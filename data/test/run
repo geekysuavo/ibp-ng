@@ -1,0 +1,17 @@
+#!/bin/bash
+
+rm -rf test.pdb.d
+
+../../bin/ibp-ng \
+ --input test.fa --seqid 1 \
+ --psf test.psf \
+ --dmdgp test.dmdgp \
+ --output test.pdb.d \
+ --format pdb \
+ --topology ../../lib/ibp-protein.top \
+ --params ../../lib/ibp-protein.par \
+ --reorder ../../lib/ibp-protein.ord \
+ --threads 4 \
+ --method dist \
+ --limit 100 --branch-eps 0.01 --branch-max 32 --vdw-scale 0.5
+
