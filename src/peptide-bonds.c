@@ -97,6 +97,10 @@ int peptide_bond_add (peptide_t *P,
   /* store the virtual state. */
   P->bonds[i].is_virtual = is_virtual;
 
+  /* initialize the probability parameters. */
+  P->bonds[i].mu = 0.0;
+  P->bonds[i].kappa = 0.0;
+
   /* return success. */
   return 1;
 }
@@ -188,6 +192,60 @@ int peptide_bond_delete_any (peptide_t *P,
 
     /* decrement the bond count. */
     P->n_bonds--;
+  }
+
+  /* return success. */
+  return 1;
+}
+
+/* peptide_field_bonds(): compute the probability parameters for
+ * each bond in a peptide structure.
+ *
+ * arguments:
+ *  @P: pointer to the peptide structure to modify.
+ *  @tol: distance tolerance to add into intervals.
+ *
+ * returns:
+ *  integer indicating whether (1) or not (0) the operation succeeded.
+ */
+int peptide_field_bonds (peptide_t *P, double tol) {
+  /* declare required variables:
+   *  @i: peptide bond array index.
+   *  @L, @U: bond length interval.
+   */
+  double L, U, mu, kappa;
+  unsigned int i;
+
+  /* define the 0.025-0.975 quantile range for the standard normal. */
+  const double zl = -1.95996938;
+  const double zu =  1.95996938;
+  const double Z = pow(zu - zl, 2.0);
+
+  /* loop over the bonds in the peptide. */
+  for (i = 0; i < P->n_bonds; i++) {
+    /* get the current bond length. */
+    L = P->bonds[i].len.l - tol;
+    U = P->bonds[i].len.u + tol;
+
+    /* rectify the bounds. */
+    if (L <= 0.0) L = tol;
+    if (U <= L) U = L + 2.0 * tol;
+
+    /* compute the parameters. */
+    if (P->bonds[i].is_virtual) {
+      /* log-normal. */
+      kappa = Z * pow(log(U / L), -2.0);
+      mu = L * exp(-zl / sqrt(kappa));
+    }
+    else {
+      /* normal. */
+      kappa = Z * pow(U - L, -2.0);
+      mu = L - zl / sqrt(kappa);
+    }
+
+    /* store the computed parameters. */
+    P->bonds[i].mu = mu;
+    P->bonds[i].kappa = kappa;
   }
 
   /* return success. */

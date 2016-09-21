@@ -21,6 +21,8 @@ int peptide_torsion_delete_any (peptide_t *P,
                                 unsigned int resid,
                                 const char *name);
 
+int peptide_field_torsions (peptide_t *P, double tol);
+
 int peptide_graph_torsions (peptide_t *P, graph_t *G);
 
 #endif /* !__IBPNG_PEPTIDE_TORSIONS_H__ */

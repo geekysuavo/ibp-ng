@@ -113,6 +113,10 @@ int peptide_torsion_add (peptide_t *P,
   /* initialize the angle. */
   P->torsions[i].ang = value_undefined();
 
+  /* initialize the probability parameters. */
+  P->torsions[i].mu = 0.0;
+  P->torsions[i].kappa = 0.0;
+
   /* return success. */
   return 1;
 }
@@ -219,6 +223,60 @@ int peptide_torsion_delete_any (peptide_t *P,
 
     /* decrement the torsion count. */
     P->n_torsions--;
+  }
+
+  /* return success. */
+  return 1;
+}
+
+/* peptide_field_torsions(): compute the probability parameters for
+ * each torsion in a peptide structure.
+ *
+ * FIXME: currently, an approximation is used that assumes relatively
+ * high precision. of course, this will break down when [-180,180] is
+ * used to generate a completely uninformative interval.
+ *
+ * one hacky solution would be to place [-x,x] into the ibp-protein.par
+ * file, where x >> 180, to force the resulting von mises distribution
+ * be closer to a circular uniform distribution.
+ *
+ * arguments:
+ *  @P: pointer to the peptide structure to modify.
+ *  @tol: angular tolerance to add into intervals.
+ *
+ * returns:
+ *  integer indicating whether (1) or not (0) the operation succeeded.
+ */
+int peptide_field_torsions (peptide_t *P, double tol) {
+  /* declare required variables:
+   *  @i: peptide dihedral array index.
+   *  @L, @U: dihedral value interval.
+   */
+  double L, U, mu, kappa;
+  unsigned int i;
+
+  /* define the 0.025-0.975 quantile range for the standard normal. */
+  const double zl = -1.95996938;
+  const double zu =  1.95996938;
+  const double Z = pow(zu - zl, 2.0);
+
+  /* loop over the dihedrals in the peptide. */
+  for (i = 0; i < P->n_torsions; i++) {
+    /* get the current dihedral angle. */
+    L = P->torsions[i].ang.l * (M_PI / 180.0) - tol;
+    U = P->torsions[i].ang.u * (M_PI / 180.0) + tol;
+
+    /* rectify the bounds. */
+    if (L < -M_PI) L = -M_PI;
+    if (U >  M_PI) U =  M_PI;
+
+    /* compute the parameters. */
+    kappa = Z * pow(U - L, -2.0);
+    mu = L - zl / sqrt(kappa);
+
+    /* store the computed parameters. */
+    P->torsions[i].mu = mu;
+    P->torsions[i].kappa = kappa;
   }
 
   /* return success. */

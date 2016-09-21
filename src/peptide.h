@@ -44,6 +44,11 @@ typedef struct {
    * (i.e. from an interval restraint) or not.
    */
   unsigned int is_virtual;
+
+  /* @mu: mode of the normal/log-normal probability.
+   * @kappa: precision of the normal/log-normal probability.
+   */
+  double mu, kappa;
 }
 peptide_bond_t;
 
@@ -55,6 +60,11 @@ typedef struct {
    */
   unsigned int atom_id[3];
   value_t ang;
+
+  /* @mu: mode of the von mises probability.
+   * @kappa: precision of the von mises probability.
+   */
+  double mu, kappa;
 }
 peptide_angle_t;
 
@@ -66,6 +76,11 @@ typedef struct {
    */
   unsigned int atom_id[4];
   value_t ang;
+
+  /* @mu: mode of the von mises probability.
+   * @kappa: precision of the von mises probability.
+   */
+  double mu, kappa;
 }
 peptide_dihed_t;
 
@@ -141,7 +156,11 @@ const char *peptide_get_resname (peptide_t *P, unsigned int res);
 
 const char *peptide_get_restype (peptide_t *P, unsigned int res);
 
-/* function declarations (peptide.c): */
+/* function declarations (peptide-field.c): */
+
+int peptide_field (peptide_t *P, double tol);
+
+/* function declarations (peptide-graph.c): */
 
 graph_t *peptide_graph (peptide_t *P, reorder_t *ord);
 

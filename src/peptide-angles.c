@@ -104,6 +104,10 @@ int peptide_angle_add (peptide_t *P,
   /* initialize the angle. */
   P->angles[i].ang = value_undefined();
 
+  /* initialize the probability parameters. */
+  P->angles[i].mu = 0.0;
+  P->angles[i].kappa = 0.0;
+
   /* return success. */
   return 1;
 }
@@ -201,6 +205,55 @@ int peptide_angle_delete_any (peptide_t *P,
 
     /* decrement the angle count. */
     P->n_angles--;
+  }
+
+  /* return success. */
+  return 1;
+}
+
+/* peptide_field_angles(): compute the probability parameters for
+ * each angle in a peptide structure.
+ *
+ * arguments:
+ *  @P: pointer to the peptide structure to modify.
+ *  @tol: angular tolerance to add into intervals.
+ *
+ * returns:
+ *  integer indicating whether (1) or not (0) the operation succeeded.
+ */
+int peptide_field_angles (peptide_t *P, double tol) {
+  /* declare required variables:
+   *  @i: peptide angle array index.
+   *  @L, @U: angle value interval.
+   */
+  double L, U, mu, kappa;
+  unsigned int i;
+
+  /* define the 0.025-0.975 quantile range for the standard normal.
+   * this is an approximation, since angles are von mises, but
+   * since our angles will be precise (exact), it works.
+   */
+  const double zl = -1.95996938;
+  const double zu =  1.95996938;
+  const double Z = pow(zu - zl, 2.0);
+
+  /* loop over the angles in the peptide. */
+  for (i = 0; i < P->n_angles; i++) {
+    /* get the current bond angle. */
+    L = P->angles[i].ang.l * (M_PI / 180.0) - tol;
+    U = P->angles[i].ang.u * (M_PI / 180.0) + tol;
+
+    /* rectify the bounds. */
+    if (L <  0.0) L =  0.0;
+    if (U > M_PI) U = M_PI;
+
+    /* compute the parameters. */
+    kappa = Z * pow(U - L, -2.0);
+    mu = L - zl / sqrt(kappa);
+
+    /* store the computed parameters. */
+    P->angles[i].mu = mu;
+    P->angles[i].kappa = kappa;
   }
 
   /* return success. */

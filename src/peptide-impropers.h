@@ -21,6 +21,8 @@ int peptide_improper_delete_any (peptide_t *P,
                                  unsigned int resid,
                                  const char *name);
 
+int peptide_field_impropers (peptide_t *P, double tol);
+
 int peptide_graph_impropers (peptide_t *P, graph_t *G);
 
 #endif /* !__IBPNG_PEPTIDE_IMPROPERS_H__ */

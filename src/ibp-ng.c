@@ -172,6 +172,10 @@ int main (int argc, char **argv) {
       die("unable to add restraints from '%s'", opts->fname_restr[i]);
   }
 
+  /* back-calculate the peptide force-field / probability parameters. */
+  if (!peptide_field(P, opts->ddf_tol))
+    die("unable to recompute force field parameters");
+
   /* create a graph structure from the peptide information. */
   G = peptide_graph(P, ord);
 

@@ -2,7 +2,7 @@
 
 rm -rf test.pdb.d
 
-../../bin/ibp-ng \
+../../bin/ibp-ng -v -v \
  --input test.fa --seqid 1 \
  --psf test.psf \
  --dmdgp test.dmdgp \

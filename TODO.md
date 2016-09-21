@@ -11,7 +11,11 @@ dos that need doing.
 
 ## Big tasks
 
- * Support for GPU-based tree traversal.
+ * Energetic pruning for true global optimization.
+    - Conversion of force fields and restraints into parameters of
+      appropriate energy functionals.
+    - Pruning and best-first search based on evaluated energy.
+ * Support for GPU-based tree traversal. [back burner]
 
 ## Misc. notes
 

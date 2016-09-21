@@ -19,6 +19,8 @@ int peptide_angle_delete_any (peptide_t *P,
                               unsigned int resid,
                               const char *name);
 
+int peptide_field_angles (peptide_t *P, double tol);
+
 int peptide_graph_angles (peptide_t *P, graph_t *G);
 
 #endif /* !__IBPNG_PEPTIDE_ANGLES_H__ */

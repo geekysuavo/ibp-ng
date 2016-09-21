@@ -18,6 +18,8 @@ int peptide_bond_delete_any (peptide_t *P,
                              unsigned int resid,
                              const char *name);
 
+int peptide_field_bonds (peptide_t *P, double tol);
+
 int peptide_graph_bonds (peptide_t *P, graph_t *G);
 
 #endif /* !__IBPNG_PEPTIDE_BONDS_H__ */

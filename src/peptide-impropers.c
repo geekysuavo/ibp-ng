@@ -113,6 +113,10 @@ int peptide_improper_add (peptide_t *P,
   /* initialize the angle. */
   P->impropers[i].ang = value_undefined();
 
+  /* initialize the probability parameters. */
+  P->impropers[i].mu = 0.0;
+  P->impropers[i].kappa = 0.0;
+
   /* return success. */
   return 1;
 }
@@ -219,6 +223,52 @@ int peptide_improper_delete_any (peptide_t *P,
 
     /* decrement the improper count. */
     P->n_impropers--;
+  }
+
+  /* return success. */
+  return 1;
+}
+
+/* peptide_field_impropers(): compute the probability parameters for
+ * each improper in a peptide structure.
+ *
+ * arguments:
+ *  @P: pointer to the peptide structure to modify.
+ *  @tol: angular tolerance to add into intervals.
+ *
+ * returns:
+ *  integer indicating whether (1) or not (0) the operation succeeded.
+ */
+int peptide_field_impropers (peptide_t *P, double tol) {
+  /* declare required variables:
+   *  @i: peptide dihedral array index.
+   *  @L, @U: dihedral value interval.
+   */
+  double L, U, mu, kappa;
+  unsigned int i;
+
+  /* define the 0.025-0.975 quantile range for the standard normal. */
+  const double zl = -1.95996938;
+  const double zu =  1.95996938;
+  const double Z = pow(zu - zl, 2.0);
+
+  /* loop over the dihedrals in the peptide. */
+  for (i = 0; i < P->n_impropers; i++) {
+    /* get the current dihedral angle. */
+    L = P->impropers[i].ang.l * (M_PI / 180.0) - tol;
+    U = P->impropers[i].ang.u * (M_PI / 180.0) + tol;
+
+    /* rectify the bounds. */
+    if (L < -M_PI) L = -M_PI;
+    if (U >  M_PI) U =  M_PI;
+
+    /* compute the parameters. */
+    kappa = Z * pow(U - L, -2.0);
+    mu = L - zl / sqrt(kappa);
+
+    /* store the computed parameters. */
+    P->impropers[i].mu = mu;
+    P->impropers[i].kappa = kappa;
   }
 
   /* return success. */
