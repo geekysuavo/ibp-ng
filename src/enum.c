@@ -88,6 +88,13 @@ static const struct enum_prune_map_t pruners[] = {
     enum_prune_path_report
   },
 
+  /* energetic feasibility. */
+  { "energy",
+    enum_prune_energy_init,
+    enum_prune_energy,
+    enum_prune_energy_report
+  },
+
   /* null-terminator. */
   { NULL, NULL, NULL, NULL }
 };
