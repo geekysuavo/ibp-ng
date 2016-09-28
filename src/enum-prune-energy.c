@@ -4,11 +4,28 @@
 #include "enum-thread.h"
 #include "enum-prune.h"
 
-/* enum_prune_energy_t: structure for holding information required for
- * energetic feasibility pruning closures.
+/* define constants to represent pruning closure @type.
+ */
+#define ENERGY_BOND     0
+#define ENERGY_ANGLE    1
+#define ENERGY_DIHEDRAL 2
+#define ENERGY_DISTANCE 3
+
+/* enum_prune_energy_t: structure for holding information
+ * required for energetic pruning closures.
  */
 typedef struct {
-  /* FIXME: fill out the enum_prune_energy_t struct. */
+  /* @type: type of energy term to be feasibility checked.
+   */
+  unsigned int type;
+
+  /* @ntest, @nprune: test and prune counts of the current closure.
+   * @mu, @kappa: mean and precision force field parameters.
+   * @n: backward step-counts for the prior atoms.
+   */
+  unsigned int ntest, nprune;
+  unsigned int n[4];
+  double mu, kappa;
 }
 enum_prune_energy_t;
 

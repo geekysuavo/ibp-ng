@@ -277,10 +277,10 @@ int dmdgp_write_dihedrals (FILE *fh, peptide_t *P,
 
     /* print the dihedral entry. */
     fprintf(fh, dihed_fmt,
-            P->torsions[i].atom_id[0],
-            P->torsions[i].atom_id[1],
-            P->torsions[i].atom_id[2],
-            P->torsions[i].atom_id[3],
+            P->torsions[i].atom_id[0] + 1,
+            P->torsions[i].atom_id[1] + 1,
+            P->torsions[i].atom_id[2] + 1,
+            P->torsions[i].atom_id[3] + 1,
             P->torsions[i].ang.l);
   }
 
@@ -291,10 +291,10 @@ int dmdgp_write_dihedrals (FILE *fh, peptide_t *P,
 
     /* print the dihedral entry. */
     fprintf(fh, dihed_fmt,
-            P->impropers[i].atom_id[0],
-            P->impropers[i].atom_id[1],
-            P->impropers[i].atom_id[2],
-            P->impropers[i].atom_id[3],
+            P->impropers[i].atom_id[0] + 1,
+            P->impropers[i].atom_id[1] + 1,
+            P->impropers[i].atom_id[2] + 1,
+            P->impropers[i].atom_id[3] + 1,
             P->impropers[i].ang.l);
   }
 
@@ -309,10 +309,10 @@ int dmdgp_write_dihedrals (FILE *fh, peptide_t *P,
 
     /* print the dihedral entry. */
     fprintf(fh, dihed_fmt,
-            P->torsions[i].atom_id[0],
-            P->torsions[i].atom_id[1],
-            P->torsions[i].atom_id[2],
-            P->torsions[i].atom_id[3],
+            P->torsions[i].atom_id[0] + 1,
+            P->torsions[i].atom_id[1] + 1,
+            P->torsions[i].atom_id[2] + 1,
+            P->torsions[i].atom_id[3] + 1,
             P->torsions[i].ang.l,
             P->torsions[i].ang.u);
   }
@@ -324,10 +324,10 @@ int dmdgp_write_dihedrals (FILE *fh, peptide_t *P,
 
     /* print the dihedral entry. */
     fprintf(fh, dihed_fmt,
-            P->impropers[i].atom_id[0],
-            P->impropers[i].atom_id[1],
-            P->impropers[i].atom_id[2],
-            P->impropers[i].atom_id[3],
+            P->impropers[i].atom_id[0] + 1,
+            P->impropers[i].atom_id[1] + 1,
+            P->impropers[i].atom_id[2] + 1,
+            P->impropers[i].atom_id[3] + 1,
             P->impropers[i].ang.l,
             P->impropers[i].ang.u);
   }

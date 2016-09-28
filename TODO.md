@@ -7,6 +7,7 @@ dos that need doing.
 ## Small tasks
 
  * Possible to more intelligently precompute discretization points?
+ * Compute write orderings from the re-order that preserve residue order.
  * Beneficial to keep sign of dihedrals when known, best way to implement?
 
 ## Big tasks
