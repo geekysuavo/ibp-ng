@@ -109,9 +109,11 @@ typedef struct {
    * @nb: number of nodes/branches at the current level.
    * @pos: position of the node for the candidate solution.
    * @prev: previous solution position of the node.
+   * @energy: current energy at the node.
    */
   unsigned int idx, end, nb;
   vector_t pos, prev;
+  double energy;
 }
 enum_thread_node_t;
 
@@ -203,8 +205,9 @@ struct _enum_t {
   /* pruning function control variables:
    *  @ddf_tol: error tolerance for ddf bounds checking.
    *  @rmsd_tol: minimum acceptable rmsd between solutions.
+   *  @energy_tol: maximum acceptable energy for pruning.
    */
-  double ddf_tol, rmsd_tol;
+  double ddf_tol, rmsd_tol, energy_tol;
 };
 
 /* function declarations (enum.c): */

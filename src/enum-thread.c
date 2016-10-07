@@ -349,6 +349,11 @@ int enum_threads_init (enum_t *E) {
     E->threads[E->nthreads - 1].state[i].nb - 1;
   }
 
+  /* initialize the energies. */
+  for (unsigned int t = 0; t < E->nthreads; t++)
+    for (unsigned int i = 0; i < E->G->n_order; i++)
+      E->threads[t].state[i].energy = 0.0;
+
   /* compute the tree size. */
   for (unsigned int i = 0; i < E->G->n_order; i++)
     E->ntree += log10((double) E->threads[0].state[i].nb);
@@ -387,6 +392,51 @@ static inline int enum_thread_feasible (enum_thread_t *th) {
   return 1;
 }
 
+/* enum_thread_lerp_index(): compute the sign of sin(omega) and the
+ * interval interpolation factor based on the current value of the
+ * thread state index.
+ *
+ * the sign of sin(omega) is determined to be positive for even
+ * state indices and negative for odd state indices.
+ *
+ * the interpolation factor is a bit trickier. this function basically
+ * dabbles in the dark arts of integer modular arithmetic to cause iBP
+ * to select the inner interpolation points first, moving outwards as
+ * the state index increases.
+ *
+ * this is basically a heuristic to try and traverse better parts of
+ * the tree first when enumerating solutions.
+ *
+ * arguments:
+ *  @i: current thread state index.
+ *  @N: number of interpolation points, also half the node branch count.
+ *  @sigma: pointer to the output sign of sin(omega).
+ *  @lerp: pointer to the output interpolation factor.
+ */
+static inline void enum_thread_lerp_index (const unsigned int i,
+                                           const unsigned int N,
+                                           double *sigma,
+                                           double *lerp) {
+  /* compute the current sign of sinus omega. */
+  *sigma = (i % 2 ? -1.0 : 1.0);
+
+  /* compute a halfway point. */
+  const unsigned int H = (N % 2 ? N / 2 + 1 : N / 2);
+
+  /* get the "sign-independent" branch index @j, and swap around to
+   * obtain an alternating index @n.
+   */
+  const unsigned int j = i / 2;
+  const unsigned int n = ((j + 1) % 2 ? N / 2 + j / 2 : (j + 1) / 2 - 1);
+
+  /* compute the interpolation index @idx. */
+  unsigned int idx = (N / 2 + n) % N;
+  idx = (n < H ? idx : (N - 1) % H - idx);
+
+  /* compute the final interpolation factor. */
+  *lerp = (N > 1 ? ((double) idx) / ((double) (N - 1)) : 0.0);
+}
+
 /* enum_thread_execute(): core thread function for enumerator threads.
  *
  * arguments:
@@ -418,7 +468,7 @@ void *enum_thread_execute (void *pdata) {
   double st = sqrt(1.0 - ct * ct);
 
   /* define dihedral angular quantities for embedding atoms. */
-  double cw, sw, sig;
+  double cw, sw, sig, lerp;
 
   /* define vector quantities and extra scalars for embedding atoms. */
   vector_t x0, x1, x2, x3, r01, r02, r12, rv, p1, p2, p3;
@@ -449,6 +499,7 @@ void *enum_thread_execute (void *pdata) {
       if (dup[lev]) {
         /* store the previously computed position, and move on. */
         state[lev].pos = state[lev - dup[lev]].pos;
+        state[lev].energy = state[lev - dup[lev]].energy;
         lev++; continue;
       }
 
@@ -494,10 +545,15 @@ void *enum_thread_execute (void *pdata) {
       ct = distances_to_angle(d12, d13, d23);
       st = sqrt(1.0 - ct * ct);
 
+      /* determine the sign and interpolation factors from the
+       * value of the thread state index.
+       */
+      enum_thread_lerp_index(state[lev].idx,
+                             state[lev].nb / 2,
+                             &sig, &lerp);
+
       /* compute the current d(i,i-3) edge value. */
-      sig = (state[lev].idx % 2 ? 1.0 : -1.0);
-      d03 = val03.l + (val03.u - val03.l) *
-            ((double) state[lev].idx) / ((double) (state[lev].nb - 1));
+      d03 = val03.l + (val03.u - val03.l) * lerp;
 
       /* compute the cosine and sine of omega. */
       cw = distances_to_dihedral(d01, d02, d03, d12, d13, d23);
@@ -568,6 +624,10 @@ void *enum_thread_execute (void *pdata) {
         if (state_rmsd(state, len) < E->rmsd_tol)
           break;
 
+        /* perform one final check to see if the solution is valid. */
+        if (state[len - 1].energy > E->energy_tol)
+          break;
+
         /* store the new solution into the "previous" slot. */
         for (unsigned int i = 0; i < len; i++)
           state[i].prev = state[i].pos;
@@ -579,6 +639,11 @@ void *enum_thread_execute (void *pdata) {
 
         /* increment the solution count. */
         E->nsol++;
+        E->energy_tol = state[len - 1].energy;
+
+        /* write some output. */
+        info("solution %u found, U = %.32le",
+             E->nsol, E->energy_tol);
 
         /* write the solution. */
         if (E->write_data && !E->write_data(E, thread)) {

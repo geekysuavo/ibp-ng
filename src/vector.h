@@ -32,13 +32,18 @@ void vector_set (vector_t *v, double x, double y, double z);
 
 void vector_dot (vector_t *a, vector_t *b, double *z);
 
-double vector_dist (vector_t *a, vector_t *b);
-
 double vector_sqdist (vector_t *a, vector_t *b);
+
+double vector_dist (vector_t *a, vector_t *b);
 
 void vector_normalize (vector_t *a);
 
 void vector_cross (vector_t *a, vector_t *b, vector_t *z);
+
+double vector_angle (vector_t *a, vector_t *b, vector_t *c);
+
+double vector_dihedral (vector_t *a, vector_t *b,
+                        vector_t *c, vector_t *d);
 
 #endif  /* !__IBPNG_VECTOR_H__ */
 

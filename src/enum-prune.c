@@ -57,3 +57,33 @@ int enum_prune_add_closure (enum_t *E, unsigned int lev,
   return 1;
 }
 
+/* enum_prune_get_level(): function utilized by pruning initialization
+ * functions to check whether all atoms in a given entry have been embedded.
+ *
+ * arguments:
+ *  @order: graph order.
+ *  @lev: current order level.
+ *  @id: atom index to check.
+ *
+ * returns:
+ *  graph order level (i.e. comparable to @lev) of the specified
+ *  atom index.
+ */
+unsigned int enum_prune_get_level (unsigned int *order,
+                                   unsigned int lev,
+                                   unsigned int id) {
+  /* declare required variables:
+   *  @i: order loop counter.
+   */
+  unsigned int i;
+
+  /* check for a match in the order prior to @lev. */
+  for (i = 0; i <= lev; i++) {
+    if (order[i] == id)
+      return i;
+  }
+
+  /* return the index, which is now (@lev+1). */
+  return i;
+}
+

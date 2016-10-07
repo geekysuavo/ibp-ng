@@ -360,6 +360,7 @@ enum_t *enum_new (peptide_t *P, graph_t *G, opts_t *opts) {
   /* store the pruning control variables. */
   E->ddf_tol = opts->ddf_tol;
   E->rmsd_tol = (double) G->n_orig * pow(opts->rmsd_tol, 2.0);
+  E->energy_tol = INFINITY;
 
   /* set the enumerator output format. */
   if (!enum_init_format(E, opts)) {

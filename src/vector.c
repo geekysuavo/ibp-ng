@@ -128,3 +128,88 @@ inline void vector_cross (vector_t *a, vector_t *b, vector_t *z) {
   z->z = a->x * b->y - a->y * b->x;
 }
 
+/* vector_angle(): compute the angle among three vectors.
+ *
+ * arguments:
+ *  @a, @b, @c: vectors to use for the computation.
+ *
+ * returns:
+ *  computed angle value.
+ */
+inline double vector_angle (vector_t *a, vector_t *b, vector_t *c) {
+  /* declare required variables:
+   *  @ba, @bc: vectors from @b to @a and @c, respectively.
+   *  @dot: dot product between the two centered vectors.
+   */
+  vector_t ba, bc;
+  double dot;
+
+  /* compute the first centered vector. */
+  ba.x = a->x - b->x;
+  ba.y = a->y - b->y;
+  ba.z = a->z - b->z;
+
+  /* compute the second centered vector. */
+  bc.x = c->x - b->x;
+  bc.y = c->y - b->y;
+  bc.z = c->z - b->z;
+
+  /* compute the dot product of the two vectors after normalization. */
+  vector_normalize(&ba);
+  vector_normalize(&bc);
+  vector_dot(&ba, &bc, &dot);
+
+  /* return the angle. */
+  return acos(dot);
+}
+
+/* vector_dihedral(): compute the dihedral angle among four vectors.
+ *
+ * arguments:
+ *  @a, @b, @c, @d: vectors to use for the computation.
+ *
+ * returns:
+ *  computed angle value.
+ */
+inline double vector_dihedral (vector_t *a, vector_t *b,
+                               vector_t *c, vector_t *d) {
+  /* declare required variables. */
+  vector_t b1, b2, b3;
+  vector_t n1, n2, m;
+  double x, y;
+
+  /* compute the first vector in the three-vector system. */
+  b1.x = a->x - b->x;
+  b1.y = a->y - b->y;
+  b1.z = a->z - b->z;
+
+  /* compute the second vector in the three-vector system. */
+  b2.x = b->x - c->x;
+  b2.y = b->y - c->y;
+  b2.z = b->z - c->z;
+
+  /* compute the third vector in the three-vector system. */
+  b3.x = c->x - d->x;
+  b3.y = c->y - d->y;
+  b3.z = c->z - d->z;
+
+  /* compute the unit normal of the first plane. */
+  vector_cross(&b1, &b2, &n1);
+  vector_normalize(&n1);
+
+  /* compute the unit normal of the second plane. */
+  vector_cross(&b2, &b3, &n2);
+  vector_normalize(&n2);
+
+  /* compute the final vector of the orthonormal frame. */
+  vector_normalize(&b2);
+  vector_cross(&n1, &b2, &m);
+
+  /* finally, compute the dihedral angle. */
+  vector_dot(&n1, &n2, &x);
+  vector_dot(&m, &n2, &y);
+
+  /* return the angle. */
+  return atan2(y, x);
+}
+

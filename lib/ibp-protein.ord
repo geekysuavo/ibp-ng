@@ -28,14 +28,22 @@ end
 
 ! second residue
 reorder BB2
- N, -O, -CA, -C,                         ! include i-1 carbonyl oxygen
- N, CA, H1, N, CA, HA, C, CA             ! original order
+! N, -O, -CA, -C,                         ! include i-1 carbonyl oxygen
+! N, CA, H1, N, CA, HA, C, CA             ! original order
+!
+! attempt to branch directly on phi,psi.
+ N, -O, -CA, -C, N, CA, C, +N,
+ -C, N, CA, H1, N, CA, HA, C, CA
 end
 
 ! inner residue
 reorder BBI
- N, -O, -C, -CA,                         ! include i-1 carbonyl oxygen
- N, -C, CA, H1, N, CA, HA, C, CA         ! original order
+! N, -O, -C, -CA,                         ! include i-1 carbonyl oxygen
+! N, -C, CA, H1, N, CA, HA, C, CA         ! original order
+!
+! attempt to branch directly on phi,psi.
+ N, -O, -CA, -C, N, CA, C, +N,
+ -C, N, CA, H1, N, CA, HA, C, CA
 end
 
 ! last residue

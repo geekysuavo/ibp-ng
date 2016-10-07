@@ -9,6 +9,10 @@ int enum_prune_add_closure (enum_t *E, unsigned int lev,
                             enum_prune_test_fn func,
                             void *data);
 
+unsigned int enum_prune_get_level (unsigned int *order,
+                                   unsigned int lev,
+                                   unsigned int id);
+
 /* function declarations (enum-prune-ddf.c): */
 
 int enum_prune_ddf_init (enum_t *E, unsigned int lev);

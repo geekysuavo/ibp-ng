@@ -19,36 +19,6 @@ typedef struct {
 }
 enum_prune_taf_t;
 
-/* taf_level(): function utilized by taf_init() to check whether
- * all atoms in a torsion entry have been embedded.
- *
- * arguments:
- *  @order: graph order.
- *  @lev: current order level.
- *  @id: atom index to check.
- *
- * returns:
- *  graph order level (i.e. comparable to @lev) of the specified
- *  atom index.
- */
-static inline unsigned int taf_level (unsigned int *order,
-                                      unsigned int lev,
-                                      unsigned int id) {
-  /* declare required variables:
-   *  @i: order loop counter.
-   */
-  unsigned int i;
-
-  /* check for a match in the order prior to @lev. */
-  for (i = 0; i <= lev; i++) {
-    if (order[i] == id)
-      return i;
-  }
-
-  /* return the index, which is now (@lev+1). */
-  return i;
-}
-
 /* taf_init(): function utilized by:
  *  - enum_prune_dihe_init()
  *  - enum_prune_impr_init()
@@ -57,6 +27,7 @@ static int taf_init (enum_t *E, peptide_dihed_t *arr, unsigned int n_arr,
                      unsigned int lev) {
   /* declare required variables:
    *  @i: peptide torsion/improper array index.
+   *  @k: atoms array index.
    *  @id: atom index that has just been embedded.
    *  @ids: atom indices in each torsion/improper.
    *  @data: closure data pointer.
@@ -78,7 +49,7 @@ static int taf_init (enum_t *E, peptide_dihed_t *arr, unsigned int n_arr,
 
     /* get the graph level of each atom. */
     for (k = 0; k < 4; k++)
-      levs[k] = taf_level(E->G->order, lev, ids[k]);
+      levs[k] = enum_prune_get_level(E->G->order, lev, ids[k]);
 
     /* skip if all other atoms in the order have not been embedded. */
     if (levs[0] > lev ||
@@ -134,51 +105,18 @@ int enum_prune_taf (enum_t *E, enum_thread_t *th, void *data) {
    *  @taf_data: payload for dihe/impr closures.
    */
   enum_prune_taf_t *taf_data;
-  vector_t x1, x2, x3, x4;
-  vector_t b1, b2, b3;
-  vector_t n1, n2, m;
-  double x, y, omega;
 
   /* get the payload. */
   taf_data = (enum_prune_taf_t*) data;
 
   /* extract pretty handles to the atom positions. */
-  x1 = th->state[th->level - taf_data->n[0]].pos;
-  x2 = th->state[th->level - taf_data->n[1]].pos;
-  x3 = th->state[th->level - taf_data->n[2]].pos;
-  x4 = th->state[th->level - taf_data->n[3]].pos;
+  vector_t x1 = th->state[th->level - taf_data->n[0]].pos;
+  vector_t x2 = th->state[th->level - taf_data->n[1]].pos;
+  vector_t x3 = th->state[th->level - taf_data->n[2]].pos;
+  vector_t x4 = th->state[th->level - taf_data->n[3]].pos;
 
-  /* compute the first vector in the three-vector system. */
-  b1.x = x1.x - x2.x;
-  b1.y = x1.y - x2.y;
-  b1.z = x1.z - x2.z;
-
-  /* compute the second vector in the three-vector system. */
-  b2.x = x2.x - x3.x;
-  b2.y = x2.y - x3.y;
-  b2.z = x2.z - x3.z;
-
-  /* compute the third vector in the three-vector system. */
-  b3.x = x3.x - x4.x;
-  b3.y = x3.y - x4.y;
-  b3.z = x3.z - x4.z;
-
-  /* compute the unit normal of the first plane. */
-  vector_cross(&b1, &b2, &n1);
-  vector_normalize(&n1);
-
-  /* compute the unit normal of the second plane. */
-  vector_cross(&b2, &b3, &n2);
-  vector_normalize(&n2);
-
-  /* compute the final vector of the orthonormal frame. */
-  vector_normalize(&b2);
-  vector_cross(&n1, &b2, &m);
-
-  /* finally, compute the dihedral angle. */
-  vector_dot(&n1, &n2, &x);
-  vector_dot(&m, &n2, &y);
-  omega = atan2(y, x);
+  /* compute the dihedral angle. */
+  const double omega = vector_dihedral(&x1, &x2, &x3, &x4);
 
   /* check if the computed dihedral angle is in bounds. */
   taf_data->ntest++;

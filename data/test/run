@@ -3,15 +3,17 @@
 rm -rf test.pdb.d
 
 ../../bin/ibp-ng -v -v \
- --input test.fa --seqid 1 \
+ --input test.fa --seqid 2 \
  --psf test.psf \
  --dmdgp test.dmdgp \
- --output test.pdb.d \
- --format pdb \
+ --output test.dcd \
+ --format dcd \
+ --restraints test2.res \
  --topology ../../lib/ibp-protein.top \
  --params ../../lib/ibp-protein.par \
  --reorder ../../lib/ibp-protein.ord \
- --threads 4 \
- --method dist \
- --limit 100 --branch-eps 0.01 --branch-max 32 --vdw-scale 0.5
+ --threads 1 \
+ --method impr,energy \
+ --rmsd 0.5 \
+ --limit 1000 --branch-eps 0.01 --branch-max 32 --vdw-scale 0.5
 
