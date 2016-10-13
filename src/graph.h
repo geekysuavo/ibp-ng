@@ -3,6 +3,9 @@
 #ifndef __IBPNG_GRAPH_H__
 #define __IBPNG_GRAPH_H__
 
+/* include the integer limits header. */
+#include <limits.h>
+
 /* include the traceback and value headers. */
 #include "trace.h"
 #include "value.h"
@@ -27,12 +30,13 @@ typedef struct {
   unsigned int nv;
 
   /* @order: re-order array for graph traversal.
+   * @ordrev: re-order reverse-lookup array.
    * @orig: re-order originality offset array.
    * @rmsd: deviation contribution array.
    * @n_order: length of the re-order array.
    * @n_orig: number of original atoms in the order.
    */
-  unsigned int *order, *orig, n_order, n_orig;
+  unsigned int *order, *ordrev, *orig, n_order, n_orig;
   double *rmsd;
 }
 graph_t;

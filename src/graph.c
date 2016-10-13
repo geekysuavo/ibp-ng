@@ -9,7 +9,7 @@
  * and/or freed using graph_free().
  *
  * arguments:
- *  @n_vertices: initial number of vertices of the graph. may be increased.
+ *  @n_vertices: number of vertices of the graph.
  *
  * returns:
  *  pointer to an allocated and initialized graph_t structure. the pointer
@@ -47,10 +47,27 @@ graph_t *graph_new (unsigned int n_vertices) {
     return NULL;
   }
 
+  /* allocate the vertex reverse-lookup array. */
+  G->ordrev = (unsigned int*) malloc(G->nv * sizeof(unsigned int));
+
+  /* check if the array was allocated successfully. */
+  if (!G->ordrev) {
+    /* free the structure pointer. */
+    free(G);
+
+    /* raise an exception and return null. */
+    raise("unable to allocate graph reverse lookup array");
+    return NULL;
+  }
+
   /* initialize the edge array. */
   for (unsigned int i = 0; i < G->nv; i++)
     for (unsigned int j = 0; j < G->nv; j++)
       G->E[i + G->nv * j] = value_undefined();
+
+  /* initialize the reverse-lookup array. */
+  for (unsigned int i = 0; i < G->nv; i++)
+    G->ordrev[i] = UINT_MAX;
 
   /* initialize the re-order array. */
   G->rmsd = NULL;
@@ -73,6 +90,10 @@ void graph_free (graph_t *G) {
   /* free the edge array. */
   free(G->E);
   G->E = NULL;
+
+  /* free the reverse lookup array. */
+  free(G->ordrev);
+  G->ordrev = NULL;
 
   /* reset the vertex count. */
   G->nv = 0;
@@ -341,9 +362,14 @@ int graph_extend_order (graph_t *G, unsigned int v) {
     }
   }
 
-  /* if this is an original node, increment the number of originals. */
-  if (G->orig[i] == 0)
+  /* if this is an original node... */
+  if (G->orig[i] == 0) {
+    /* store the reverse-lookup index and increment the
+     * number of original vertices.
+     */
+    G->ordrev[v] = i;
     G->n_orig++;
+  }
 
   /* return success. */
   return 1;

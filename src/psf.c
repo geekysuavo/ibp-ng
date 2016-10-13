@@ -54,16 +54,16 @@ int psf_write (const char *fname, peptide_t *P, graph_t *G) {
 
   /* write the atom list. */
   fprintf(fh, "%8u !NATOM\n", G->n_orig);
-  for (i = 0, j = 1; i < G->n_order; i++) {
+  for (i = 0, j = 1; i < G->nv; i++) {
     /* skip non-original atoms in the order. */
-    if (G->orig[i])
+    if (G->ordrev[i] >= G->n_order)
       continue;
 
     /* get the atom structure pointer and store the output atom index
      * into the index map.
      */
-    atom = P->atoms + G->order[i];
-    map[G->order[i]] = (unsigned int) j;
+    atom = P->atoms + i;
+    map[i] = (unsigned int) j;
 
     /* print the atom information. */
     fprintf(fh, "%8d%8u    %s  %-4s %-4s  %9.6lf       %7.4lf%12u\n",

@@ -110,16 +110,17 @@ int enum_write_dcd (enum_t *E, enum_thread_t *th) {
   write(E->fd, &sz, sizeof(int));
 
   /* locally store the thread length and originality array. */
-  const unsigned int n = E->G->n_order;
-  const unsigned int *dup = E->G->orig;
+  const unsigned int n = E->G->nv;
+  const unsigned int max = E->G->n_order;
+  const unsigned int *rev = E->G->ordrev;
 
   /* x: write the current thread coordinates. */
   for (unsigned int i = 0; i < n; i++) {
     /* skip duplicate atoms. */
-    if (dup[i]) continue;
+    if (rev[i] >= max) continue;
 
     /* write the value. */
-    xyz = (float) th->state[i].pos.x;
+    xyz = (float) th->state[rev[i]].pos.x;
     write(E->fd, &xyz, sizeof(float));
   }
 
@@ -130,10 +131,10 @@ int enum_write_dcd (enum_t *E, enum_thread_t *th) {
   /* y: write the current thread coordinates. */
   for (unsigned int i = 0; i < n; i++) {
     /* skip duplicate atoms. */
-    if (dup[i]) continue;
+    if (rev[i] >= max) continue;
 
     /* write the value. */
-    xyz = (float) th->state[i].pos.y;
+    xyz = (float) th->state[rev[i]].pos.y;
     write(E->fd, &xyz, sizeof(float));
   }
 
@@ -144,10 +145,10 @@ int enum_write_dcd (enum_t *E, enum_thread_t *th) {
   /* z: write the current thread coordinates. */
   for (unsigned int i = 0; i < n; i++) {
     /* skip duplicate atoms. */
-    if (dup[i]) continue;
+    if (rev[i] >= max) continue;
 
     /* write the value. */
-    xyz = (float) th->state[i].pos.z;
+    xyz = (float) th->state[rev[i]].pos.z;
     write(E->fd, &xyz, sizeof(float));
   }
 
@@ -220,20 +221,21 @@ int enum_write_pdb (enum_t *E, enum_thread_t *th) {
 
   /* loop over the current thread state. */
   fprintf(fh, "%-6s    %-4u\n", "MODEL", 1);
-  for (i = n = 0; i < E->G->n_order; i++) {
+  for (i = n = 0; i < E->G->nv; i++) {
     /* skip duplicate atoms. */
-    if (E->G->orig[i]) continue;
+    if (E->G->ordrev[i] >= E->G->n_order)
+      continue;
 
     /* write the current atom information. */
-    atom = E->P->atoms + E->G->order[i];
+    atom = E->P->atoms + i;
     fprintf(fh, "%-6s%5u %-4s %3s %c%4u    %8.3lf%8.3lf%8.3lf"
                 "%6.2lf%6.2lf           %c\n",
             "ATOM", n++, atom->name,
             peptide_get_resname(E->P, atom->res_id),
             'A', atom->res_id + 1,
-            th->state[i].pos.x,
-            th->state[i].pos.y,
-            th->state[i].pos.z,
+            th->state[E->G->ordrev[i]].pos.x,
+            th->state[E->G->ordrev[i]].pos.y,
+            th->state[E->G->ordrev[i]].pos.z,
             1.0, 0.0,
             atom->type[0]);
   }

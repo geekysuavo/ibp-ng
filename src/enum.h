@@ -155,11 +155,13 @@ struct _enum_t {
   peptide_t *P;
   graph_t *G;
 
-  /* @write_mutex: mutual exclusion for multi-threaded data writes.
+  /* @writeord: atom ordering to use when writing data.
+   * @write_mutex: mutual exclusion for multi-threaded data writes.
    * @write_open: function pointer for opening the output system.
    * @write_data: function pointer for writing output data.
    * @write_close: function pointer for closing the output system.
    */
+  unsigned int *writeord;
 #ifdef __IBP_HAVE_PTHREAD
   pthread_mutex_t write_mutex;
 #endif
