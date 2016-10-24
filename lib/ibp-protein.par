@@ -322,10 +322,8 @@ improper CH2E C    NH1  HA    500.000 0   66.1640
 improper CH2E C    NH2  H     500.000 0    0.0000
 improper CH2E C    N    HA    500.000 0   67.7957
 improper CH2E CY   CR1E CR1E  500.000 0 -179.9903
-improper CH2P CH1E HA   HA    500.000 0  -70.0781
-improper CH2P CH1E HA   HA    500.000 0  -71.9385
+improper CH2P CH1E HA   HA    500.000 0  -71.4000
 improper CH2P CH2E HA   HA    500.000 0  -70.7825
-improper CH2P CH2E HA   HA    500.000 0  -71.8986
 improper CH3E CH1E HA   HA    500.000 0  -70.1069
 improper CH3E CH3E CH1E HA    500.000 0  -65.0462
 improper CH3E CH3E CH2E HA    500.000 0  -65.1424

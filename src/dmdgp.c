@@ -113,7 +113,7 @@ int dmdgp_write_edges (FILE *fh, peptide_t *P, graph_t *G,
 
   /* build the exact edge format string. */
   snprintf(efmt, 256,
-    "%s%sD %%11.6lf # %%s%%-4u %%-4s -- %%s%%-4u %%-4s\n",
+    "%s%sD %%11.6lf             # %%s%%-4u %%-4s -- %%s%%-4u %%-4s\n",
     fmt, fmt);
 
   /* build the interval edge format string. */
@@ -140,7 +140,7 @@ int dmdgp_write_edges (FILE *fh, peptide_t *P, graph_t *G,
       }
       else if (et == VALUE_TYPE_INTERVAL) {
         /* print the interval edge entry. */
-        fprintf(fh, ifmt, i + i, j + 1,
+        fprintf(fh, ifmt, i + 1, j + 1,
                 G->E[i + G->nv * j].l, G->E[i + G->nv * j].u,
                 resid_get_code3(P->res[P->atoms[i].res_id]),
                 P->atoms[i].res_id + 1,

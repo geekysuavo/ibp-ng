@@ -28,28 +28,20 @@ end
 
 ! second residue
 reorder BB2
-! N, -O, -CA, -C,                         ! include i-1 carbonyl oxygen
-! N, CA, H1, N, CA, HA, C, CA             ! original order
-!
-! attempt to branch directly on phi,psi.
  N, -O, -CA, -C, N, CA, C, +N,
  -C, N, CA, H1, N, CA, HA, C, CA
 end
 
 ! inner residue
 reorder BBI
-! N, -O, -C, -CA,                         ! include i-1 carbonyl oxygen
-! N, -C, CA, H1, N, CA, HA, C, CA         ! original order
-!
-! attempt to branch directly on phi,psi.
  N, -O, -CA, -C, N, CA, C, +N,
  -C, N, CA, H1, N, CA, HA, C, CA
 end
 
 ! last residue
 reorder BBN
- N, -O, -C, -CA,                              ! include i-1 carbonyl oxygen
- N, -C, CA, H1, N, CA, HA, C, CA, O, C, O2    ! original order
+ N, -O, -C, -CA,
+ N, -C, CA, H1, N, CA, HA, C, CA, O, C, O2
 end
 
 ! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -178,18 +170,14 @@ reorder PHE
  {30..33}  HB2, CB,  CA,  C
 end
 
-{*** FIXME: this hack is bad and you should feel bad. ***}
 reorder PRO
- N, -O, -CA, -C, N,
- CA, C, HA, C, CA
-end
-
-reorder PROFULL
- {* note: this is still a work in progress! *}
- N, -O, -CA, -C,                         ! include i-1 carbonyl oxygen
- N, CA, CD, CB, CG, N,
- CD, HD1, HD2, CD, CG, HG1, HG2, CG, CB, HB1, HB2, CB,
- CA, HA, C, CA
+ { 0.. 4}  N,  -O,  -CA, -C,  N,
+ { 5.. 9}  CA,  C,  +N,  -C,  N,
+ {10..14}  CA,  CD,  CB,  CG, N,
+ {15..19}  CD,  HD1, HD2, CD, CG,
+ {20..24}  HG1, HG2, CG,  CB, HB1,
+ {25..29}  HB2, CB,  CA,  HA, C,
+     {30}  CA
 end
 
 reorder SER

@@ -7,6 +7,7 @@ dos that need doing.
 ## Small tasks
 
  * Compute write orderings from the re-order that preserve residue order.
+ * Incorporate LJ terms into the energetic pruning procedures.
 
 ## Big tasks
 
