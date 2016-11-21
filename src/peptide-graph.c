@@ -75,6 +75,7 @@ int peptide_graph_complete (peptide_t *P, graph_t *G) {
         continue;
 
       /* add the edge. */
+      W[i + n * j].type = VALUE_TYPE_INTERVAL;
       graph_set_edge(G, i, j, W[i + n * j]);
     }
   }

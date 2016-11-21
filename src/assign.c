@@ -709,9 +709,12 @@ int assign_set_dihedral (peptide_t *P,
   l = phi - dphi / 2.0;
   u = phi + dphi / 2.0;
 
-  /* check the restraint bounds. */
-  if (l < -180.0 || u > 180.0 || l > u)
-    throw("invalid dihedral restraint [%.3lf,%.3lf]", l, u);
+  /* ensure the bounds are valid. */
+  if (l > u) {
+    const double S = l;
+    l = u;
+    u = S;
+  }
 
   /* add the dihedral restraint to the peptide, in the form of
    * an improper torsion angle.

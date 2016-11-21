@@ -307,7 +307,10 @@ int peptide_graph_torsions (peptide_t *P, graph_t *G) {
   for (i = 0; i < P->n_torsions; i++) {
     /* get the current torsion information. */
     atoms = P->torsions[i].atom_id;
+
+    /* scale and bound the torsion. */
     omega = value_scal(P->torsions[i].ang, M_PI / 180.0);
+    omega = value_bound(omega, value_interval(-M_PI, M_PI));
 
     /* get the known distances between each pair of atoms. */
     d01 = graph_get_edge(G, atoms[0], atoms[1]);

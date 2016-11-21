@@ -10,6 +10,7 @@
 #define ENERGY_ANGLE    1
 #define ENERGY_DIHEDRAL 2
 #define ENERGY_DISTANCE 3
+#define ENERGY_CONTACT  4
 
 /* enum_prune_energy_t: structure for holding information
  * required for energetic pruning closures.
@@ -47,6 +48,9 @@ int enum_prune_energy_init (enum_t *E, unsigned int lev) {
    */
   unsigned int i, k, n, n_data, id, *ids, levs[4];
   enum_prune_energy_t *data;
+
+  /* define a contact force constant scale factor. */
+  const double Z = 3.84147997;
 
   /* get the current atom index. */
   id = E->G->order[lev];
@@ -256,6 +260,44 @@ int enum_prune_energy_init (enum_t *E, unsigned int lev) {
     data[n_data - 1].next = NULL;
   }
 
+  /* loop over van der waals contacts. */
+  for (i = 0, n = 4; i < lev; i++) {
+    /* skip duplicate atoms. */
+    if (E->G->orig[i]) continue;
+
+    /* get the other atom index. */
+    unsigned int jd = E->G->order[i];
+
+    /* reallocate the closure payload. */
+    n_data++;
+    data = (enum_prune_energy_t*)
+      realloc(data, n_data * sizeof(enum_prune_energy_t));
+
+    /* check for allocation failures. */
+    if (!data)
+      return 0;
+
+    /* store the term type. */
+    data[n_data - 1].type = ENERGY_CONTACT;
+
+    /* initialize the counters. */
+    data[n_data - 1].ntest = data[n_data - 1].nprune = 0;
+
+    /* store the offsets. */
+    data[n_data - 1].n[0] = 0;
+    data[n_data - 1].n[1] = lev - i;
+    data[n_data - 1].n[2] = 0;
+    data[n_data - 1].n[3] = 0;
+
+    /* store the term parameters. */
+    data[n_data - 1].kappa = Z * pow(E->ddf_tol, -2.0);
+    data[n_data - 1].mu =
+      E->P->atoms[id].radius + E->P->atoms[jd].radius;
+
+    /* initialize the next-payload pointer. */
+    data[n_data - 1].next = NULL;
+  }
+
   /* return if no closures were created. */
   if (!n_data)
     return 1;
@@ -329,6 +371,12 @@ int enum_prune_energy (enum_t *E, enum_thread_t *th, void *data) {
       case ENERGY_DISTANCE:
         obs = vector_dist(&x[0], &x[1]);
         Eterm = 0.5 * kappa * pow(log(obs / mu), 2.0);
+        break;
+
+      /* close contacts (vdw repulsion). */
+      case ENERGY_CONTACT:
+        obs = vector_dist(&x[0], &x[1]);
+        Eterm = 0.5 * kappa * pow(mu / obs, 6.0);
         break;
 
       /* otherwise, do nothing. */

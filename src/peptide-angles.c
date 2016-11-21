@@ -284,7 +284,10 @@ int peptide_graph_angles (peptide_t *P, graph_t *G) {
   for (i = 0; i < P->n_angles; i++) {
     /* get the current angle information. */
     atoms = P->angles[i].atom_id;
+
+    /* scale and bound the angle. */
     theta = value_scal(P->angles[i].ang, M_PI / 180.0);
+    theta = value_bound(theta, value_interval(0.0, M_PI));
 
     /* get the known distances between each pair of atoms. */
     d01 = graph_get_edge(G, atoms[0], atoms[1]);

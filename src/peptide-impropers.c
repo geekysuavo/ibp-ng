@@ -299,7 +299,10 @@ int peptide_graph_impropers (peptide_t *P, graph_t *G) {
   for (i = 0; i < P->n_impropers; i++) {
     /* get the current improper information. */
     atoms = P->impropers[i].atom_id;
+
+    /* scale and bound the improper. */
     omega = value_scal(P->impropers[i].ang, M_PI / 180.0);
+    omega = value_bound(omega, value_interval(-M_PI, M_PI));
 
     /* get the known distances between each pair of atoms. */
     d01 = graph_get_edge(G, atoms[0], atoms[1]);
