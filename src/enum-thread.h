@@ -7,6 +7,8 @@
 
 int enum_threads_init (enum_t *E);
 
+void *enum_thread_timer (void *pdata);
+
 void *enum_thread_execute (void *pdata);
 
 #endif /* !__IBPNG_ENUM_THREAD_H__ */

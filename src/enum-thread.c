@@ -349,6 +349,11 @@ int enum_threads_init (enum_t *E) {
     E->threads[E->nthreads - 1].state[i].nb - 1;
   }
 
+  /* set the start state to the initial index. */
+  for (unsigned int t = 0; t < E->nthreads; t++)
+    for (unsigned int i = 0; i < E->G->n_order; i++)
+      E->threads[t].state[i].start = E->threads[t].state[i].idx;
+
   /* initialize the energies. */
   for (unsigned int t = 0; t < E->nthreads; t++)
     for (unsigned int i = 0; i < E->G->n_order; i++)
@@ -356,10 +361,10 @@ int enum_threads_init (enum_t *E) {
 
   /* compute the tree size. */
   for (unsigned int i = 0; i < E->G->n_order; i++)
-    E->ntree += log10((double) E->threads[0].state[i].nb);
+    E->logW += log10((double) E->threads[0].state[i].nb);
 
   /* output an informational message about the tree size. */
-  info("dense tree size: 10^%.3lf leaves", E->ntree);
+  info("dense tree size: 10^%.3lf leaves", E->logW);
 
   /* return success. */
   return 1;
@@ -435,6 +440,62 @@ static inline void enum_thread_lerp_index (const unsigned int i,
 
   /* compute the final interpolation factor. */
   *lerp = (N > 1 ? ((double) idx) / ((double) (N - 1)) : 0.0);
+}
+
+/* enum_thread_timer(): timer thread function for enumeration timing
+ * information.
+ *
+ * arguments:
+ *  @pdata: pointer to the enumerator data structure.
+ */
+void *enum_thread_timer (void *pdata) {
+  /* get a reference to the current enumerator. */
+  enum_t *E = (enum_t*) pdata;
+
+  /* get references to commonly used sizes. */
+  const unsigned int nt = E->nthreads;
+  const unsigned int len = E->G->n_order;
+
+  /* initialize the timer. */
+  double t = 0.0;
+
+  /* loop until the master thread cancels us. */
+  while (1) {
+    /* sleep for one minute. */
+    sleep(60);
+    t += 1.0;
+
+    /* start outputting timing information. */
+    info("elapsed time: %.0lf min.", t);
+
+    /* compute the log-width of each thread. */
+    for (unsigned int tid = 0; tid < nt; tid++) {
+      /* initialize the thread width. */
+      double L1 = 0.0;
+      double L2 = 0.0;
+
+      /* compute the thread width. */
+      for (unsigned int lev = 0; lev < len; lev++) {
+        /* get the state indices of the current level. */
+        const unsigned int n = E->threads[tid].state[lev].idx -
+                               E->threads[tid].state[lev].start;
+        const unsigned int N = E->threads[tid].state[lev].nb;
+
+        /* sum in their contributions. */
+        if (N > n) {
+          L1 += log10((double) (n + 1));
+          L2 += log10((double) (N - n));
+        }
+      }
+
+      /* write the current thread information. */
+      fprintf(stderr, "   #%-3u: ~10^%.3lf min. remaining\n",
+              tid + 1, L2 - L1 + log(t));
+    }
+  }
+
+  /* end thread execution. */
+  return NULL;
 }
 
 /* enum_thread_execute(): core thread function for enumerator threads.

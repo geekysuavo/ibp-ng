@@ -105,13 +105,14 @@ typedef void (*enum_write_close_fn) (struct _enum_t *E);
  */
 typedef struct {
   /* @idx: index [0..n-1] of the node at the current level.
+   * @start: start index of the thread at the current level.
    * @end: end index of the thread at the current level.
    * @nb: number of nodes/branches at the current level.
    * @pos: position of the node for the candidate solution.
    * @prev: previous solution position of the node.
    * @energy: current energy at the node.
    */
-  unsigned int idx, end, nb;
+  unsigned int idx, start, end, nb;
   vector_t pos, prev;
   double energy;
 }
@@ -132,6 +133,7 @@ struct _enum_thread_t {
 
   /* @state: array of states for each atom in the thread.
    * @level: current level of the thread in the tree.
+   * @logW: logarithm of the thread size.
    */
   enum_thread_node_t *state;
   unsigned int level;
@@ -173,14 +175,14 @@ struct _enum_t {
    */
   unsigned int term;
 
-  /* @ntree: base-10 logarithm of the number of leaves in the tree.
+  /* @logW: logarithm of the number of leaves in the tree.
    * @nsol: number of solutions computed from the graph.
    * @nmax: maximum number of solutions to compute.
    * @fname: file/directory name string for storing outputs.
    * @fd: file descriptor for DCD-formatted output.
    */
   unsigned int nsol, nmax;
-  double ntree;
+  double logW;
   char *fname;
   int fd;
 
@@ -203,6 +205,12 @@ struct _enum_t {
    */
   enum_thread_t *threads;
   unsigned int nthreads;
+
+  /* @timer: unique thread for computing timing information.
+   */
+#ifdef __IBP_HAVE_PTHREAD
+  pthread_t timer;
+#endif
 
   /* pruning function control variables:
    *  @ddf_tol: error tolerance for ddf bounds checking.

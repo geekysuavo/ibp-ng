@@ -338,7 +338,7 @@ enum_t *enum_new (peptide_t *P, graph_t *G, opts_t *opts) {
   /* initialize the output system variables. */
   E->fd = -1;
   E->nsol = 0;
-  E->ntree = 0.0;
+  E->logW = 0.0;
   E->nmax = opts->nsol_limit;
   E->fname = strdup(opts->fname_out);
 
@@ -514,6 +514,15 @@ int enum_execute (enum_t *E) {
 
 #endif /* __IBP_HAVE_CUDA */
 
+  /* execute the timer thread. */
+  int ret = pthread_create(&E->timer, NULL,
+                           enum_thread_timer,
+                           (void*) E);
+
+  /* check the thread creation result. */
+  if (ret)
+    throw("unable to create timer thread");
+
   /* execute the threads. */
   for (unsigned int i = 0; i < E->nthreads; i++) {
     /* create the thread. */
@@ -530,10 +539,13 @@ int enum_execute (enum_t *E) {
   for (unsigned int i = 0; i < E->nthreads; i++)
     pthread_join(E->threads[i].thread, NULL);
 
+  /* cancel the timer thread. */
+  pthread_cancel(E->timer);
+
 #else /* __IBP_HAVE_PTHREAD */
 
   /* execute a single enumerator in the current thread. boring. */
-  enum_thread_execute((void*) E->threads);\
+  enum_thread_execute((void*) E->threads);
 
 #endif /* __IBP_HAVE_PTHREAD */
 
