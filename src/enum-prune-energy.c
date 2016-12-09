@@ -1,7 +1,7 @@
 
 /* include the enumerator header. */
 #include "enum.h"
-#include "enum-thread.h"
+#include "enum-node.h"
 #include "enum-prune.h"
 
 /* define constants to represent pruning closure @type.
@@ -317,7 +317,7 @@ int enum_prune_energy_init (enum_t *E, unsigned int lev) {
 /* enum_prune_energy(): determine whether an enumerator tree may
  * be pruned at a given node based on energetic feasibility.
  */
-int enum_prune_energy (enum_t *E, enum_thread_t *th, void *data) {
+int enum_prune_energy (enum_t *E, enum_node_t *end, void *data) {
   /* declare required variables:
    *  @energy_data: payload for energetic pruning terms.
    *  @Eterm: energy contribution of the current term.
@@ -329,8 +329,15 @@ int enum_prune_energy (enum_t *E, enum_thread_t *th, void *data) {
    */
   enum_prune_energy_t *energy_data;
   double Eterm, Enew, mu, kappa, obs;
-  unsigned int k;
+
+  /* declare more required variables:
+   *  @x: positions of all involved atoms.
+   *  @i, @k: node lookup and loop indices.
+   *  @node: array of upstream node pointers.
+   */
   vector_t x[4];
+  unsigned int i, k;
+  enum_node_t *node[4];
 
   /* get the payload and initialize the energy contribution. */
   energy_data = (enum_prune_energy_t*) data;
@@ -344,8 +351,12 @@ int enum_prune_energy (enum_t *E, enum_thread_t *th, void *data) {
     kappa = energy_data->kappa;
 
     /* extract all atom positions. */
-    for (k = 0; k < 4; k++)
-      x[k] = th->state[th->level - energy_data->n[k]].pos;
+    for (k = 0; k < 4; k++) {
+      for (i = 0, node[k] = end; i < energy_data->n[k]; i++)
+        node[k] = node[k]->prev;
+
+      x[k] = node[k]->pos;
+    }
 
     /* compute the current term. */
     switch (energy_data->type) {
@@ -391,10 +402,10 @@ int enum_prune_energy (enum_t *E, enum_thread_t *th, void *data) {
   }
 
   /* update the energy at the current node. */
-  th->state[th->level].energy = th->state[th->level - 1].energy + Enew;
+  end->energy = end->prev->energy + Enew;
 
   /* check if the node should be pruned. */
-  if (th->state[th->level].energy > E->energy_tol)
+  if (end->energy > E->energy_tol)
     return 1;
 
   /* do not prune. */

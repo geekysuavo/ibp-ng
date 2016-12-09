@@ -6,7 +6,7 @@ dos that need doing.
 
 ## Small tasks
 
- * Timing information during traversal
+ * Back to trees, sheesh.
 
 ## Big tasks
 

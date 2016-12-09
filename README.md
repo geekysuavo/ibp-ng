@@ -42,13 +42,7 @@ GNU/Linux distribution. The development configuration is:
  * Flex 2.5.4
  * Bison 2.3
 
-There are two compilation options that must be set in the
-[Makefile] (Makefile):
-
- * **IBP_PTHREAD**: enable support for multiple parallel (CPU) threads.
- * **IBP_CUDA**: enable (experimental, incomplete) support for GPU threads.
-
-Once these options are set, **ibp-ng** may be compiled like so:
+**ibp-ng** may be compiled like so:
 
 ```bash
 make

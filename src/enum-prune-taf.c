@@ -1,7 +1,7 @@
 
 /* include the enumerator header. */
 #include "enum.h"
-#include "enum-thread.h"
+#include "enum-node.h"
 #include "enum-prune.h"
 
 /* enum_prune_taf_t: structure for holding information required for
@@ -100,20 +100,30 @@ int enum_prune_impr_init (enum_t *E, unsigned int lev) {
 /* enum_prune_taf(): determine whether an enumerator tree may be pruned
  * at a given node based on torsion angle feasibility.
  */
-int enum_prune_taf (enum_t *E, enum_thread_t *th, void *data) {
+int enum_prune_taf (enum_t *E, enum_node_t *end, void *data) {
   /* declare required variables:
    *  @taf_data: payload for dihe/impr closures.
+   *  @node: array of upstream node pointers.
+   *  @i, @k: node lookup and loop indices.
    */
   enum_prune_taf_t *taf_data;
+  enum_node_t *node[4];
+  unsigned int i, k;
 
   /* get the payload. */
   taf_data = (enum_prune_taf_t*) data;
 
+  /* lookup each node in the torsion. */
+  for (k = 0; k < 4; k++) {
+    for (i = 0, node[k] = end; i < taf_data->n[k]; i++)
+      node[k] = node[k]->prev;
+  }
+
   /* extract pretty handles to the atom positions. */
-  vector_t x1 = th->state[th->level - taf_data->n[0]].pos;
-  vector_t x2 = th->state[th->level - taf_data->n[1]].pos;
-  vector_t x3 = th->state[th->level - taf_data->n[2]].pos;
-  vector_t x4 = th->state[th->level - taf_data->n[3]].pos;
+  vector_t x1 = node[0]->pos;
+  vector_t x2 = node[1]->pos;
+  vector_t x3 = node[2]->pos;
+  vector_t x4 = node[3]->pos;
 
   /* compute the dihedral angle. */
   const double omega = vector_dihedral(&x1, &x2, &x3, &x4);

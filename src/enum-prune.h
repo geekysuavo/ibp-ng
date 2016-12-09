@@ -17,7 +17,7 @@ unsigned int enum_prune_get_level (unsigned int *order,
 
 int enum_prune_ddf_init (enum_t *E, unsigned int lev);
 
-int enum_prune_ddf (enum_t *E, enum_thread_t *th, void *data);
+int enum_prune_ddf (enum_t *E, enum_node_t *end, void *data);
 
 void enum_prune_ddf_report (enum_t *E, unsigned int lev, void *data);
 
@@ -27,7 +27,7 @@ int enum_prune_dihe_init (enum_t *E, unsigned int lev);
 
 int enum_prune_impr_init (enum_t *E, unsigned int lev);
 
-int enum_prune_taf (enum_t *E, enum_thread_t *th, void *data);
+int enum_prune_taf (enum_t *E, enum_node_t *end, void *data);
 
 void enum_prune_dihe_report (enum_t *E, unsigned int lev, void *data);
 
@@ -37,7 +37,7 @@ void enum_prune_impr_report (enum_t *E, unsigned int lev, void *data);
 
 int enum_prune_path_init (enum_t *E, unsigned int lev);
 
-int enum_prune_path (enum_t *E, enum_thread_t *th, void *data);
+int enum_prune_path (enum_t *E, enum_node_t *end, void *data);
 
 void enum_prune_path_report (enum_t *E, unsigned int lev, void *data);
 
@@ -45,7 +45,7 @@ void enum_prune_path_report (enum_t *E, unsigned int lev, void *data);
 
 int enum_prune_energy_init (enum_t *E, unsigned int lev);
 
-int enum_prune_energy (enum_t *E, enum_thread_t *th, void *data);
+int enum_prune_energy (enum_t *E, enum_node_t *end, void *data);
 
 void enum_prune_energy_report (enum_t *E, unsigned int lev, void *data);
 

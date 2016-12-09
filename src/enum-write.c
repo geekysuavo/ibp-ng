@@ -1,7 +1,7 @@
 
 /* include the enumerator headers. */
 #include "enum.h"
-#include "enum-thread.h"
+#include "enum-node.h"
 
 /* all functions defined in this source file must follow the function
  * pointer specifications outlined for enumerator output writing systems.
@@ -97,7 +97,7 @@ void enum_write_dcd_close (enum_t *E) {
 
 /* enum_write_dcd(): called to write a structure to (32-bit) DCD output.
  */
-int enum_write_dcd (enum_t *E, enum_thread_t *th) {
+int enum_write_dcd (enum_t *E) {
   /* declare required variables:
    *  @xyz: current coordinate value, casted to a float.
    *  @sz: size of each coordinate (x, y, z) record.
@@ -120,7 +120,7 @@ int enum_write_dcd (enum_t *E, enum_thread_t *th) {
     if (rev[i] >= max) continue;
 
     /* write the value. */
-    xyz = (float) th->state[rev[i]].pos.x;
+    xyz = (float) E->soln[rev[i]].x;
     write(E->fd, &xyz, sizeof(float));
   }
 
@@ -134,7 +134,7 @@ int enum_write_dcd (enum_t *E, enum_thread_t *th) {
     if (rev[i] >= max) continue;
 
     /* write the value. */
-    xyz = (float) th->state[rev[i]].pos.y;
+    xyz = (float) E->soln[rev[i]].y;
     write(E->fd, &xyz, sizeof(float));
   }
 
@@ -148,7 +148,7 @@ int enum_write_dcd (enum_t *E, enum_thread_t *th) {
     if (rev[i] >= max) continue;
 
     /* write the value. */
-    xyz = (float) th->state[rev[i]].pos.z;
+    xyz = (float) E->soln[rev[i]].z;
     write(E->fd, &xyz, sizeof(float));
   }
 
@@ -174,7 +174,7 @@ int enum_write_pdb_open (enum_t *E) {
 
 /* enum_write_pdb(): called to write a structure to PDB output.
  */
-int enum_write_pdb (enum_t *E, enum_thread_t *th) {
+int enum_write_pdb (enum_t *E) {
   /* declare required variables:
    * @n: number of unique tree node pointers in the path.
    */
@@ -233,9 +233,9 @@ int enum_write_pdb (enum_t *E, enum_thread_t *th) {
             "ATOM", n++, atom->name,
             peptide_get_resname(E->P, atom->res_id),
             'A', atom->res_id + 1,
-            th->state[E->G->ordrev[i]].pos.x,
-            th->state[E->G->ordrev[i]].pos.y,
-            th->state[E->G->ordrev[i]].pos.z,
+            E->soln[E->G->ordrev[i]].x,
+            E->soln[E->G->ordrev[i]].y,
+            E->soln[E->G->ordrev[i]].z,
             1.0, 0.0,
             atom->type[0]);
   }

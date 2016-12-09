@@ -1,7 +1,7 @@
 
 /* include the enumerator header. */
 #include "enum.h"
-#include "enum-thread.h"
+#include "enum-node.h"
 #include "enum-prune.h"
 
 /* enum_prune_path_t: structure for holding information required for
@@ -74,12 +74,16 @@ int enum_prune_path_init (enum_t *E, unsigned int lev) {
 /* enum_prune_path(): determine whether an enumerator tree may be pruned
  * at a given node based on shortest path feasibility.
  */
-int enum_prune_path (enum_t *E, enum_thread_t *th, void *data) {
+int enum_prune_path (enum_t *E, enum_node_t *end, void *data) {
   /* declare required variables:
+   *  @node: upstream node pointer.
+   *  @endpos: pointer to the position of the end.
    *  @dik: distance bound from x(i) to x(k).
    *  @djk: distance bound from x(j) to x(k).
    *  @dij: current distance between x(i) and x(j).
    */
+  enum_node_t *node;
+  vector_t *endpos;
   value_t dik, djk;
   double dij;
 
@@ -89,10 +93,11 @@ int enum_prune_path (enum_t *E, enum_thread_t *th, void *data) {
   /* locally store the level, thread length, and originality array. */
   const unsigned int n = E->G->n_order;
   const unsigned int *dup = E->G->orig;
-  const unsigned int j = th->level;
+  const unsigned int j = end->lev;
 
-  /* locally store the end position. */
-  vector_t *thpos = &th->state[j].pos;
+  /* initialize the upstream node pointer. */
+  endpos = &end->pos;
+  node = end->prev;
 
   /* loop over all upstream embedded atoms. */
   for (unsigned int i = j - 1; i < n; i--) {
@@ -100,7 +105,7 @@ int enum_prune_path (enum_t *E, enum_thread_t *th, void *data) {
     if (dup[i]) continue;
 
     /* compute the distance between the two nodes. */
-    dij = vector_dist(&th->state[i].pos, thpos);
+    dij = vector_dist(&node->pos, endpos);
 
     /* loop over all future (un-embedded) atoms. */
     for (unsigned int k = j + 1; k < n; k++) {
@@ -123,6 +128,9 @@ int enum_prune_path (enum_t *E, enum_thread_t *th, void *data) {
         return 1;
       }
     }
+
+    /* update the upstream node pointer. */
+    node = node->prev;
   }
 
   /* do not prune. */

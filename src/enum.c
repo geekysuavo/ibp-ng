@@ -1,7 +1,7 @@
 
 /* include the enumerator headers. */
 #include "enum.h"
-#include "enum-thread.h"
+#include "enum-node.h"
 #include "enum-write.h"
 #include "enum-prune.h"
 
@@ -99,70 +99,6 @@ static const struct enum_prune_map_t pruners[] = {
   { NULL, NULL, NULL, NULL }
 };
 
-/* enum_init_threads(): set up the thread array of an enumerator in
- * preparation for execution.
- *
- * arguments:
- *  @E: pointer to the enumerator structure to modify.
- *  @opts: pointer to an options data structure to access.
- *
- * returns:
- *  integer indicating whether (1) or not (0) the operation succeeded.
- */
-static int enum_init_threads (enum_t *E, opts_t *opts) {
-  /* declare required variables:
-   *  @bytes: number of bytes to allocate for the thread array.
-   *  @offset: offset for initializing thread states.
-   *  @stride: stride for initializing thread states.
-   */
-  unsigned long bytes, offset, stride;
-  char *stateptr;
-
-  /* initialize the thread array and count. */
-  E->threads = NULL;
-  E->nthreads = opts->thread_num;
-
-  /* compute the number of bytes to allocate. */
-  bytes = E->G->n_order * sizeof(enum_thread_node_t);
-  bytes = E->nthreads * (sizeof(enum_thread_t) + bytes);
-
-  /* compute the thread offset and stride. */
-  offset = E->nthreads * sizeof(enum_thread_t);
-  stride = E->G->n_order * sizeof(enum_thread_node_t);
-
-  /* allocate the array of threads. */
-  E->threads = (enum_thread_t*) malloc(bytes);
-  if (!E->threads)
-    throw("unable to allocate array of %u threads (%lu bytes)",
-          E->nthreads, bytes);
-
-  /* initialize the thread contents. */
-  for (unsigned int i = 0; i < E->nthreads; i++) {
-    /* store the enumerator pointer and set the initial level. */
-    E->threads[i].E = E;
-    E->threads[i].level = 3;
-
-    /* initialize the thread state pointer. */
-    stateptr = ((char*) E->threads) + offset + i * stride;
-    E->threads[i].state = (enum_thread_node_t*) stateptr;
-
-    /* loop over the positions in the order. */
-    for (unsigned int j = 0; j < E->G->n_order; j++) {
-      /* set the node states. */
-      E->threads[i].state[j].idx = 0;
-      E->threads[i].state[j].end = 0;
-      E->threads[i].state[j].nb = 0;
-
-      /* set the node coordinates. */
-      vector_set(&E->threads[i].state[j].pos, 0.0, 0.0, 0.0);
-      vector_set(&E->threads[i].state[j].prev, 1.0e6, 1.0e6, 1.0e6);
-    }
-  }
-
-  /* return success. */
-  return 1;
-}
-
 /* enum_init_format(): set the output format of an enumerator by the string
  * name of the format.
  *
@@ -179,15 +115,18 @@ static int enum_init_format (enum_t *E, opts_t *opts) {
    */
   unsigned int i;
 
+  /* initialize the solution vertex array. */
+  E->soln = (vector_t*) malloc(E->G->n_order * sizeof(vector_t));
+  if (!E->soln)
+    throw("unable to allocate solution storage");
+
+  /* initialize the solution array. */
+  memset(E->soln, 0, E->G->n_order * sizeof(vector_t));
+
   /* initialize with the default output system. */
   E->write_data = enum_write_dcd;
   E->write_open = enum_write_dcd_open;
   E->write_close = enum_write_dcd_close;
-
-#ifdef __IBP_HAVE_PTHREAD
-  /* initialize the write mutex. */
-  pthread_mutex_init(&E->write_mutex, NULL);
-#endif
 
   /* return if no output format was specified. */
   if (!opts->fmt_out)
@@ -349,13 +288,8 @@ enum_t *enum_new (peptide_t *P, graph_t *G, opts_t *opts) {
   E->nbmax = opts->branch_max / 2;
   E->eps = opts->branch_eps;
 
-  /* initialize the threads. */
-  if (!enum_init_threads(E, opts)) {
-    /* raise an exception and return null. */
-    raise("unable to initialize threads");
-    enum_free(E);
-    return NULL;
-  }
+  /* initialize the solution vertex array. */
+  E->soln = NULL;
 
   /* store the pruning control variables. */
   E->ddf_tol = opts->ddf_tol;
@@ -396,11 +330,6 @@ void enum_free (enum_t *E) {
   /* return if the structure pointer is null. */
   if (!E) return;
 
-#ifdef __IBP_HAVE_PTHREAD
-  /* destroy the write mutex. */
-  pthread_mutex_destroy(&E->write_mutex);
-#endif
-
   /* cleanup the output system. */
   if (E->write_close)
     E->write_close(E);
@@ -437,8 +366,11 @@ void enum_free (enum_t *E) {
   /* free the pruning test sizes. */
   free(E->prune_sz);
 
-  /* free the threads. */
-  free(E->threads);
+  /* clean up the tree. */
+  enum_node_free(E, &E->tree);
+
+  /* free the solution vertex array. */
+  free(E->soln);
 
   /* finally, free the structure pointer. */
   free(E);
@@ -503,51 +435,7 @@ int enum_execute (enum_t *E) {
   if (E->write_open && !E->write_open(E))
     throw("unable to open enumerator output");
 
-  /* initialize the threads for enumeration. */
-  if (!enum_threads_init(E))
-    throw("unable to initialize enumerator threads");
-
-#if defined(__IBP_HAVE_PTHREAD)
-#if defined(__IBP_HAVE_CUDA)
-
-  /* FIXME: handle gpu thread kickoff here. */
-
-#endif /* __IBP_HAVE_CUDA */
-
-  /* execute the timer thread. */
-  int ret = pthread_create(&E->timer, NULL,
-                           enum_thread_timer,
-                           (void*) E);
-
-  /* check the thread creation result. */
-  if (ret)
-    throw("unable to create timer thread");
-
-  /* execute the threads. */
-  for (unsigned int i = 0; i < E->nthreads; i++) {
-    /* create the thread. */
-    int ret = pthread_create(&E->threads[i].thread, NULL,
-                             enum_thread_execute,
-                             (void*) (E->threads + i));
-
-    /* check the thread creation result. */
-    if (ret)
-      throw("unable to create thread %u of %u", i + 1, E->nthreads);
-  }
-
-  /* wait for all threads to exit. */
-  for (unsigned int i = 0; i < E->nthreads; i++)
-    pthread_join(E->threads[i].thread, NULL);
-
-  /* cancel the timer thread. */
-  pthread_cancel(E->timer);
-
-#else /* __IBP_HAVE_PTHREAD */
-
-  /* execute a single enumerator in the current thread. boring. */
-  enum_thread_execute((void*) E->threads);
-
-#endif /* __IBP_HAVE_PTHREAD */
+  /* FIXME: initialize and traverse the tree. */
 
   /* close the output system. */
   if (E->write_close)

@@ -1,7 +1,7 @@
 
 /* include the enumerator header. */
 #include "enum.h"
-#include "enum-thread.h"
+#include "enum-node.h"
 #include "enum-prune.h"
 
 /* enum_prune_ddf_t: structure for holding information required for
@@ -52,41 +52,44 @@ int enum_prune_ddf_init (enum_t *E, unsigned int lev) {
 /* enum_prune_ddf(): determine whether an enumerator tree may be pruned
  * at a given node based on direct distance feasibility (DDF).
  */
-int enum_prune_ddf (enum_t *E, enum_thread_t *th, void *data) {
+int enum_prune_ddf (enum_t *E, enum_node_t *end, void *data) {
   /* declare required variables:
+   *  @node: upstream node pointer.
+   *  @endpos: pointer to the position of the end.
    *  @bound: distance bound between upstream and end.
    *  @dist: computed distance between upstream and end.
    */
+  enum_node_t *node;
+  vector_t *endpos;
   value_t bound;
   double dist;
 
   /* get the payload. */
   enum_prune_ddf_t *ddf_data = (enum_prune_ddf_t*) data;
 
-  /* locally store the level, thread length, and originality array. */
-  const unsigned int n = E->G->n_order;
-  const unsigned int *dup = E->G->orig;
-  const unsigned int ia = th->level;
+  /* initialize the local variables. */
+  endpos = &end->pos;
+  node = end->prev;
 
-  /* locally store the end position. */
-  vector_t *thpos = &th->state[ia].pos;
+  /* loop over all upstream embedded nodes. */
+  while (node) {
+    /* skip duplicate embeddings. */
+    if (E->G->orig[node->lev]) {
+      node = node->prev;
+      continue;
+    }
 
-  /* loop over all upstream embedded atoms. */
-  for (unsigned int ib = ia - 1; ib < n; ib--) {
-    /* skip duplicate atoms. */
-    if (dup[ib]) continue;
-
-    /* obtain the distance bound on the two nodes. */
-    bound = graph_get_edge(E->G, E->G->order[ib],
-                                 E->G->order[ia]);
+    /* get the distance bound for the two nodes. */
+    bound = graph_get_edge(E->G, E->G->order[node->lev],
+                                 E->G->order[end->lev]);
 
     /* compute the distance between the two nodes. */
-    dist = vector_dist(&th->state[ib].pos, thpos);
+    dist = vector_dist(&node->pos, endpos);
 
-    /* prune if the distance is out of the bound. */
-    ddf_data->ntest[ib]++;
+    /* prune if the distance is outside of the bound. */
+    ddf_data->ntest[node->lev]++;
     if (bound.l - dist > E->ddf_tol || dist - bound.u > E->ddf_tol) {
-      ddf_data->nprune[ib]++;
+      ddf_data->nprune[node->lev]++;
       return 1;
     }
   }

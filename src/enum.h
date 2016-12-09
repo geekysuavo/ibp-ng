@@ -8,11 +8,6 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-/* include the pthread header. */
-#ifdef __IBP_HAVE_PTHREAD
-#include <pthread.h>
-#endif
-
 /* include the peptide, graph and options headers. */
 #include "peptide.h"
 #include "graph.h"
@@ -21,11 +16,11 @@
 /* include the vector header. */
 #include "vector.h"
 
-/* predeclare enum_t and enum_thread_t before defining them, in order
+/* predeclare enum_t and enum_node_t before defining them, in order
  * to allow the pruning function pointer specification below.
  */
 typedef struct _enum_t enum_t;
-typedef struct _enum_thread_t enum_thread_t;
+typedef struct _enum_node_t enum_node_t;
 
 /* enum_prune_init_fn: function pointer specification for 
  * initializing an enumerator pruning device.
@@ -44,7 +39,7 @@ typedef int (*enum_prune_init_fn) (struct _enum_t *E, unsigned int lev);
  *
  * arguments:
  *  @E: pointer to the enumerator data structure to utilize.
- *  @th: pointer to the enumerator thread to check.
+ *  @end: pointer to the tree node to check.
  *  @data: optional payload data pointer.
  *
  * returns:
@@ -52,7 +47,7 @@ typedef int (*enum_prune_init_fn) (struct _enum_t *E, unsigned int lev);
  *  pruned by the pruning function.
  */
 typedef int (*enum_prune_test_fn) (struct _enum_t *E,
-                                   struct _enum_thread_t *th,
+                                   struct _enum_node_t *end,
                                    void *data);
 
 /* enum_prune_report_fn: function pointer specification for
@@ -83,13 +78,11 @@ typedef int (*enum_write_open_fn) (struct _enum_t *E);
  *
  * arguments:
  *  @E: pointer to the enumerator data structure to utilize.
- *  @th: pointer to the enumerator thread to access.
  *
  * returns:
  *  integer indicating whether (1) or not (0) the operation succeeded.
  */
-typedef int (*enum_write_data_fn) (struct _enum_t *E,
-                                   struct _enum_thread_t *th);
+typedef int (*enum_write_data_fn) (struct _enum_t *E);
 
 /* enum_write_close_fn: function pointer specification for closing
  * an enumerator data output system.
@@ -99,44 +92,31 @@ typedef int (*enum_write_data_fn) (struct _enum_t *E,
  */
 typedef void (*enum_write_close_fn) (struct _enum_t *E);
 
-/* enum_thread_node_t: data structure for holding the state of a single
- * node in an iDMDGP sub-tree. an array of these structures describes
- * the state of a single candidate solution.
+/* enum_node_t: tree data structure for holding the traversal state of
+ * an iDMDGP solution enumerator.
  */
-typedef struct {
-  /* @idx: index [0..n-1] of the node at the current level.
-   * @start: start index of the thread at the current level.
-   * @end: end index of the thread at the current level.
-   * @nb: number of nodes/branches at the current level.
-   * @pos: position of the node for the candidate solution.
-   * @prev: previous solution position of the node.
+struct _enum_node_t {
+  /* @pos: embedded coordinates of the current atom.
    * @energy: current energy at the node.
    */
-  unsigned int idx, start, end, nb;
-  vector_t pos, prev;
+  vector_t pos;
   double energy;
-}
-enum_thread_node_t;
 
-/* enum_thread_t: data structure for holding the traversal state of a
- * single thread of an iDMDGP solution enumerator, which covers a
- * well-defined iDMDGP sub-tree.
- */
-struct _enum_thread_t {
-  /* @thread: system-level thread information.
-   * @E: pointer back to the master enumerator.
+  /* @feas: whether the node's branch is currently considered feasible.
    */
-#ifdef __IBP_HAVE_PTHREAD
-  pthread_t thread;
-#endif
-  enum_t *E;
+  unsigned int feas;
 
-  /* @state: array of states for each atom in the thread.
-   * @level: current level of the thread in the tree.
-   * @logW: logarithm of the thread size.
+  /* @lev: current level of the tree node.
+   * @idx: index [0..nb-1] of the tree node.
+   * @nb: number of branches from the tree node.
    */
-  enum_thread_node_t *state;
-  unsigned int level;
+  unsigned int lev, idx, nb;
+
+  /* @prev: parent tree node pointer, or null for the root.
+   * @next: array of child tree node pointers.
+   */
+  enum_node_t *prev;
+  enum_node_t **next;
 };
 
 /* enum_t: structure for holding all state information required for the
@@ -158,15 +138,11 @@ struct _enum_t {
   graph_t *G;
 
   /* @writeord: atom ordering to use when writing data.
-   * @write_mutex: mutual exclusion for multi-threaded data writes.
    * @write_open: function pointer for opening the output system.
    * @write_data: function pointer for writing output data.
    * @write_close: function pointer for closing the output system.
    */
   unsigned int *writeord;
-#ifdef __IBP_HAVE_PTHREAD
-  pthread_mutex_t write_mutex;
-#endif
   enum_write_open_fn write_open;
   enum_write_data_fn write_data;
   enum_write_close_fn write_close;
@@ -202,15 +178,10 @@ struct _enum_t {
 
   /* @threads: array of enumerator threads.
    * @nthreads: number of enumerator threads.
+   * @soln: vertices of the last solution accepted.
    */
-  enum_thread_t *threads;
-  unsigned int nthreads;
-
-  /* @timer: unique thread for computing timing information.
-   */
-#ifdef __IBP_HAVE_PTHREAD
-  pthread_t timer;
-#endif
+  enum_node_t tree;
+  vector_t *soln;
 
   /* pruning function control variables:
    *  @ddf_tol: error tolerance for ddf bounds checking.

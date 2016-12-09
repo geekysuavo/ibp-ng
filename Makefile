@@ -1,21 +1,10 @@
 
-# HAVE_PTHREAD: whether to enable *any* multi-threading, cpu or gpu.
-# HAVE_CUDA: whether to enable gpu code. requires HAVE_PTHREAD=y.
-IBP_PTHREAD=y
-IBP_CUDA=n
-
 # CC: compiler binary filename.
 CC=gcc
+LD=gcc
 NVCC=nvcc
 LEX=flex
 YACC=bison
-
-# LD: linkage binary filename.
-ifeq ($(IBP_CUDA),y)
-LD=nvcc
-else
-LD=gcc
-endif
 
 # CFLAGS, LFLAGS, YFLAGS, LIBS: compilation flags and library linkage flags.
 CFLAGS=-ggdb -O3 -std=c99 -D_POSIX_SOURCE
@@ -23,16 +12,6 @@ CFLAGS+= -Wall -Wformat -Wextra -Wno-unused-parameter
 LFLAGS=
 YFLAGS=-d
 LIBS=-lm -lfl
-
-# CFLAGS, LIBS: pthread/cuda-only compilation flags and libraries.
-ifeq ($(IBP_PTHREAD),y)
-CFLAGS+= -pthread -D__IBP_HAVE_PTHREAD=y
-LIBS+= -lpthread
-endif
-ifeq ($(IBP_CUDA),y)
-CFLAGS+= -D__IBP_HAVE_CUDA=y
-LIBS+= -lcuda -lcudart
-endif
 
 # installation configuration variables.
 INSTALL=install
@@ -49,12 +28,9 @@ SRC_C+= param-alloc param-add param-get param
 SRC_C+= peptide-alloc peptide-residues peptide-atoms peptide-bonds
 SRC_C+= peptide-angles peptide-torsions peptide-impropers
 SRC_C+= peptide-graph peptide-field
-SRC_C+= enum enum-thread enum-write enum-prune
+SRC_C+= enum enum-node enum-write enum-prune
 SRC_C+= enum-prune-ddf enum-prune-taf enum-prune-path enum-prune-energy
 SRC_C+= dmdgp dmdgp-hash psf ibp-ng
-
-# SRC_N: basenames of nvcc source files.
-SRC_N=enum-gpu
 
 # SRC_L: basenames of flex source files.
 SRC_L=  assign-scan topol-scan param-scan reorder-scan
@@ -71,19 +47,14 @@ SRC_Y_H=$(addsuffix .h,$(addprefix src/,$(SRC_Y)))
 OBJ=  $(addsuffix .o,$(addprefix src/,$(SRC_C)))
 OBJ+= $(SRC_L_C:.c=.o) $(SRC_Y_C:.c=.o)
 
-# OBJ: cuda-only compiled object files.
-ifeq ($(IBP_CUDA),y)
-OBJ+= $(addsuffix .o,$(addprefix src/,$(SRC_N)))
-endif
-
 # DATE: date string for making tarballs.
 DATE=$(shell date +%Y%m%d)
 
 # SUFFIXES: registered filename suffixes for implicit make rules.
-.SUFFIXES: .c .cu .l .o .y
+.SUFFIXES: .c .l .o .y
 
 # PRECIOUS: files that make is forced to keep around.
-.PRECIOUS: %.c %.cu %.h %.o
+.PRECIOUS: %.c %.h %.o
 
 # all: global, default make target.
 all: $(SRC_Y_C) $(SRC_L_C) $(OBJ) $(BIN)
@@ -97,11 +68,6 @@ $(BIN): $(OBJ)
 .c.o:
 	@echo " CC   $^"
 	@$(CC) $(CFLAGS) -c $^ -o $@
-
-# .cu => .o: nvcc source compilation make target.
-.cu.o:
-	@echo " NVCC $^"
-	@$(NVCC) -c $^ -o $@
 
 # .l => .c: flex compilation make target.
 .l.c:
