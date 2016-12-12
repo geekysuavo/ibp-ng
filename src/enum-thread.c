@@ -92,14 +92,14 @@ static void state_add (enum_thread_node_t *dest,
  */
 static inline int state_valid (enum_thread_node_t *state,
                                unsigned int len) {
-  /* if any one index is less than the end value, return true. */
+  /* if any one index has passed the end value, return false. */
   for (unsigned int i = 0; i < len; i++) {
-    if (state[i].idx < state[i].end)
-      return 1;
+    if (state[i].idx > state[i].end)
+      return 0;
   }
 
-  /* return false. */
-  return 0;
+  /* return true. */
+  return 1;
 }
 
 /* state_increment(): increment the index of a state.
