@@ -397,16 +397,19 @@ int enum_prune_energy (enum_t *E, enum_node_t *end, void *data) {
     /* sum the energy term into the new contribution. */
     Enew += Eterm;
 
+    /* update the energy at the current node. */
+    end->energy = end->prev->energy + Enew;
+
+    /* check if the node should be pruned. */
+    energy_data->ntest++;
+    if (end->energy > E->energy_tol) {
+      energy_data->nprune++;
+      return 1;
+    }
+
     /* move to the next energy term. */
     energy_data = energy_data->next;
   }
-
-  /* update the energy at the current node. */
-  end->energy = end->prev->energy + Enew;
-
-  /* check if the node should be pruned. */
-  if (end->energy > E->energy_tol)
-    return 1;
 
   /* do not prune. */
   return 0;

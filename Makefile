@@ -28,7 +28,7 @@ SRC_C+= param-alloc param-add param-get param
 SRC_C+= peptide-alloc peptide-residues peptide-atoms peptide-bonds
 SRC_C+= peptide-angles peptide-torsions peptide-impropers
 SRC_C+= peptide-graph peptide-field
-SRC_C+= enum enum-node enum-write enum-prune
+SRC_C+= enum enum-queue enum-node enum-write enum-prune
 SRC_C+= enum-prune-ddf enum-prune-taf enum-prune-path enum-prune-energy
 SRC_C+= dmdgp dmdgp-hash psf ibp-ng
 

@@ -195,7 +195,7 @@ static int enum_init_prune_add (enum_t *E, const char *name) {
   throw("unrecognized pruning method '%s'", name);
 }
 
-/* initialize the pruning methods of an enumerator.
+/* enum_init_prune(): initialize the pruning methods of an enumerator.
  *
  * arguments:
  *  @E: pointer to the enumerator structure to modify.
@@ -238,6 +238,29 @@ static int enum_init_prune (enum_t *E, opts_t *opts) {
     if (!enum_init_prune_add(E, opts->prune[i]))
       return 0;
   }
+
+  /* return success. */
+  return 1;
+}
+
+/* enum_init_queue(): initialize the priority queue of an enumerator.
+ *
+ * arguments:
+ *  @E: pointer to the enumerator structure to modify.
+ *  @opts: pointer to an options data structure to access.
+ *
+ * returns:
+ *  integer indicating whether (1) or not (0) the operation succeeded.
+ */
+static int enum_init_queue (enum_t *E, opts_t *opts) {
+  /* compute the maximum number of queue elements. */
+  E->nqmax = E->G->n_order * E->nbmax;
+  E->nq = 0;
+
+  /* allocate the array for holding queued nodes. */
+  E->Q = (enum_pq_elem_t*) malloc(E->nqmax * sizeof(enum_pq_elem_t));
+  if (!E->Q)
+    throw("unable to allocate priority queue");
 
   /* return success. */
   return 1;
@@ -291,6 +314,10 @@ enum_t *enum_new (peptide_t *P, graph_t *G, opts_t *opts) {
   /* initialize the solution vertex array. */
   E->soln = NULL;
 
+  /* initialize the priority queue. */
+  E->Q = NULL;
+  E->nq = E->nqmax = 0;
+
   /* store the pruning control variables. */
   E->ddf_tol = opts->ddf_tol;
   E->rmsd_tol = (double) G->n_orig * pow(opts->rmsd_tol, 2.0);
@@ -308,6 +335,14 @@ enum_t *enum_new (peptide_t *P, graph_t *G, opts_t *opts) {
   if (!enum_init_prune(E, opts)) {
     /* raise an exception and return null. */
     raise("unable to initialize pruning methods");
+    enum_free(E);
+    return NULL;
+  }
+
+  /* initialize the priority queue. */
+  if (!enum_init_queue(E, opts)) {
+    /* raise an exception and return null. */
+    raise("unable to initialize priority queue");
     enum_free(E);
     return NULL;
   }
@@ -366,11 +401,12 @@ void enum_free (enum_t *E) {
   /* free the pruning test sizes. */
   free(E->prune_sz);
 
-  /* clean up the tree. */
+  /* free the tree and the solution vertex array. */
   enum_node_free(E, &E->tree);
-
-  /* free the solution vertex array. */
   free(E->soln);
+
+  /* free the priority queue. */
+  free(E->Q);
 
   /* finally, free the structure pointer. */
   free(E);

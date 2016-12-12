@@ -232,14 +232,6 @@ int peptide_torsion_delete_any (peptide_t *P,
 /* peptide_field_torsions(): compute the probability parameters for
  * each torsion in a peptide structure.
  *
- * FIXME: currently, an approximation is used that assumes relatively
- * high precision. of course, this will break down when [-180,180] is
- * used to generate a completely uninformative interval.
- *
- * one hacky solution would be to place [-x,x] into the ibp-protein.par
- * file, where x >> 180, to force the resulting von mises distribution
- * be closer to a circular uniform distribution.
- *
  * arguments:
  *  @P: pointer to the peptide structure to modify.
  *  @tol: angular tolerance to add into intervals.

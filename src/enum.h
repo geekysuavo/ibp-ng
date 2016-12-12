@@ -92,6 +92,18 @@ typedef int (*enum_write_data_fn) (struct _enum_t *E);
  */
 typedef void (*enum_write_close_fn) (struct _enum_t *E);
 
+/* enum_pq_elem_t: data structure for maintaining a priority queue
+ * for energetically-driven tree enumeration.
+ */
+typedef struct {
+  /* @end: pointer to a tree node in the queue.
+   * @prio: priority of the node in the queue.
+   */
+  enum_node_t *end;
+  double prio;
+}
+enum_pq_elem_t;
+
 /* enum_node_t: tree data structure for holding the traversal state of
  * an iDMDGP solution enumerator.
  */
@@ -182,6 +194,13 @@ struct _enum_t {
    */
   enum_node_t tree;
   vector_t *soln;
+
+  /* @Q: heapified array of tree nodes in the enumerator priority queue.
+   * @nq: number of tree nodes in the queue.
+   * @nqmax: maximum number of queued nodes.
+   */
+  enum_pq_elem_t *Q;
+  unsigned int nq, nqmax;
 
   /* pruning function control variables:
    *  @ddf_tol: error tolerance for ddf bounds checking.
