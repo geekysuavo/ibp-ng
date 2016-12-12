@@ -386,16 +386,19 @@ int enum_prune_energy (enum_t *E, enum_thread_t *th, void *data) {
     /* sum the energy term into the new contribution. */
     Enew += Eterm;
 
+    /* update the energy at the current node. */
+    th->state[th->level].energy = th->state[th->level - 1].energy + Enew;
+
+    /* check if the node should be pruned. */
+    energy_data->ntest++;
+    if (th->state[th->level].energy > E->energy_tol) {
+      energy_data->nprune++;
+      return 1;
+    }
+
     /* move to the next energy term. */
     energy_data = energy_data->next;
   }
-
-  /* update the energy at the current node. */
-  th->state[th->level].energy = th->state[th->level - 1].energy + Enew;
-
-  /* check if the node should be pruned. */
-  if (th->state[th->level].energy > E->energy_tol)
-    return 1;
 
   /* do not prune. */
   return 0;
