@@ -29,19 +29,20 @@ end
 ! second residue
 reorder BB2
  N, -O, -CA, -C, N, CA, C, +N,
- -C, N, CA, H1, N, CA, HA, C, CA
+ -C, N, CA, H1, N, CA, C, HA, C, CA
 end
 
 ! inner residue
 reorder BBI
  N, -O, -CA, -C, N, CA, C, +N,
- -C, N, CA, H1, N, CA, HA, C, CA
+ -C, N, CA, H1, N, CA, C, HA, C, CA
 end
 
 ! last residue
 reorder BBN
- N, -O, -C, -CA,
- N, -C, CA, H1, N, CA, HA, C, CA, O, C, O2
+ N, -O, -CA, -C, N, CA, C,
+ -C, N, CA, H1, N, CA, C, HA
+ C, CA, O, C, O2
 end
 
 ! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

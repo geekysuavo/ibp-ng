@@ -338,6 +338,7 @@ enum_t *enum_new (peptide_t *P, graph_t *G, opts_t *opts) {
   /* initialize the output system variables. */
   E->fd = -1;
   E->nsol = 0;
+  E->nrej = 0;
   E->logW = 0.0;
   E->nmax = opts->nsol_limit;
   E->fname = strdup(opts->fname_out);
@@ -485,6 +486,12 @@ static void enum_report (enum_t *E) {
       }
     }
   }
+
+  /* output the number of solutions. */
+  printf("\nSolutions:\n"
+         "  Accepted: %16u\n"
+         "  Rejected: %16u\n",
+         E->nsol, E->nrej);
 }
 
 /* enum_execute(): enumerate all solutions from an iDMDGP graph/peptide

@@ -176,12 +176,13 @@ struct _enum_t {
   unsigned int term;
 
   /* @logW: logarithm of the number of leaves in the tree.
-   * @nsol: number of solutions computed from the graph.
+   * @nsol: number of solutions accepted during traversal.
+   * @nrej: number of solutions rejected during traversal.
    * @nmax: maximum number of solutions to compute.
    * @fname: file/directory name string for storing outputs.
    * @fd: file descriptor for DCD-formatted output.
    */
-  unsigned int nsol, nmax;
+  unsigned int nsol, nrej, nmax;
   double logW;
   char *fname;
   int fd;

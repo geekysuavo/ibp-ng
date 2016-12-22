@@ -681,13 +681,15 @@ void *enum_thread_execute (void *pdata) {
           state[i].pos.z -= x0.z;
         }
 
-        /* break if the rmsd-step of the candidate solution is too low. */
-        if (state_rmsd(state, len) < E->rmsd_tol)
+        /* break if:
+         *  1. the rmsd-step of the candidate solution is too low.
+         *  2. the energy of the candidate solution is too high.
+         */
+        if (state_rmsd(state, len) < E->rmsd_tol ||
+            state[len - 1].energy > E->energy_tol) {
+          E->nrej++;
           break;
-
-        /* perform one final check to see if the solution is valid. */
-        if (state[len - 1].energy > E->energy_tol)
-          break;
+        }
 
         /* store the new solution into the "previous" slot. */
         for (unsigned int i = 0; i < len; i++)

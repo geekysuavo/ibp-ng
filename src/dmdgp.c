@@ -346,14 +346,17 @@ int dmdgp_write_order (FILE *fh, peptide_t *P, graph_t *G,
                        const char *fmt) {
   /* declare required variables:
    *  @order_fmt: order format string.
-   *  @iord: order atom index.
+   *  @j, @j3: order atom indices.
+   *  @nb: order branch count.
    *  @i: order index.
+   *  @e3: graph edge.
    */
-  unsigned int i, iord;
+  unsigned int i, j, j3, nb;
   char order_fmt[256];
+  value_t e3;
 
   /* build the order format string. */
-  snprintf(order_fmt, 256, "%s # %%s%%-4u %%-4s\n", fmt);
+  snprintf(order_fmt, 256, "%s # %%s%%-4u %%-4s  %%s\n", fmt);
 
   /* begin the order section. */
   fprintf(fh, "# reorder length: %u\n", G->n_order);
@@ -361,14 +364,40 @@ int dmdgp_write_order (FILE *fh, peptide_t *P, graph_t *G,
 
   /* loop over the ordering of the graph. */
   for (i = 0; i < G->n_order; i++) {
-    /* get the order index. */
-    iord = G->order[i];
+    /* get the index of the current atom in the order. */
+    j = G->order[i];
+
+    /* determine the branch count. */
+    if (i < 3) {
+      /* initial clique. */
+      nb = 0;
+    }
+    else if (G->orig[i]) {
+      /* duplicate edge. */
+      nb = 1;
+    }
+    else {
+      /* get the prior atom index. */
+      j3 = G->order[i - 3];
+
+      /* get the current i,i-3 edge. */
+      e3 = graph_get_edge(G, j, j3);
+
+      /* determine the edge type. */
+      if (e3.type == VALUE_TYPE_SCALAR)
+        nb = 2;
+      else
+        nb = 3;
+    }
 
     /* print the order entry. */
-    fprintf(fh, order_fmt, iord + 1,
-            resid_get_code3(P->res[P->atoms[iord].res_id]),
-            P->atoms[iord].res_id + 1,
-            P->atoms[iord].name);
+    fprintf(fh, order_fmt, j + 1,
+            resid_get_code3(P->res[P->atoms[j].res_id]),
+            P->atoms[j].res_id + 1, P->atoms[j].name,
+            nb == 0 ? "(init)" :
+            nb == 1 ? "(copy)" :
+            nb == 2 ? "(exact)" :
+            nb == 3 ? "(interval)" : "");
   }
 
   /* end the order section. */
