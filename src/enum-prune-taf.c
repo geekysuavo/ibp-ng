@@ -175,7 +175,7 @@ void enum_prune_taf_report (enum_t *E, peptide_dihed_t *arr,
   /* output the statistics. */
   printf("  %c%-4u %-4s | %c%-4u %-4s | "
          "%c%-4u %-4s | %c%-4u %-4s : "
-         "%16u/%-16u  %3.0lf%%\n",
+         "%16u/%-16u  %6.2lf%%\n",
          res0, r0 + 1, atom0,
          res1, r1 + 1, atom1,
          res2, r2 + 1, atom2,

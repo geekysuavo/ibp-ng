@@ -278,7 +278,9 @@ int peptide_graph_bonds (peptide_t *P, graph_t *G) {
     len = P->bonds[i].len;
 
     /* attempt to refine the graph edge associated with the bond. */
-    if (!graph_refine_edge(G, atoms[0], atoms[1], len))
+    if (!graph_refine_edge(G, atoms[0], atoms[1], len,
+                           &P->bonds[i].len,
+                           VALUE_IS_DISTANCE))
       throw("unable to refine graph edge from %u.%s to %u.%s",
             P->atoms[atoms[0]].res_id + 1, P->atoms[atoms[0]].name,
             P->atoms[atoms[1]].res_id + 1, P->atoms[atoms[1]].name);

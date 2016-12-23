@@ -337,7 +337,9 @@ int peptide_graph_torsions (peptide_t *P, graph_t *G) {
     d03 = value_from_dihedral(d01, d02, d12, d13, d23, omega);
 
     /* attempt to refine the graph edge associated with the torsion. */
-    if (!graph_refine_edge(G, atoms[0], atoms[3], d03))
+    if (!graph_refine_edge(G, atoms[0], atoms[3], d03,
+                           &P->torsions[i].ang,
+                           VALUE_IS_DIHEDRAL))
       throw("unable to refine graph edge from %u.%s to %u.%s",
             P->atoms[atoms[0]].res_id + 1, P->atoms[atoms[0]].name,
             P->atoms[atoms[3]].res_id + 1, P->atoms[atoms[3]].name);

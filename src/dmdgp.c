@@ -124,11 +124,11 @@ int dmdgp_write_edges (FILE *fh, peptide_t *P, graph_t *G,
   /* loop over the edges of the graph. */
   for (i = 0; i < G->nv; i++) {
     for (j = i + 1; j < G->nv; j++) {
-      /* get the edge type. */
-      const value_type_t et = graph_has_edge(G, i, j);
+      /* get the edge. */
+      value_t eij = graph_get_edge(G, i, j);
 
       /* print the edge information. */
-      if (et == VALUE_TYPE_SCALAR) {
+      if (value_is_scalar(eij)) {
         /* print the exact edge entry. */
         fprintf(fh, efmt, i + 1, j + 1, G->E[i + G->nv * j].l,
                 resid_get_code3(P->res[P->atoms[i].res_id]),
@@ -138,7 +138,7 @@ int dmdgp_write_edges (FILE *fh, peptide_t *P, graph_t *G,
                 P->atoms[j].res_id + 1,
                 P->atoms[j].name);
       }
-      else if (et == VALUE_TYPE_INTERVAL) {
+      else if (value_is_interval(eij)) {
         /* print the interval edge entry. */
         fprintf(fh, ifmt, i + 1, j + 1,
                 G->E[i + G->nv * j].l, G->E[i + G->nv * j].u,
@@ -384,7 +384,7 @@ int dmdgp_write_order (FILE *fh, peptide_t *P, graph_t *G,
       e3 = graph_get_edge(G, j, j3);
 
       /* determine the edge type. */
-      if (e3.type == VALUE_TYPE_SCALAR)
+      if (value_is_scalar(e3))
         nb = 2;
       else
         nb = 3;

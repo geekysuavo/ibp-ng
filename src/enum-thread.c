@@ -298,11 +298,11 @@ int enum_threads_init (enum_t *E) {
     value_t d03 = graph_get_edge(E->G, i0, i3);
 
     /* set the branch count based on d(i,i-3) edge type. */
-    if (d03.type == VALUE_TYPE_SCALAR) {
+    if (value_is_scalar(d03)) {
       /* scalar edges produce two branches. */
       E->threads[0].state[i].nb = 2;
     }
-    else if (d03.type == VALUE_TYPE_INTERVAL) {
+    else if (value_is_interval(d03)) {
       /* interval edges produce multiple branches. */
       unsigned int nb = (d03.u - d03.l) / E->eps;
       if (nb > E->nbmax)
@@ -312,6 +312,12 @@ int enum_threads_init (enum_t *E) {
 
       /* set the branch count. */
       E->threads[0].state[i].nb = 2 * nb;
+    }
+
+    /* refine the branch count in the case of dihedral edges. */
+    if (value_is_dihedral(d03)) {
+      /* dihedrals do not require sigma={+1,-1}, only sigma=+1. */
+      E->threads[0].state[i].nb /= 2;
     }
   }
 
@@ -414,16 +420,31 @@ static inline int enum_thread_feasible (enum_thread_t *th) {
  *
  * arguments:
  *  @i: current thread state index.
- *  @N: number of interpolation points, also half the node branch count.
+ *  @nb: number of branches at the current tree level.
+ *  @is_dihed: whether or not the distance is from a dihedral.
  *  @sigma: pointer to the output sign of sin(omega).
  *  @lerp: pointer to the output interpolation factor.
  */
 static inline void enum_thread_lerp_index (const unsigned int i,
-                                           const unsigned int N,
+                                           const unsigned int nb,
+                                           const int is_dihed,
                                            double *sigma,
                                            double *lerp) {
-  /* compute the current sign of sinus omega. */
-  *sigma = (i % 2 ? -1.0 : 1.0);
+  /* act differently for dihedral-derived edges. */
+  unsigned int j = 0;
+  unsigned int N = 0;
+  if (is_dihed) {
+    /* dihedral: only branch using positive sign. */
+    *sigma = 1.0;
+    N = nb;
+    j = i;
+  }
+  else {
+    /* distance/angle: branch using positive and negative sign. */
+    *sigma = (i % 2 ? -1.0 : 1.0);
+    N = nb / 2;
+    j = i / 2;
+  }
 
   /* compute a halfway point. */
   const unsigned int H = (N % 2 ? N / 2 + 1 : N / 2);
@@ -431,7 +452,6 @@ static inline void enum_thread_lerp_index (const unsigned int i,
   /* get the "sign-independent" branch index @j, and swap around to
    * obtain an alternating index @n.
    */
-  const unsigned int j = i / 2;
   const unsigned int n = ((j + 1) % 2 ? N / 2 + j / 2 : (j + 1) / 2 - 1);
 
   /* compute the interpolation index @idx. */
@@ -439,7 +459,7 @@ static inline void enum_thread_lerp_index (const unsigned int i,
   idx = (n < H ? idx : (N - 1) % H - idx);
 
   /* compute the final interpolation factor. */
-  *lerp = (N > 1 ? ((double) idx) / ((double) (N - 1)) : 0.0);
+  *lerp = (N > 1 ? ((double) idx) / ((double) (N - 1)) : 0.5);
 }
 
 /* enum_thread_timer(): timer thread function for enumeration timing
@@ -606,20 +626,39 @@ void *enum_thread_execute (void *pdata) {
       ct = distances_to_angle(d12, d13, d23);
       st = sqrt(1.0 - ct * ct);
 
-      /* determine the sign and interpolation factors from the
-       * value of the thread state index.
-       */
-      enum_thread_lerp_index(state[lev].idx,
-                             state[lev].nb / 2,
-                             &sig, &lerp);
+      /* determine the cosine and sine of omega. */
+      if (value_is_dihedral(val03)) {
+        /* dihedral case: directly interpolate the cosine and sine. */
+        val03 = value_bound(value_scal(*val03.src, M_PI / 180.0),
+                            value_interval(-M_PI, M_PI));
 
-      /* compute the current d(i,i-3) edge value. */
-      d03 = val03.l + (val03.u - val03.l) * lerp;
+        /* compute the interpolation factor and the sign. */
+        enum_thread_lerp_index(state[lev].idx, state[lev].nb, 1,
+                               &sig, &lerp);
 
-      /* compute the cosine and sine of omega. */
-      cw = distances_to_dihedral(d01, d02, d03, d12, d13, d23);
-      cw = (cw < -1.0 ? -1.0 : cw > 1.0 ? 1.0 : cw);
-      sw = sig * sqrt(1.0 - cw * cw);
+        /* compute the current d(i,i-3) edge value. */
+        d03 = val03.l + (val03.u - val03.l) * lerp;
+
+        /* compute the cosine and sine of omega. */
+        cw = cos(d03);
+        sw = sin(d03);
+      }
+      else {
+        /* distance/angle case: determine the sign and
+         * interpolation factors from the value of the
+         * thread state index.
+         */
+        enum_thread_lerp_index(state[lev].idx, state[lev].nb, 0,
+                               &sig, &lerp);
+
+        /* compute the current d(i,i-3) edge value. */
+        d03 = val03.l + (val03.u - val03.l) * lerp;
+
+        /* compute the cosine and sine of omega. */
+        cw = distances_to_dihedral(d01, d02, d03, d12, d13, d23);
+        cw = (cw < -1.0 ? -1.0 : cw > 1.0 ? 1.0 : cw);
+        sw = sig * sqrt(1.0 - cw * cw);
+      }
 
       /* compute the scale factor for all p-vectors. */
       fv = st / sqrt(rv.x * rv.x + rv.y * rv.y + rv.z * rv.z);

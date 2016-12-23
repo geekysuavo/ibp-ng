@@ -307,7 +307,9 @@ int peptide_graph_angles (peptide_t *P, graph_t *G) {
     d02 = value_from_angle(d01, d12, theta);
 
     /* attempt to refine the graph edge associated with the angle. */
-    if (!graph_refine_edge(G, atoms[0], atoms[2], d02))
+    if (!graph_refine_edge(G, atoms[0], atoms[2], d02,
+                           &P->angles[i].ang,
+                           VALUE_IS_ANGLE))
       throw("unable to refine graph edge from %u.%s to %u.%s",
             P->atoms[atoms[0]].res_id + 1, P->atoms[atoms[0]].name,
             P->atoms[atoms[2]].res_id + 1, P->atoms[atoms[2]].name);

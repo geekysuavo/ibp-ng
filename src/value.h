@@ -28,10 +28,21 @@ typedef enum {
 }
 value_type_t;
 
+/* value_semantic_t: enumeration of all semantic meanings of values
+ * that may be stored within a value_t.
+ */
+typedef enum {
+  VALUE_IS_DISTANCE = 0,
+  VALUE_IS_ANGLE,
+  VALUE_IS_DIHEDRAL
+}
+value_semantic_t;
+
 /* value_t: generalized parameter type structure that holds either
  * scalar values or interval values.
  */
-typedef struct {
+typedef struct value value_t;
+struct value {
   /* @type: type of value contained by the structure.
    */
   value_type_t type;
@@ -40,8 +51,13 @@ typedef struct {
    * @u: scalar exact value, interval upper bound.
    */
   double l, u;
-}
-value_t;
+
+  /* @sem: semantic meaning of the source value.
+   * @src: source value from which this value was derived.
+   */
+  value_semantic_t sem;
+  value_t *src;
+};
 
 /* function declarations: */
 
@@ -56,6 +72,15 @@ int value_is_undefined (value_t val);
 int value_is_scalar (value_t val);
 
 int value_is_interval (value_t val);
+
+int value_is_distance (value_t val);
+
+int value_is_angle (value_t val);
+
+int value_is_dihedral (value_t val);
+
+void value_set_source (value_t *v, value_t *vsrc,
+                       const value_semantic_t sem);
 
 value_t value_add (value_t va, value_t vb);
 

@@ -216,7 +216,7 @@ void graph_set_edge (graph_t *G, unsigned int va, unsigned int vb,
  *  integer indicating whether (1) or not (0) the operation succeeded.
  */
 int graph_refine_edge (graph_t *G, unsigned int va, unsigned int vb,
-                       value_t w) {
+                       value_t w, value_t *psrc, const value_semantic_t sem) {
   /* declare required variables:
    *  @wcur: current edge weight.
    */
@@ -266,6 +266,9 @@ int graph_refine_edge (graph_t *G, unsigned int va, unsigned int vb,
     /* undefined weight. throw an exception. */
     throw("edge weight is undefined");
   }
+
+  /* the refinement succeeded. also refine the semantic content. */
+  value_set_source(G->E + (va + G->nv * vb), psrc, sem);
 
   /* return success. */
   return 1;

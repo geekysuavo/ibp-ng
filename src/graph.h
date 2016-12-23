@@ -57,7 +57,7 @@ void graph_set_edge (graph_t *G, unsigned int va, unsigned int vb,
                      value_t w);
 
 int graph_refine_edge (graph_t *G, unsigned int va, unsigned int vb,
-                       value_t w);
+                       value_t w, value_t *psrc, const value_semantic_t sem);
 
 #define graph_remove_edge(G,va,vb) \
   graph_set_edge(G, va, vb, value_undefined())

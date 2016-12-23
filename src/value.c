@@ -16,6 +16,10 @@ value_t value_undefined (void) {
   /* set the value type. */
   val.type = VALUE_TYPE_UNDEFINED;
 
+  /* set the value source. */
+  val.sem = VALUE_IS_DISTANCE;
+  val.src = NULL;
+
   /* set the value bounds. */
   val.l = val.u = NAN;
 
@@ -39,6 +43,10 @@ value_t value_scalar (double v) {
 
   /* set the value type. */
   val.type = VALUE_TYPE_SCALAR;
+
+  /* set the value source. */
+  val.sem = VALUE_IS_DISTANCE;
+  val.src = NULL;
 
   /* set the value bounds. */
   val.l = val.u = v;
@@ -75,6 +83,10 @@ value_t value_interval (double l, double u) {
 
   /* set the value type. */
   val.type = VALUE_TYPE_INTERVAL;
+
+  /* set the value source. */
+  val.sem = VALUE_IS_DISTANCE;
+  val.src = NULL;
 
   /* set the value bounds. */
   val.l = l;
@@ -121,6 +133,59 @@ int value_is_scalar (value_t val) {
 int value_is_interval (value_t val) {
   /* return whether the value is an interval or not. */
   return (val.type == VALUE_TYPE_INTERVAL);
+}
+
+/* value_is_distance(): return whether a generalized value is a distance.
+ *
+ * arguments:
+ *  @val: the value to check.
+ *
+ * returns:
+ *  integer indicating whether (1) or not (0) the value is a distance.
+ */
+int value_is_distance (value_t val) {
+  /* test the semantic tag of the value. */
+  return (val.sem == VALUE_IS_DISTANCE);
+}
+
+/* value_is_angle(): return whether a generalized value is an angle.
+ *
+ * arguments:
+ *  @val: the value to check.
+ *
+ * returns:
+ *  integer indicating whether (1) or not (0) the value is an angle.
+ */
+int value_is_angle (value_t val) {
+  /* test the semantic tag of the value. */
+  return (val.sem == VALUE_IS_ANGLE);
+}
+
+/* value_is_dihedral(): return whether a generalized value is a dihedral.
+ *
+ * arguments:
+ *  @val: the value to check.
+ *
+ * returns:
+ *  integer indicating whether (1) or not (0) the value is a dihedral.
+ */
+int value_is_dihedral (value_t val) {
+  /* test the semantic tag of the value. */
+  return (val.sem == VALUE_IS_DIHEDRAL);
+}
+
+/* value_set_source(): set the source value of a generalized value.
+ *
+ * arguments:
+ *  @v: pointer to the generalized value to modify.
+ *  @vsrc: pointer to the source value.
+ *  @sem: semantic meaning of the source.
+ */
+inline void value_set_source (value_t *v, value_t *vsrc,
+                              const value_semantic_t sem) {
+  /* set the source value. */
+  v->src = vsrc;
+  v->sem = sem;
 }
 
 /* value_add(): compute the sum of two generalized values.

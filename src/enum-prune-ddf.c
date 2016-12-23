@@ -129,7 +129,7 @@ void enum_prune_ddf_report (enum_t *E, unsigned int lev, void *data) {
 
     /* output the statistics. */
     printf("  %c%-4u %-4s | %c%-4u %-4s : "
-           "%16u/%-16u  %3.0lf%%\n",
+           "%16u/%-16u  %6.2lf%%\n",
            resi, ri + 1, atomi,
            resj, rj + 1, atomj,
            ddf_data->nprune[j], ddf_data->ntest[j], f);
