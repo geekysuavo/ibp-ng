@@ -477,13 +477,14 @@ void *enum_thread_timer (void *pdata) {
   const unsigned int len = E->G->n_order;
 
   /* initialize the timer. */
-  double t = 0.0;
+  unsigned int last_nsol = 0;
+  double t = 0.0, dt = 1.0;
 
   /* loop until the master thread cancels us. */
   while (1) {
-    /* sleep for one minute. */
-    sleep(60);
-    t += 1.0;
+    /* sleep for the required duration. */
+    sleep((unsigned int) (dt * 60.0));
+    t += dt;
 
     /* start outputting timing information. */
     info("elapsed time: %.0lf min.", t);
@@ -512,6 +513,19 @@ void *enum_thread_timer (void *pdata) {
       fprintf(stderr, "   #%-3u: ~10^%.3lf min. remaining\n",
               tid + 1, L2 - L1 + log(t));
     }
+
+    /* if the number of solutions has not increased since our
+     * last timing report, increase the delay time, up to a maximum
+     * of two hours between reports. when a solution is logged, set
+     * the delay time back to the minimum.
+     */
+    if (E->nsol <= last_nsol)
+      dt = (dt * 5.0 > 120.0 ? 120.0 : dt * 5.0);
+    else
+      dt = 1.0;
+
+    /* store the new solution count. */
+    last_nsol = E->nsol;
   }
 
   /* end thread execution. */
