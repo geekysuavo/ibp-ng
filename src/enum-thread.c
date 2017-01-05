@@ -141,6 +141,41 @@ static inline unsigned int state_increment (enum_thread_node_t *state,
   return imod;
 }
 
+/* state_widths(): compute the number of leaf nodes in the implicit
+ * tree that are to the left and right of the tree path defined by
+ * the current state.
+ *
+ * arguments:
+ *  @state: state to compute widths.
+ *  @len: number of nodes in the state.
+ *  @wl: base-10 log of the number of leaves to the left.
+ *  @wr: base-10 log of the number of leaves to the right.
+ */
+static inline void state_widths (enum_thread_node_t *state,
+                                 const unsigned int len,
+                                 double *wl, double *wr) {
+  /* initialize the output values. */
+  long double L = 0.0, R = 0.0;
+
+  /* loop over each level of the tree. */
+  for (unsigned int j = 0; j < len; j++) {
+    /* compute the size of each subtree under this level. */
+    long double nj = 1.0;
+    for (unsigned int k = j + 1; k < len; k++)
+      nj *= (long double) state[k].nb;
+
+    /* sum in the number of leaves to the left and right
+     * of the state at this level.
+     */
+    L += nj * (long double) state[j].idx;
+    R += nj * (long double) (state[j].nb - state[j].idx - 1);
+  }
+
+  /* return the base-10 logarithm of the leaf counts. */
+  *wl = (double) log10l(L);
+  *wr = (double) log10l(R);
+}
+
 /* state_rmsd(): determine the rmsd-step of a given state.
  *
  * this function utilizes the quaternion characteristic polynomial method,
@@ -491,23 +526,10 @@ void *enum_thread_timer (void *pdata) {
 
     /* compute the log-width of each thread. */
     for (unsigned int tid = 0; tid < nt; tid++) {
-      /* initialize the thread width. */
+      /* compute the thread width. */
       double L1 = 0.0;
       double L2 = 0.0;
-
-      /* compute the thread width. */
-      for (unsigned int lev = 0; lev < len; lev++) {
-        /* get the state indices of the current level. */
-        const unsigned int n = E->threads[tid].state[lev].idx -
-                               E->threads[tid].state[lev].start;
-        const unsigned int N = E->threads[tid].state[lev].nb;
-
-        /* sum in their contributions. */
-        if (N > n) {
-          L1 += log10((double) (n + 1));
-          L2 += log10((double) (N - n));
-        }
-      }
+      state_widths(E->threads[tid].state, len, &L1, &L2);
 
       /* write the current thread information. */
       fprintf(stderr, "   #%-3u: ~10^%.3lf min. remaining\n",
