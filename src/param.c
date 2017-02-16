@@ -23,7 +23,7 @@ void param_check_angles (peptide_t *P) {
    *  @sum: sum of the three angles.
    */
   peptide_angle_t *a1, *a2, *a3;
-  unsigned int i1, i2, i3, idx;
+  unsigned int i1, i2, i3;
   value_t sum;
 
   /* loop over the set of angles. */
@@ -45,11 +45,8 @@ void param_check_angles (peptide_t *P) {
         continue;
 
       /* skip angles that cannot yield a trihedron/tetrahedron. */
-      if (a2->atom_id[0] == a1->atom_id[0])
-        idx = 0;
-      else if (a2->atom_id[2] != a1->atom_id[0])
-        idx = 2;
-      else
+      if (a2->atom_id[0] != a1->atom_id[0] &&
+          a2->atom_id[2] == a1->atom_id[0])
         continue;
 
       /* loop one last time over the angles. */

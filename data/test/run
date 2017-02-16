@@ -13,7 +13,6 @@ rm -rf test.pdb.d
  --params ../../lib/ibp-protein.par \
  --reorder ../../lib/ibp-protein.ord \
  --threads 1 \
- --method impr,energy \
- --rmsd 0.5 \
- --limit 1000 --branch-eps 0.01 --branch-max 32 --vdw-scale 0.5
+ --method dist,impr,energy \
+ --limit 1000 --branch-eps 0.01 --branch-max 128 --vdw-scale 0.5
 

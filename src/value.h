@@ -116,7 +116,7 @@ value_t values_to_dihedral (value_t d01, value_t d02, value_t d03,
 value_t values_to_chord (value_t d01, value_t d02, value_t d03,
                          value_t d12, value_t d13, value_t d23);
 
-inline double distances_to_angle (double d01, double d02, double d12);
+double distances_to_angle (double d01, double d02, double d12);
 
 double distances_to_dihedral (double d01, double d02, double d03,
                               double d12, double d13, double d23);

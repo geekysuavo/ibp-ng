@@ -15,9 +15,8 @@
 int peptide_add_residue1 (peptide_t *P, char res) {
   /* declare required variables:
    *  @ires: residue index 
-   *  @i: sequence index.
    */
-  unsigned int i, ires;
+  unsigned int ires;
 
   /* lookup the residue index from the code. */
   ires = resid_lookup1(res);
@@ -27,7 +26,6 @@ int peptide_add_residue1 (peptide_t *P, char res) {
     throw("invalid residue code '%c'", res);
 
   /* increment the array length. */
-  i = P->n_res;
   P->n_res++;
 
   /* reallocate the array. */
