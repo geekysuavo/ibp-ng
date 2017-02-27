@@ -1,0 +1,20 @@
+#!/bin/bash
+
+for k in 1 2; do
+  ../../bin/ibp-ng -v -v \
+   --psf     order-${k}.psf \
+   --dmdgp   order-${k}.dmdgp \
+   --reorder order-${k}.ord \
+   --output  /dev/null \
+   --topology ../../lib/ibp-protein.top \
+   --params   ../../lib/ibp-protein.par \
+   --input orders.fa --restraints orders.res \
+   --format dcd --threads 1 --method dist,impr \
+   --limit 10000000 --branch-eps 0.01 --branch-max 16 \
+   --rmsd 0.1 --ddf-tol 0.1 --vdw-scale 0.8 | \
+  awk '/^DEBUG/ {print $2, $3}' > TMP
+
+  sort -u TMP > rama-${k}.dat
+  rm -f TMP
+done
+
