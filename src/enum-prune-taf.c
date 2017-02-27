@@ -120,8 +120,22 @@ int enum_prune_taf (enum_t *E, enum_thread_t *th, void *data) {
 
   /* check if the computed dihedral angle is in bounds. */
   taf_data->ntest++;
-  if (taf_data->bound.l - omega > E->ddf_tol ||
-      omega - taf_data->bound.u > E->ddf_tol) {
+  int feasible = 0;
+  for (int n = -2; n <= 2; n += 2) {
+    /* compute the shifted feasibility boundary. */
+    const double shift = (double) n * M_PI;
+    const double L = taf_data->bound.l - E->ddf_tol + shift;
+    const double U = taf_data->bound.u + E->ddf_tol + shift;
+
+    /* check the dihedral angle against the shifted boundary. */
+    if (omega >= L && omega <= U) {
+      feasible = 1;
+      break;
+    }
+  }
+
+  /* if all three boundaries fail to contain the angle, prune. */
+  if (!feasible) {
     taf_data->nprune++;
     return 1;
   }

@@ -1,0 +1,23 @@
+diff -Naur src/enum-thread.c src.new/enum-thread.c
+--- src/enum-thread.c	2017-02-16 10:06:22.000000000 +0100
++++ src.new/enum-thread.c	2017-02-27 11:01:20.000000000 +0100
+@@ -735,6 +735,19 @@
+ 
+       /* check if the atom is feasible and terminal. */
+       if (lev == len - 1) {
++        /* FIXME: begin temporary patch!!! */
++        vector_t *COi = &state[E->G->ordrev[4]].pos;
++        vector_t *Nj  = &state[E->G->ordrev[6]].pos;
++        vector_t *CAj = &state[E->G->ordrev[8]].pos;
++        vector_t *COj = &state[E->G->ordrev[10]].pos;
++        vector_t *Nk  = &state[E->G->ordrev[12]].pos;
++        double phi = vector_dihedral(COi, Nj, CAj, COj);
++        double psi = vector_dihedral(Nj, CAj, COj, Nk);
++        fprintf(stdout, "DEBUG %le %le\n",
++                phi * 180.0 / M_PI,
++                psi * 180.0 / M_PI);
++        /* FIXME: end temporary patch!!! */
++
+         /* compute the center of the structure. */
+         x0.x = x0.y = x0.z = 0.0;
+         for (unsigned int i = 0; i < len; i++) {

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+pushd ../..
+patch -p0 -R -i data/orders/orders.diff
+make again
+popd
+

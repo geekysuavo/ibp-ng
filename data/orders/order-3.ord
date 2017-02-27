@@ -1,0 +1,20 @@
+
+reorder BB1
+ N, H1, H2, CA, N, HA, CA, C
+end
+
+reorder BB2
+ N, -O, -CA, -C,
+ N, CA, H1, N, CA, HA, C, CA
+end
+
+reorder BBI
+ N, -O, -C, -CA,
+ N, -C, CA, H1, N, CA, HA, C, CA
+end
+
+reorder BBN
+ N, -O, -C, -CA,
+ N, -C, CA, H1, N, CA, HA, C, CA, O, C, O2
+end
+
