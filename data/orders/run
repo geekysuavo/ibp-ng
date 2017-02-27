@@ -5,7 +5,9 @@ kmax=4
 
 if [ "${1}" == "clean" ]; then
   for k in $(seq ${kmin} ${kmax}); do
-    rm -f order-${k}.psf order-${k}.dmdgp rama-${k}.dat
+    for x in psf dcd dmdgp out err dat; do
+      rm -f order-${k}.${x}
+    done
   done
   exit
 fi
@@ -22,7 +24,9 @@ for k in $(seq ${kmin} ${kmax}); do
    --params   ../../lib/ibp-protein.par \
    --format dcd --threads 1 --method dist,impr \
    --limit 16384 --branch-eps 0.01 --branch-max 64 \
-   --rmsd 1.0 --ddf-tol 0.1 --vdw-scale 0.5 | \
-  awk '/^DEBUG/ {print $2, $3}' | sort -u > order-${k}.dat
+   --rmsd 1.0 --ddf-tol 0.1 --vdw-scale 0.5 \
+    1>order-${k}.out 2>order-${k}.err
+
+  awk '/^DEBUG/ {print $2, $3}' order-${k}.out | sort -u > order-${k}.dat
 done
 
