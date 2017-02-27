@@ -1,14 +1,17 @@
 #!/bin/bash
 
-rm -rf test.pdb.d
+if [ "${1}" == "clean" ]; then
+  rm -f alpha.psf alpha.dmdgp alpha.dcd
+  exit
+fi
 
 ../../bin/ibp-ng -v -v \
- --input test.fa --seqid 2 \
- --psf test.psf \
- --dmdgp test.dmdgp \
- --output test.dcd \
+ --input alpha.fa \
+ --psf alpha.psf \
+ --dmdgp alpha.dmdgp \
+ --output alpha.dcd \
  --format dcd \
- --restraints test2.res \
+ --restraints alpha.res \
  --topology ../../lib/ibp-protein.top \
  --params ../../lib/ibp-protein.par \
  --reorder ../../lib/ibp-protein.ord \

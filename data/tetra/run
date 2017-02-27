@@ -1,0 +1,21 @@
+#!/bin/bash
+
+if [ "${1}" == "clean" ]; then
+  rm -f tetra.psf tetra.dmdgp tetra.dcd
+  exit
+fi
+
+../../bin/ibp-ng -v -v \
+ --input tetra.fa \
+ --psf tetra.psf \
+ --dmdgp tetra.dmdgp \
+ --output tetra.dcd \
+ --format dcd \
+ --restraints tetra.res \
+ --topology ../../lib/ibp-protein.top \
+ --params ../../lib/ibp-protein.par \
+ --reorder ../../lib/ibp-protein.ord \
+ --threads 1 \
+ --method dist,impr \
+ --limit 10000 --branch-eps 0.01 --branch-max 128 --vdw-scale 0.5
+
