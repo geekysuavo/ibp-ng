@@ -1,0 +1,21 @@
+#!/bin/bash
+
+if [ "${1}" == "clean" ]; then
+  rm -f talos.psf talos.dmdgp talos.dcd
+  exit
+fi
+
+../../bin/ibp-ng -v -v \
+ --input talos.fa \
+ --psf talos.psf \
+ --dmdgp talos.dmdgp \
+ --output talos.dcd \
+ --format dcd \
+ --restraints talos.res \
+ --topology ../../lib/ibp-protein.top \
+ --params ../../lib/ibp-protein.par \
+ --reorder ../../lib/ibp-protein.ord \
+ --threads 1 \
+ --method dist,impr,energy \
+ --limit 1000 --branch-eps 0.01 --branch-max 16 --vdw-scale 0.5
+
