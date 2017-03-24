@@ -64,15 +64,15 @@ make
 
 ### Basic Usage
 
-Successful compilation will produce a file in [bin] (bin) called **ibp-ng**.
+Successful compilation will produce a file in [bin](bin) called **ibp-ng**.
 For basic usage information, just run:
 
 ```bash
 bin/ibp-ng -h
 ```
 
-A toy example is provided in [data/test] (data/test). The script that invokes
-**ibp-ng** is named [data/test/run] (data/test/run). It will use four threads
+A toy example is provided in [data/test](data/test). The script that invokes
+**ibp-ng** is named [data/test/run](data/test/run). It will use four threads
 to generate 100 structures using a very fine granularity and only direct
 distance feasibility pruning. To execute the script, run:
 
@@ -81,14 +81,14 @@ cd data/test
 ./run
 ```
 
-More examples will be placed in the [data] (data) directory as the source
+More examples will be placed in the [data](data) directory as the source
 code progresses.
 
 ## Licensing
 
 This project is released under the
-[MIT license] (https://opensource.org/licenses/MIT). See the
-[LICENSE.md] (LICENSE.md) file for the complete license terms.
+[MIT license](https://opensource.org/licenses/MIT). See the
+[LICENSE.md](LICENSE.md) file for the complete license terms.
 
 And as always, enjoy!
 
