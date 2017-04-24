@@ -1,592 +1,600 @@
-{* A2: phi, psi, omega *}
+{* R2: phi, psi, omega *}
 assign (resid  1 and name C)  (resid  2 and name N)
-       (resid  2 and name CA) (resid  2 and name C)  1.0  -60.282    6.419 1
+       (resid  2 and name CA) (resid  2 and name C)  1.0  -75.179   11.861 1
 assign (resid  2 and name N)  (resid  2 and name CA)
-       (resid  2 and name C)  (resid  3 and name N)  1.0  -30.116    8.014 1
+       (resid  2 and name C)  (resid  3 and name N)  1.0  135.965   21.898 1
 assign (resid  2 and name CA) (resid  2 and name C)
        (resid  3 and name N)  (resid  3 and name CA) 1.0  180.000    0.100 1
 
-{* L3: phi, psi, omega *}
+{* A3: phi, psi, omega *}
 assign (resid  2 and name C)  (resid  3 and name N)
-       (resid  3 and name CA) (resid  3 and name C)  1.0  -61.352    6.573 1
+       (resid  3 and name CA) (resid  3 and name C)  1.0  -66.317    5.165 1
 assign (resid  3 and name N)  (resid  3 and name CA)
-       (resid  3 and name C)  (resid  4 and name N)  1.0  -36.511    6.141 1
+       (resid  3 and name C)  (resid  4 and name N)  1.0  -25.589   11.376 1
 assign (resid  3 and name CA) (resid  3 and name C)
        (resid  4 and name N)  (resid  4 and name CA) 1.0  180.000    0.100 1
 
 {* L4: phi, psi, omega *}
 assign (resid  3 and name C)  (resid  4 and name N)
-       (resid  4 and name CA) (resid  4 and name C)  1.0  -67.130    5.217 1
+       (resid  4 and name CA) (resid  4 and name C)  1.0  -66.675    4.957 1
 assign (resid  4 and name N)  (resid  4 and name CA)
-       (resid  4 and name C)  (resid  5 and name N)  1.0  -43.768    6.479 1
+       (resid  4 and name C)  (resid  5 and name N)  1.0  -39.306    6.278 1
 assign (resid  4 and name CA) (resid  4 and name C)
        (resid  5 and name N)  (resid  5 and name CA) 1.0  180.000    0.100 1
 
-{* D5: phi, psi, omega *}
+{* L5: phi, psi, omega *}
 assign (resid  4 and name C)  (resid  5 and name N)
-       (resid  5 and name CA) (resid  5 and name C)  1.0  -65.077    4.925 1
+       (resid  5 and name CA) (resid  5 and name C)  1.0  -66.621    5.148 1
 assign (resid  5 and name N)  (resid  5 and name CA)
-       (resid  5 and name C)  (resid  6 and name N)  1.0  -39.641    5.437 1
+       (resid  5 and name C)  (resid  6 and name N)  1.0  -40.841    6.627 1
 assign (resid  5 and name CA) (resid  5 and name C)
        (resid  6 and name N)  (resid  6 and name CA) 1.0  180.000    0.100 1
 
 {* D6: phi, psi, omega *}
 assign (resid  5 and name C)  (resid  6 and name N)
-       (resid  6 and name CA) (resid  6 and name C)  1.0  -67.942    4.915 1
+       (resid  6 and name CA) (resid  6 and name C)  1.0  -65.214    6.032 1
 assign (resid  6 and name N)  (resid  6 and name CA)
-       (resid  6 and name C)  (resid  7 and name N)  1.0  -42.748    5.091 1
+       (resid  6 and name C)  (resid  7 and name N)  1.0  -39.514    4.815 1
 assign (resid  6 and name CA) (resid  6 and name C)
        (resid  7 and name N)  (resid  7 and name CA) 1.0  180.000    0.100 1
 
-{* Q7: phi, psi, omega *}
+{* D7: phi, psi, omega *}
 assign (resid  6 and name C)  (resid  7 and name N)
-       (resid  7 and name CA) (resid  7 and name C)  1.0  -66.417    3.978 1
+       (resid  7 and name CA) (resid  7 and name C)  1.0  -67.951    5.376 1
 assign (resid  7 and name N)  (resid  7 and name CA)
-       (resid  7 and name C)  (resid  8 and name N)  1.0  -41.896    4.802 1
+       (resid  7 and name C)  (resid  8 and name N)  1.0  -40.659    5.449 1
 assign (resid  7 and name CA) (resid  7 and name C)
        (resid  8 and name N)  (resid  8 and name CA) 1.0  180.000    0.100 1
 
-{* A8: phi, psi, omega *}
+{* Q8: phi, psi, omega *}
 assign (resid  7 and name C)  (resid  8 and name N)
-       (resid  8 and name CA) (resid  8 and name C)  1.0  -63.295    3.964 1
+       (resid  8 and name CA) (resid  8 and name C)  1.0  -65.779    3.417 1
 assign (resid  8 and name N)  (resid  8 and name CA)
-       (resid  8 and name C)  (resid  9 and name N)  1.0  -38.616    4.379 1
+       (resid  8 and name C)  (resid  9 and name N)  1.0  -41.299    5.671 1
 assign (resid  8 and name CA) (resid  8 and name C)
        (resid  9 and name N)  (resid  9 and name CA) 1.0  180.000    0.100 1
 
-{* R9: phi, psi, omega *}
+{* A9: phi, psi, omega *}
 assign (resid  8 and name C)  (resid  9 and name N)
-       (resid  9 and name CA) (resid  9 and name C)  1.0  -65.230    2.932 1
+       (resid  9 and name CA) (resid  9 and name C)  1.0  -64.131    3.598 1
 assign (resid  9 and name N)  (resid  9 and name CA)
-       (resid  9 and name C)  (resid 10 and name N)  1.0  -27.009    7.303 1
+       (resid  9 and name C)  (resid 10 and name N)  1.0  -37.699    5.185 1
 assign (resid  9 and name CA) (resid  9 and name C)
        (resid 10 and name N)  (resid 10 and name CA) 1.0  180.000    0.100 1
 
-{* H10: phi, psi, omega *}
+{* R10: phi, psi, omega *}
 assign (resid  9 and name C)  (resid 10 and name N)
-       (resid 10 and name CA) (resid 10 and name C)  1.0  -88.120   10.229 1
+       (resid 10 and name CA) (resid 10 and name C)  1.0  -66.884    5.826 1
 assign (resid 10 and name N)  (resid 10 and name CA)
-       (resid 10 and name C)  (resid 11 and name N)  1.0  -17.844   10.895 1
+       (resid 10 and name C)  (resid 11 and name N)  1.0  -26.378    7.276 1
 assign (resid 10 and name CA) (resid 10 and name C)
        (resid 11 and name N)  (resid 11 and name CA) 1.0  180.000    0.100 1
 
-{* L11: phi, psi, omega *}
+{* H11: phi, psi, omega *}
 assign (resid 10 and name C)  (resid 11 and name N)
-       (resid 11 and name CA) (resid 11 and name C)  1.0 -108.144   12.664 1
+       (resid 11 and name CA) (resid 11 and name C)  1.0  -87.399    9.639 1
 assign (resid 11 and name N)  (resid 11 and name CA)
-       (resid 11 and name C)  (resid 12 and name N)  1.0  -33.768   12.310 1
+       (resid 11 and name C)  (resid 12 and name N)  1.0  -19.902   12.683 1
 assign (resid 11 and name CA) (resid 11 and name C)
        (resid 12 and name N)  (resid 12 and name CA) 1.0  180.000    0.100 1
 
 {* L12: phi, psi, omega *}
 assign (resid 11 and name C)  (resid 12 and name N)
-       (resid 12 and name CA) (resid 12 and name C)  1.0 -114.298   14.316 1
+       (resid 12 and name CA) (resid 12 and name C)  1.0 -111.620   11.038 1
 assign (resid 12 and name N)  (resid 12 and name CA)
-       (resid 12 and name C)  (resid 13 and name N)  1.0  147.003    8.484 1
+       (resid 12 and name C)  (resid 13 and name N)  1.0  -31.561   11.977 1
 assign (resid 12 and name CA) (resid 12 and name C)
        (resid 13 and name N)  (resid 13 and name CA) 1.0  180.000    0.100 1
 
-{* T13: phi, psi, omega *}
+{* L13: phi, psi, omega *}
 assign (resid 12 and name C)  (resid 13 and name N)
-       (resid 13 and name CA) (resid 13 and name C)  1.0  -76.371    6.380 1
+       (resid 13 and name CA) (resid 13 and name C)  1.0 -120.854   12.139 1
 assign (resid 13 and name N)  (resid 13 and name CA)
-       (resid 13 and name C)  (resid 14 and name N)  1.0  165.007    7.244 1
+       (resid 13 and name C)  (resid 14 and name N)  1.0  144.745    9.450 1
 assign (resid 13 and name CA) (resid 13 and name C)
        (resid 14 and name N)  (resid 14 and name CA) 1.0  180.000    0.100 1
 
-{* E14: phi, psi, omega *}
+{* T14: phi, psi, omega *}
 assign (resid 13 and name C)  (resid 14 and name N)
-       (resid 14 and name CA) (resid 14 and name C)  1.0  -59.826    4.017 1
+       (resid 14 and name CA) (resid 14 and name C)  1.0  -77.698    6.481 1
 assign (resid 14 and name N)  (resid 14 and name CA)
-       (resid 14 and name C)  (resid 15 and name N)  1.0  -39.385    5.016 1
+       (resid 14 and name C)  (resid 15 and name N)  1.0  165.150    6.553 1
 assign (resid 14 and name CA) (resid 14 and name C)
        (resid 15 and name N)  (resid 15 and name CA) 1.0  180.000    0.100 1
 
-{* Q15: phi, psi, omega *}
+{* E15: phi, psi, omega *}
 assign (resid 14 and name C)  (resid 15 and name N)
-       (resid 15 and name CA) (resid 15 and name C)  1.0  -66.671    3.370 1
+       (resid 15 and name CA) (resid 15 and name C)  1.0  -60.468    4.211 1
 assign (resid 15 and name N)  (resid 15 and name CA)
-       (resid 15 and name C)  (resid 16 and name N)  1.0  -41.687    4.474 1
+       (resid 15 and name C)  (resid 16 and name N)  1.0  -39.077    5.062 1
 assign (resid 15 and name CA) (resid 15 and name C)
        (resid 16 and name N)  (resid 16 and name CA) 1.0  180.000    0.100 1
 
-{* E16: phi, psi, omega *}
+{* Q16: phi, psi, omega *}
 assign (resid 15 and name C)  (resid 16 and name N)
-       (resid 16 and name CA) (resid 16 and name C)  1.0  -66.347    3.245 1
+       (resid 16 and name CA) (resid 16 and name C)  1.0  -67.949    2.768 1
 assign (resid 16 and name N)  (resid 16 and name CA)
-       (resid 16 and name C)  (resid 17 and name N)  1.0  -41.630    2.812 1
+       (resid 16 and name C)  (resid 17 and name N)  1.0  -38.186    4.348 1
 assign (resid 16 and name CA) (resid 16 and name C)
        (resid 17 and name N)  (resid 17 and name CA) 1.0  180.000    0.100 1
 
-{* R17: phi, psi, omega *}
+{* E17: phi, psi, omega *}
 assign (resid 16 and name C)  (resid 17 and name N)
-       (resid 17 and name CA) (resid 17 and name C)  1.0  -62.044    2.966 1
+       (resid 17 and name CA) (resid 17 and name C)  1.0  -66.396    2.868 1
 assign (resid 17 and name N)  (resid 17 and name CA)
-       (resid 17 and name C)  (resid 18 and name N)  1.0  -42.669    2.974 1
+       (resid 17 and name C)  (resid 18 and name N)  1.0  -41.294    2.839 1
 assign (resid 17 and name CA) (resid 17 and name C)
        (resid 18 and name N)  (resid 18 and name CA) 1.0  180.000    0.100 1
 
-{* A18: phi, psi, omega *}
+{* R18: phi, psi, omega *}
 assign (resid 17 and name C)  (resid 18 and name N)
-       (resid 18 and name CA) (resid 18 and name C)  1.0  -63.575    3.435 1
+       (resid 18 and name CA) (resid 18 and name C)  1.0  -62.794    3.774 1
 assign (resid 18 and name N)  (resid 18 and name CA)
-       (resid 18 and name C)  (resid 19 and name N)  1.0  -41.601    3.175 1
+       (resid 18 and name C)  (resid 19 and name N)  1.0  -40.178    3.164 1
 assign (resid 18 and name CA) (resid 18 and name C)
        (resid 19 and name N)  (resid 19 and name CA) 1.0  180.000    0.100 1
 
-{* T19: phi, psi, omega *}
+{* A19: phi, psi, omega *}
 assign (resid 18 and name C)  (resid 19 and name N)
-       (resid 19 and name CA) (resid 19 and name C)  1.0  -65.943    2.378 1
+       (resid 19 and name CA) (resid 19 and name C)  1.0  -63.793    2.855 1
 assign (resid 19 and name N)  (resid 19 and name CA)
-       (resid 19 and name C)  (resid 20 and name N)  1.0  -44.773    4.242 1
+       (resid 19 and name C)  (resid 20 and name N)  1.0  -40.232    4.198 1
 assign (resid 19 and name CA) (resid 19 and name C)
        (resid 20 and name N)  (resid 20 and name CA) 1.0  180.000    0.100 1
 
-{* M20: phi, psi, omega *}
+{* T20: phi, psi, omega *}
 assign (resid 19 and name C)  (resid 20 and name N)
-       (resid 20 and name CA) (resid 20 and name C)  1.0  -62.564    3.525 1
+       (resid 20 and name CA) (resid 20 and name C)  1.0  -65.198    3.396 1
 assign (resid 20 and name N)  (resid 20 and name CA)
-       (resid 20 and name C)  (resid 21 and name N)  1.0  -43.957    2.595 1
+       (resid 20 and name C)  (resid 21 and name N)  1.0  -44.239    4.186 1
 assign (resid 20 and name CA) (resid 20 and name C)
        (resid 21 and name N)  (resid 21 and name CA) 1.0  180.000    0.100 1
 
 {* M21: phi, psi, omega *}
 assign (resid 20 and name C)  (resid 21 and name N)
-       (resid 21 and name CA) (resid 21 and name C)  1.0  -65.917    3.487 1
+       (resid 21 and name CA) (resid 21 and name C)  1.0  -62.587    4.144 1
 assign (resid 21 and name N)  (resid 21 and name CA)
-       (resid 21 and name C)  (resid 22 and name N)  1.0  -36.191    5.440 1
+       (resid 21 and name C)  (resid 22 and name N)  1.0  -43.836    3.427 1
 assign (resid 21 and name CA) (resid 21 and name C)
        (resid 22 and name N)  (resid 22 and name CA) 1.0  180.000    0.100 1
 
-{* Y22: phi, psi, omega *}
+{* M22: phi, psi, omega *}
 assign (resid 21 and name C)  (resid 22 and name N)
-       (resid 22 and name CA) (resid 22 and name C)  1.0  -64.408    2.717 1
+       (resid 22 and name CA) (resid 22 and name C)  1.0  -65.975    4.030 1
 assign (resid 22 and name N)  (resid 22 and name CA)
-       (resid 22 and name C)  (resid 23 and name N)  1.0  -43.800    2.752 1
+       (resid 22 and name C)  (resid 23 and name N)  1.0  -34.966    5.633 1
 assign (resid 22 and name CA) (resid 22 and name C)
        (resid 23 and name N)  (resid 23 and name CA) 1.0  180.000    0.100 1
 
 {* Y23: phi, psi, omega *}
 assign (resid 22 and name C)  (resid 23 and name N)
-       (resid 23 and name CA) (resid 23 and name C)  1.0  -64.009    3.381 1
+       (resid 23 and name CA) (resid 23 and name C)  1.0  -63.898    2.644 1
 assign (resid 23 and name N)  (resid 23 and name CA)
-       (resid 23 and name C)  (resid 24 and name N)  1.0  -41.760    4.303 1
+       (resid 23 and name C)  (resid 24 and name N)  1.0  -43.640    3.236 1
 assign (resid 23 and name CA) (resid 23 and name C)
        (resid 24 and name N)  (resid 24 and name CA) 1.0  180.000    0.100 1
 
-{* L24: phi, psi, omega *}
+{* Y24: phi, psi, omega *}
 assign (resid 23 and name C)  (resid 24 and name N)
-       (resid 24 and name CA) (resid 24 and name C)  1.0  -64.432    4.053 1
+       (resid 24 and name CA) (resid 24 and name C)  1.0  -64.900    3.895 1
 assign (resid 24 and name N)  (resid 24 and name CA)
-       (resid 24 and name C)  (resid 25 and name N)  1.0  -41.699    2.781 1
+       (resid 24 and name C)  (resid 25 and name N)  1.0  -42.024    3.801 1
 assign (resid 24 and name CA) (resid 24 and name C)
        (resid 25 and name N)  (resid 25 and name CA) 1.0  180.000    0.100 1
 
-{* A25: phi, psi, omega *}
+{* L25: phi, psi, omega *}
 assign (resid 24 and name C)  (resid 25 and name N)
-       (resid 25 and name CA) (resid 25 and name C)  1.0  -64.276    2.514 1
+       (resid 25 and name CA) (resid 25 and name C)  1.0  -66.276    4.683 1
 assign (resid 25 and name N)  (resid 25 and name CA)
-       (resid 25 and name C)  (resid 26 and name N)  1.0  -40.100    5.488 1
+       (resid 25 and name C)  (resid 26 and name N)  1.0  -42.074    4.867 1
 assign (resid 25 and name CA) (resid 25 and name C)
        (resid 26 and name N)  (resid 26 and name CA) 1.0  180.000    0.100 1
 
-{* Q26: phi, psi, omega *}
+{* A26: phi, psi, omega *}
 assign (resid 25 and name C)  (resid 26 and name N)
-       (resid 26 and name CA) (resid 26 and name C)  1.0  -65.505    4.205 1
+       (resid 26 and name CA) (resid 26 and name C)  1.0  -65.616    2.531 1
 assign (resid 26 and name N)  (resid 26 and name CA)
-       (resid 26 and name C)  (resid 27 and name N)  1.0  -40.446    4.370 1
+       (resid 26 and name C)  (resid 27 and name N)  1.0  -38.887    5.536 1
 assign (resid 26 and name CA) (resid 26 and name C)
        (resid 27 and name N)  (resid 27 and name CA) 1.0  180.000    0.100 1
 
-{* Y27: phi, psi, omega *}
+{* Q27: phi, psi, omega *}
 assign (resid 26 and name C)  (resid 27 and name N)
-       (resid 27 and name CA) (resid 27 and name C)  1.0  -63.946    3.036 1
+       (resid 27 and name CA) (resid 27 and name C)  1.0  -67.684    4.633 1
 assign (resid 27 and name N)  (resid 27 and name CA)
-       (resid 27 and name C)  (resid 28 and name N)  1.0  -43.043    4.078 1
+       (resid 27 and name C)  (resid 28 and name N)  1.0  -37.526    4.642 1
 assign (resid 27 and name CA) (resid 27 and name C)
        (resid 28 and name N)  (resid 28 and name CA) 1.0  180.000    0.100 1
 
-{* R28: phi, psi, omega *}
+{* Y28: phi, psi, omega *}
 assign (resid 27 and name C)  (resid 28 and name N)
-       (resid 28 and name CA) (resid 28 and name C)  1.0  -65.103    3.994 1
+       (resid 28 and name CA) (resid 28 and name C)  1.0  -64.987    5.500 1
 assign (resid 28 and name N)  (resid 28 and name CA)
-       (resid 28 and name C)  (resid 29 and name N)  1.0  -30.543    5.298 1
+       (resid 28 and name C)  (resid 29 and name N)  1.0  -41.765    5.274 1
 assign (resid 28 and name CA) (resid 28 and name C)
        (resid 29 and name N)  (resid 29 and name CA) 1.0  180.000    0.100 1
 
-{* G29: phi, psi, omega *}
+{* R29: phi, psi, omega *}
 assign (resid 28 and name C)  (resid 29 and name N)
-       (resid 29 and name CA) (resid 29 and name C)  1.0  -77.876    5.402 1
+       (resid 29 and name CA) (resid 29 and name C)  1.0  -66.035    3.756 1
 assign (resid 29 and name N)  (resid 29 and name CA)
-       (resid 29 and name C)  (resid 30 and name N)  1.0   -8.859    9.273 1
+       (resid 29 and name C)  (resid 30 and name N)  1.0  -30.203    5.064 1
 assign (resid 29 and name CA) (resid 29 and name C)
        (resid 30 and name N)  (resid 30 and name CA) 1.0  180.000    0.100 1
 
 {* G30: phi, psi, omega *}
 assign (resid 29 and name C)  (resid 30 and name N)
-       (resid 30 and name CA) (resid 30 and name C)  1.0   82.688    6.624 1
+       (resid 30 and name CA) (resid 30 and name C)  1.0  -78.487    5.861 1
 assign (resid 30 and name N)  (resid 30 and name CA)
-       (resid 30 and name C)  (resid 31 and name N)  1.0   11.159    7.094 1
+       (resid 30 and name C)  (resid 31 and name N)  1.0  -10.280   11.015 1
 assign (resid 30 and name CA) (resid 30 and name C)
        (resid 31 and name N)  (resid 31 and name CA) 1.0  180.000    0.100 1
 
-{* T31: phi, psi, omega *}
+{* G31: phi, psi, omega *}
 assign (resid 30 and name C)  (resid 31 and name N)
-       (resid 31 and name CA) (resid 31 and name C)  1.0  -71.966    6.178 1
+       (resid 31 and name CA) (resid 31 and name C)  1.0   84.189    5.250 1
 assign (resid 31 and name N)  (resid 31 and name CA)
-       (resid 31 and name C)  (resid 32 and name N)  1.0  -33.608    8.052 1
+       (resid 31 and name C)  (resid 32 and name N)  1.0   10.299    6.513 1
 assign (resid 31 and name CA) (resid 31 and name C)
        (resid 32 and name N)  (resid 32 and name CA) 1.0  180.000    0.100 1
 
-{* I32: phi, psi, omega *}
+{* T32: phi, psi, omega *}
 assign (resid 31 and name C)  (resid 32 and name N)
-       (resid 32 and name CA) (resid 32 and name C)  1.0 -137.184    8.132 1
+       (resid 32 and name CA) (resid 32 and name C)  1.0  -73.509    8.751 1
 assign (resid 32 and name N)  (resid 32 and name CA)
-       (resid 32 and name C)  (resid 33 and name N)  1.0  158.072    6.271 1
+       (resid 32 and name C)  (resid 33 and name N)  1.0  -31.398    9.489 1
 assign (resid 32 and name CA) (resid 32 and name C)
        (resid 33 and name N)  (resid 33 and name CA) 1.0  180.000    0.100 1
 
-{* S33: phi, psi, omega *}
+{* I33: phi, psi, omega *}
 assign (resid 32 and name C)  (resid 33 and name N)
-       (resid 33 and name CA) (resid 33 and name C)  1.0  -84.863   11.566 1
+       (resid 33 and name CA) (resid 33 and name C)  1.0 -135.917    6.772 1
 assign (resid 33 and name N)  (resid 33 and name CA)
-       (resid 33 and name C)  (resid 34 and name N)  1.0  164.224    6.969 1
+       (resid 33 and name C)  (resid 34 and name N)  1.0  158.179    6.334 1
 assign (resid 33 and name CA) (resid 33 and name C)
        (resid 34 and name N)  (resid 34 and name CA) 1.0  180.000    0.100 1
 
-{* V34: phi, psi, omega *}
+{* S34: phi, psi, omega *}
 assign (resid 33 and name C)  (resid 34 and name N)
-       (resid 34 and name CA) (resid 34 and name C)  1.0  -61.175    2.752 1
+       (resid 34 and name CA) (resid 34 and name C)  1.0  -87.343   12.986 1
 assign (resid 34 and name N)  (resid 34 and name CA)
-       (resid 34 and name C)  (resid 35 and name N)  1.0  -37.593    3.259 1
+       (resid 34 and name C)  (resid 35 and name N)  1.0  164.711    6.954 1
 assign (resid 34 and name CA) (resid 34 and name C)
        (resid 35 and name N)  (resid 35 and name CA) 1.0  180.000    0.100 1
 
-{* E35: phi, psi, omega *}
+{* V35: phi, psi, omega *}
 assign (resid 34 and name C)  (resid 35 and name N)
-       (resid 35 and name CA) (resid 35 and name C)  1.0  -62.315    4.637 1
+       (resid 35 and name CA) (resid 35 and name C)  1.0  -61.377    2.872 1
 assign (resid 35 and name N)  (resid 35 and name CA)
-       (resid 35 and name C)  (resid 36 and name N)  1.0  -41.785    3.989 1
+       (resid 35 and name C)  (resid 36 and name N)  1.0  -36.851    3.446 1
 assign (resid 35 and name CA) (resid 35 and name C)
        (resid 36 and name N)  (resid 36 and name CA) 1.0  180.000    0.100 1
 
-{* A36: phi, psi, omega *}
+{* E36: phi, psi, omega *}
 assign (resid 35 and name C)  (resid 36 and name N)
-       (resid 36 and name CA) (resid 36 and name C)  1.0  -65.626    3.719 1
+       (resid 36 and name CA) (resid 36 and name C)  1.0  -62.749    3.867 1
 assign (resid 36 and name N)  (resid 36 and name CA)
-       (resid 36 and name C)  (resid 37 and name N)  1.0  -39.976    4.135 1
+       (resid 36 and name C)  (resid 37 and name N)  1.0  -41.470    5.202 1
 assign (resid 36 and name CA) (resid 36 and name C)
        (resid 37 and name N)  (resid 37 and name CA) 1.0  180.000    0.100 1
 
-{* M37: phi, psi, omega *}
+{* A37: phi, psi, omega *}
 assign (resid 36 and name C)  (resid 37 and name N)
-       (resid 37 and name CA) (resid 37 and name C)  1.0  -66.357    3.109 1
+       (resid 37 and name CA) (resid 37 and name C)  1.0  -66.140    3.237 1
 assign (resid 37 and name N)  (resid 37 and name CA)
-       (resid 37 and name C)  (resid 38 and name N)  1.0  -46.210    3.723 1
+       (resid 37 and name C)  (resid 38 and name N)  1.0  -37.970    4.672 1
 assign (resid 37 and name CA) (resid 37 and name C)
        (resid 38 and name N)  (resid 38 and name CA) 1.0  180.000    0.100 1
 
-{* V38: phi, psi, omega *}
+{* M38: phi, psi, omega *}
 assign (resid 37 and name C)  (resid 38 and name N)
-       (resid 38 and name CA) (resid 38 and name C)  1.0  -60.690    3.501 1
+       (resid 38 and name CA) (resid 38 and name C)  1.0  -65.428    4.254 1
 assign (resid 38 and name N)  (resid 38 and name CA)
-       (resid 38 and name C)  (resid 39 and name N)  1.0  -43.460    3.896 1
+       (resid 38 and name C)  (resid 39 and name N)  1.0  -45.173    2.761 1
 assign (resid 38 and name CA) (resid 38 and name C)
        (resid 39 and name N)  (resid 39 and name CA) 1.0  180.000    0.100 1
 
-{* M39: phi, psi, omega *}
+{* V39: phi, psi, omega *}
 assign (resid 38 and name C)  (resid 39 and name N)
-       (resid 39 and name CA) (resid 39 and name C)  1.0  -62.520    4.349 1
+       (resid 39 and name CA) (resid 39 and name C)  1.0  -61.814    2.660 1
 assign (resid 39 and name N)  (resid 39 and name CA)
-       (resid 39 and name C)  (resid 40 and name N)  1.0  -39.769    4.469 1
+       (resid 39 and name C)  (resid 40 and name N)  1.0  -43.861    3.342 1
 assign (resid 39 and name CA) (resid 39 and name C)
        (resid 40 and name N)  (resid 40 and name CA) 1.0  180.000    0.100 1
 
-{* A40: phi, psi, omega *}
+{* M40: phi, psi, omega *}
 assign (resid 39 and name C)  (resid 40 and name N)
-       (resid 40 and name CA) (resid 40 and name C)  1.0  -63.990    2.941 1
+       (resid 40 and name CA) (resid 40 and name C)  1.0  -63.353    3.805 1
 assign (resid 40 and name N)  (resid 40 and name CA)
-       (resid 40 and name C)  (resid 41 and name N)  1.0  -39.926    3.786 1
+       (resid 40 and name C)  (resid 41 and name N)  1.0  -38.376    5.486 1
 assign (resid 40 and name CA) (resid 40 and name C)
        (resid 41 and name N)  (resid 41 and name CA) 1.0  180.000    0.100 1
 
-{* L41: phi, psi, omega *}
+{* A41: phi, psi, omega *}
 assign (resid 40 and name C)  (resid 41 and name N)
-       (resid 41 and name CA) (resid 41 and name C)  1.0  -66.990    4.156 1
+       (resid 41 and name CA) (resid 41 and name C)  1.0  -65.518    3.251 1
 assign (resid 41 and name N)  (resid 41 and name CA)
-       (resid 41 and name C)  (resid 42 and name N)  1.0  -39.226    6.072 1
+       (resid 41 and name C)  (resid 42 and name N)  1.0  -39.099    4.037 1
 assign (resid 41 and name CA) (resid 41 and name C)
        (resid 42 and name N)  (resid 42 and name CA) 1.0  180.000    0.100 1
 
-{* F42: phi, psi, omega *}
+{* L42: phi, psi, omega *}
 assign (resid 41 and name C)  (resid 42 and name N)
-       (resid 42 and name CA) (resid 42 and name C)  1.0  -66.738    4.947 1
+       (resid 42 and name CA) (resid 42 and name C)  1.0  -67.312    3.673 1
 assign (resid 42 and name N)  (resid 42 and name CA)
-       (resid 42 and name C)  (resid 43 and name N)  1.0  -32.662    5.338 1
+       (resid 42 and name C)  (resid 43 and name N)  1.0  -39.069    5.066 1
 assign (resid 42 and name CA) (resid 42 and name C)
        (resid 43 and name N)  (resid 43 and name CA) 1.0  180.000    0.100 1
 
-{* E43: phi, psi, omega *}
+{* F43: phi, psi, omega *}
 assign (resid 42 and name C)  (resid 43 and name N)
-       (resid 43 and name CA) (resid 43 and name C)  1.0  -69.485    5.911 1
+       (resid 43 and name CA) (resid 43 and name C)  1.0  -66.920    4.872 1
 assign (resid 43 and name N)  (resid 43 and name CA)
-       (resid 43 and name C)  (resid 44 and name N)  1.0  -35.446    9.063 1
+       (resid 43 and name C)  (resid 44 and name N)  1.0  -32.088    6.719 1
 assign (resid 43 and name CA) (resid 43 and name C)
        (resid 44 and name N)  (resid 44 and name CA) 1.0  180.000    0.100 1
 
-{* L44: phi, psi, omega *}
+{* E44: phi, psi, omega *}
 assign (resid 43 and name C)  (resid 44 and name N)
-       (resid 44 and name CA) (resid 44 and name C)  1.0  -71.595   12.098 1
+       (resid 44 and name CA) (resid 44 and name C)  1.0  -69.459    4.456 1
 assign (resid 44 and name N)  (resid 44 and name CA)
-       (resid 44 and name C)  (resid 45 and name N)  1.0  -33.784    6.734 1
+       (resid 44 and name C)  (resid 45 and name N)  1.0  -30.770    8.111 1
 assign (resid 44 and name CA) (resid 44 and name C)
        (resid 45 and name N)  (resid 45 and name CA) 1.0  180.000    0.100 1
 
 {* L45: phi, psi, omega *}
 assign (resid 44 and name C)  (resid 45 and name N)
-       (resid 45 and name CA) (resid 45 and name C)  1.0  -91.253    9.489 1
+       (resid 45 and name CA) (resid 45 and name C)  1.0  -75.170   13.706 1
 assign (resid 45 and name N)  (resid 45 and name CA)
-       (resid 45 and name C)  (resid 46 and name N)  1.0   -1.866    9.054 1
+       (resid 45 and name C)  (resid 46 and name N)  1.0  -31.018   11.187 1
 assign (resid 45 and name CA) (resid 45 and name C)
        (resid 46 and name N)  (resid 46 and name CA) 1.0  180.000    0.100 1
 
-{* N46: phi, psi, omega *}
+{* L46: phi, psi, omega *}
 assign (resid 45 and name C)  (resid 46 and name N)
-       (resid 46 and name CA) (resid 46 and name C)  1.0   54.734    8.496 1
+       (resid 46 and name CA) (resid 46 and name C)  1.0  -96.307    8.767 1
 assign (resid 46 and name N)  (resid 46 and name CA)
-       (resid 46 and name C)  (resid 47 and name N)  1.0   44.173    6.012 1
+       (resid 46 and name C)  (resid 47 and name N)  1.0   10.761   20.705 1
 assign (resid 46 and name CA) (resid 46 and name C)
        (resid 47 and name N)  (resid 47 and name CA) 1.0  180.000    0.100 1
 
-{* T47: phi, psi, omega *}
+{* N47: phi, psi, omega *}
 assign (resid 46 and name C)  (resid 47 and name N)
-       (resid 47 and name CA) (resid 47 and name C)  1.0 -112.221   32.716 1
+       (resid 47 and name CA) (resid 47 and name C)  1.0   54.853    5.041 1
 assign (resid 47 and name N)  (resid 47 and name CA)
-       (resid 47 and name C)  (resid 48 and name N)  1.0  154.135   13.447 1
+       (resid 47 and name C)  (resid 48 and name N)  1.0   42.456    5.402 1
 assign (resid 47 and name CA) (resid 47 and name C)
        (resid 48 and name N)  (resid 48 and name CA) 1.0  180.000    0.100 1
 
-{* H48: phi, psi, omega *}
+{* T48: phi, psi, omega *}
 assign (resid 47 and name C)  (resid 48 and name N)
-       (resid 48 and name CA) (resid 48 and name C)  1.0  -65.496   10.614 1
+       (resid 48 and name CA) (resid 48 and name C)  1.0 -119.618   14.547 1
 assign (resid 48 and name N)  (resid 48 and name CA)
-       (resid 48 and name C)  (resid 49 and name N)  1.0  -34.463   11.841 1
+       (resid 48 and name C)  (resid 49 and name N)  1.0   21.265   20.850 1
 assign (resid 48 and name CA) (resid 48 and name C)
        (resid 49 and name N)  (resid 49 and name CA) 1.0  180.000    0.100 1
 
-{* A49: phi, psi, omega *}
+{* H49: phi, psi, omega *}
 assign (resid 48 and name C)  (resid 49 and name N)
-       (resid 49 and name CA) (resid 49 and name C)  1.0  -63.462    3.736 1
+       (resid 49 and name CA) (resid 49 and name C)  1.0  -59.975    5.858 1
 assign (resid 49 and name N)  (resid 49 and name CA)
-       (resid 49 and name C)  (resid 50 and name N)  1.0  -39.808    6.137 1
+       (resid 49 and name C)  (resid 50 and name N)  1.0  -41.362    8.314 1
 assign (resid 49 and name CA) (resid 49 and name C)
        (resid 50 and name N)  (resid 50 and name CA) 1.0  180.000    0.100 1
 
-{* K50: phi, psi, omega *}
+{* A50: phi, psi, omega *}
 assign (resid 49 and name C)  (resid 50 and name N)
-       (resid 50 and name CA) (resid 50 and name C)  1.0  -65.873    2.806 1
+       (resid 50 and name CA) (resid 50 and name C)  1.0  -61.931    4.392 1
 assign (resid 50 and name N)  (resid 50 and name CA)
-       (resid 50 and name C)  (resid 51 and name N)  1.0  -40.228    3.971 1
+       (resid 50 and name C)  (resid 51 and name N)  1.0  -41.925    5.878 1
 assign (resid 50 and name CA) (resid 50 and name C)
        (resid 51 and name N)  (resid 51 and name CA) 1.0  180.000    0.100 1
 
-{* F51: phi, psi, omega *}
+{* K51: phi, psi, omega *}
 assign (resid 50 and name C)  (resid 51 and name N)
-       (resid 51 and name CA) (resid 51 and name C)  1.0  -63.661    2.681 1
+       (resid 51 and name CA) (resid 51 and name C)  1.0  -67.146    2.602 1
 assign (resid 51 and name N)  (resid 51 and name CA)
-       (resid 51 and name C)  (resid 52 and name N)  1.0  -41.403    3.906 1
+       (resid 51 and name C)  (resid 52 and name N)  1.0  -42.188    4.718 1
 assign (resid 51 and name CA) (resid 51 and name C)
        (resid 52 and name N)  (resid 52 and name CA) 1.0  180.000    0.100 1
 
-{* S52: phi, psi, omega *}
+{* F52: phi, psi, omega *}
 assign (resid 51 and name C)  (resid 52 and name N)
-       (resid 52 and name CA) (resid 52 and name C)  1.0  -67.248    3.711 1
+       (resid 52 and name CA) (resid 52 and name C)  1.0  -63.824    2.508 1
 assign (resid 52 and name N)  (resid 52 and name CA)
-       (resid 52 and name C)  (resid 53 and name N)  1.0  -38.005    4.462 1
+       (resid 52 and name C)  (resid 53 and name N)  1.0  -41.154    4.754 1
 assign (resid 52 and name CA) (resid 52 and name C)
        (resid 53 and name N)  (resid 53 and name CA) 1.0  180.000    0.100 1
 
-{* L53: phi, psi, omega *}
+{* S53: phi, psi, omega *}
 assign (resid 52 and name C)  (resid 53 and name N)
-       (resid 53 and name CA) (resid 53 and name C)  1.0  -67.625    3.590 1
+       (resid 53 and name CA) (resid 53 and name C)  1.0  -68.573    3.438 1
 assign (resid 53 and name N)  (resid 53 and name CA)
-       (resid 53 and name C)  (resid 54 and name N)  1.0  -42.273    4.746 1
+       (resid 53 and name C)  (resid 54 and name N)  1.0  -37.332    5.023 1
 assign (resid 53 and name CA) (resid 53 and name C)
        (resid 54 and name N)  (resid 54 and name CA) 1.0  180.000    0.100 1
 
 {* L54: phi, psi, omega *}
 assign (resid 53 and name C)  (resid 54 and name N)
-       (resid 54 and name CA) (resid 54 and name C)  1.0  -65.401    3.758 1
+       (resid 54 and name CA) (resid 54 and name C)  1.0  -68.738    3.785 1
 assign (resid 54 and name N)  (resid 54 and name CA)
-       (resid 54 and name C)  (resid 55 and name N)  1.0  -38.568    4.316 1
+       (resid 54 and name C)  (resid 55 and name N)  1.0  -39.810    6.707 1
 assign (resid 54 and name CA) (resid 54 and name C)
        (resid 55 and name N)  (resid 55 and name CA) 1.0  180.000    0.100 1
 
-{* S55: phi, psi, omega *}
+{* L55: phi, psi, omega *}
 assign (resid 54 and name C)  (resid 55 and name N)
-       (resid 55 and name CA) (resid 55 and name C)  1.0  -65.906    3.426 1
+       (resid 55 and name CA) (resid 55 and name C)  1.0  -67.616    5.542 1
 assign (resid 55 and name N)  (resid 55 and name CA)
-       (resid 55 and name C)  (resid 56 and name N)  1.0  -36.814    4.776 1
+       (resid 55 and name C)  (resid 56 and name N)  1.0  -38.157    5.304 1
 assign (resid 55 and name CA) (resid 55 and name C)
        (resid 56 and name N)  (resid 56 and name CA) 1.0  180.000    0.100 1
 
-{* E56: phi, psi, omega *}
+{* S56: phi, psi, omega *}
 assign (resid 55 and name C)  (resid 56 and name N)
-       (resid 56 and name CA) (resid 56 and name C)  1.0  -70.103    4.148 1
+       (resid 56 and name CA) (resid 56 and name C)  1.0  -67.030    3.841 1
 assign (resid 56 and name N)  (resid 56 and name CA)
-       (resid 56 and name C)  (resid 57 and name N)  1.0  -38.092    5.172 1
+       (resid 56 and name C)  (resid 57 and name N)  1.0  -36.461    3.639 1
 assign (resid 56 and name CA) (resid 56 and name C)
        (resid 57 and name N)  (resid 57 and name CA) 1.0  180.000    0.100 1
 
-{* V57: phi, psi, omega *}
+{* E57: phi, psi, omega *}
 assign (resid 56 and name C)  (resid 57 and name N)
-       (resid 57 and name CA) (resid 57 and name C)  1.0  -65.678    4.608 1
+       (resid 57 and name CA) (resid 57 and name C)  1.0  -69.157    4.052 1
 assign (resid 57 and name N)  (resid 57 and name CA)
-       (resid 57 and name C)  (resid 58 and name N)  1.0  -41.266    4.982 1
+       (resid 57 and name C)  (resid 58 and name N)  1.0  -37.003    4.987 1
 assign (resid 57 and name CA) (resid 57 and name C)
        (resid 58 and name N)  (resid 58 and name CA) 1.0  180.000    0.100 1
 
-{* R58: phi, psi, omega *}
+{* V58: phi, psi, omega *}
 assign (resid 57 and name C)  (resid 58 and name N)
-       (resid 58 and name CA) (resid 58 and name C)  1.0  -62.154    4.867 1
+       (resid 58 and name CA) (resid 58 and name C)  1.0  -63.969    4.532 1
 assign (resid 58 and name N)  (resid 58 and name CA)
-       (resid 58 and name C)  (resid 59 and name N)  1.0  -31.264    8.110 1
+       (resid 58 and name C)  (resid 59 and name N)  1.0  -43.008    4.990 1
 assign (resid 58 and name CA) (resid 58 and name C)
        (resid 59 and name N)  (resid 59 and name CA) 1.0  180.000    0.100 1
 
-{* S59: phi, psi, omega *}
+{* R59: phi, psi, omega *}
 assign (resid 58 and name C)  (resid 59 and name N)
-       (resid 59 and name CA) (resid 59 and name C)  1.0  -68.252    7.037 1
+       (resid 59 and name CA) (resid 59 and name C)  1.0  -62.034    5.423 1
 assign (resid 59 and name N)  (resid 59 and name CA)
-       (resid 59 and name C)  (resid 60 and name N)  1.0  -25.284    7.915 1
+       (resid 59 and name C)  (resid 60 and name N)  1.0  -35.461    5.783 1
 assign (resid 59 and name CA) (resid 59 and name C)
        (resid 60 and name N)  (resid 60 and name CA) 1.0  180.000    0.100 1
 
-{* I60: phi, psi, omega *}
+{* S60: phi, psi, omega *}
 assign (resid 59 and name C)  (resid 60 and name N)
-       (resid 60 and name CA) (resid 60 and name C)  1.0 -101.884    9.542 1
+       (resid 60 and name CA) (resid 60 and name C)  1.0  -70.338    7.309 1
 assign (resid 60 and name N)  (resid 60 and name CA)
-       (resid 60 and name C)  (resid 61 and name N)  1.0   -7.122   10.723 1
+       (resid 60 and name C)  (resid 61 and name N)  1.0  -25.560    8.285 1
 assign (resid 60 and name CA) (resid 60 and name C)
        (resid 61 and name N)  (resid 61 and name CA) 1.0  180.000    0.100 1
 
 {* I61: phi, psi, omega *}
 assign (resid 60 and name C)  (resid 61 and name N)
-       (resid 61 and name CA) (resid 61 and name C)  1.0  -86.956   12.568 1
+       (resid 61 and name CA) (resid 61 and name C)  1.0 -101.558    9.985 1
 assign (resid 61 and name N)  (resid 61 and name CA)
-       (resid 61 and name C)  (resid 62 and name N)  1.0  133.625   17.188 1
+       (resid 61 and name C)  (resid 62 and name N)  1.0   -2.811   10.152 1
 assign (resid 61 and name CA) (resid 61 and name C)
        (resid 62 and name N)  (resid 62 and name CA) 1.0  180.000    0.100 1
 
-{* S62: phi, psi, omega *}
+{* I62: phi, psi, omega *}
 assign (resid 61 and name C)  (resid 62 and name N)
-       (resid 62 and name CA) (resid 62 and name C)  1.0  -67.665    9.800 1
+       (resid 62 and name CA) (resid 62 and name C)  1.0  -84.404   13.015 1
 assign (resid 62 and name N)  (resid 62 and name CA)
-       (resid 62 and name C)  (resid 63 and name N)  1.0  143.583    9.448 1
+       (resid 62 and name C)  (resid 63 and name N)  1.0  126.353   20.656 1
 assign (resid 62 and name CA) (resid 62 and name C)
        (resid 63 and name N)  (resid 63 and name CA) 1.0  180.000    0.100 1
 
-{* P63: phi, psi, omega *}
+{* S63: phi, psi, omega *}
 assign (resid 62 and name C)  (resid 63 and name N)
-       (resid 63 and name CA) (resid 63 and name C)  1.0  -56.119    6.319 1
+       (resid 63 and name CA) (resid 63 and name C)  1.0  -68.021    8.970 1
 assign (resid 63 and name N)  (resid 63 and name CA)
-       (resid 63 and name C)  (resid 64 and name N)  1.0  -33.346    6.405 1
+       (resid 63 and name C)  (resid 64 and name N)  1.0  143.968    9.297 1
 assign (resid 63 and name CA) (resid 63 and name C)
        (resid 64 and name N)  (resid 64 and name CA) 1.0  180.000    0.100 1
 
-{* Q64: phi, psi, omega *}
+{* P64: phi, psi, omega *}
 assign (resid 63 and name C)  (resid 64 and name N)
-       (resid 64 and name CA) (resid 64 and name C)  1.0  -70.969    6.044 1
+       (resid 64 and name CA) (resid 64 and name C)  1.0  -54.369    4.161 1
 assign (resid 64 and name N)  (resid 64 and name CA)
-       (resid 64 and name C)  (resid 65 and name N)  1.0  -14.693    8.110 1
+       (resid 64 and name C)  (resid 65 and name N)  1.0  -34.895    5.977 1
 assign (resid 64 and name CA) (resid 64 and name C)
        (resid 65 and name N)  (resid 65 and name CA) 1.0  180.000    0.100 1
 
-{* D65: phi, psi, omega *}
+{* Q65: phi, psi, omega *}
 assign (resid 64 and name C)  (resid 65 and name N)
-       (resid 65 and name CA) (resid 65 and name C)  1.0 -102.832    7.331 1
+       (resid 65 and name CA) (resid 65 and name C)  1.0  -71.017    5.245 1
 assign (resid 65 and name N)  (resid 65 and name CA)
-       (resid 65 and name C)  (resid 66 and name N)  1.0    4.312    6.915 1
+       (resid 65 and name C)  (resid 66 and name N)  1.0  -15.467    8.954 1
 assign (resid 65 and name CA) (resid 65 and name C)
        (resid 66 and name N)  (resid 66 and name CA) 1.0  180.000    0.100 1
 
-{* L66: phi, psi, omega *}
+{* D66: phi, psi, omega *}
 assign (resid 65 and name C)  (resid 66 and name N)
-       (resid 66 and name CA) (resid 66 and name C)  1.0  -58.489    4.662 1
+       (resid 66 and name CA) (resid 66 and name C)  1.0 -106.920    5.851 1
 assign (resid 66 and name N)  (resid 66 and name CA)
-       (resid 66 and name C)  (resid 67 and name N)  1.0  -46.179    5.114 1
+       (resid 66 and name C)  (resid 67 and name N)  1.0    5.206    7.964 1
 assign (resid 66 and name CA) (resid 66 and name C)
        (resid 67 and name N)  (resid 67 and name CA) 1.0  180.000    0.100 1
 
-{* D67: phi, psi, omega *}
+{* L67: phi, psi, omega *}
 assign (resid 66 and name C)  (resid 67 and name N)
-       (resid 67 and name CA) (resid 67 and name C)  1.0  -63.689    3.733 1
+       (resid 67 and name CA) (resid 67 and name C)  1.0  -58.645    5.634 1
 assign (resid 67 and name N)  (resid 67 and name CA)
-       (resid 67 and name C)  (resid 68 and name N)  1.0  -44.568    4.798 1
+       (resid 67 and name C)  (resid 68 and name N)  1.0  -46.113    5.910 1
 assign (resid 67 and name CA) (resid 67 and name C)
        (resid 68 and name N)  (resid 68 and name CA) 1.0  180.000    0.100 1
 
-{* R68: phi, psi, omega *}
+{* D68: phi, psi, omega *}
 assign (resid 67 and name C)  (resid 68 and name N)
-       (resid 68 and name CA) (resid 68 and name C)  1.0  -64.785    3.581 1
+       (resid 68 and name CA) (resid 68 and name C)  1.0  -63.409    3.549 1
 assign (resid 68 and name N)  (resid 68 and name CA)
-       (resid 68 and name C)  (resid 69 and name N)  1.0  -41.162    4.792 1
+       (resid 68 and name C)  (resid 69 and name N)  1.0  -43.586    3.976 1
 assign (resid 68 and name CA) (resid 68 and name C)
        (resid 69 and name N)  (resid 69 and name CA) 1.0  180.000    0.100 1
 
-{* F69: phi, psi, omega *}
+{* R69: phi, psi, omega *}
 assign (resid 68 and name C)  (resid 69 and name N)
-       (resid 69 and name CA) (resid 69 and name C)  1.0  -62.872    2.674 1
+       (resid 69 and name CA) (resid 69 and name C)  1.0  -65.703    4.382 1
 assign (resid 69 and name N)  (resid 69 and name CA)
-       (resid 69 and name C)  (resid 70 and name N)  1.0  -45.000    2.814 1
+       (resid 69 and name C)  (resid 70 and name N)  1.0  -40.318    5.251 1
 assign (resid 69 and name CA) (resid 69 and name C)
        (resid 70 and name N)  (resid 70 and name CA) 1.0  180.000    0.100 1
 
-{* D70: phi, psi, omega *}
+{* F70: phi, psi, omega *}
 assign (resid 69 and name C)  (resid 70 and name N)
-       (resid 70 and name CA) (resid 70 and name C)  1.0  -61.957    3.121 1
+       (resid 70 and name CA) (resid 70 and name C)  1.0  -63.793    3.870 1
 assign (resid 70 and name N)  (resid 70 and name CA)
-       (resid 70 and name C)  (resid 71 and name N)  1.0  -40.478    4.164 1
+       (resid 70 and name C)  (resid 71 and name N)  1.0  -44.813    2.839 1
 assign (resid 70 and name CA) (resid 70 and name C)
        (resid 71 and name N)  (resid 71 and name CA) 1.0  180.000    0.100 1
 
-{* H71: phi, psi, omega *}
+{* D71: phi, psi, omega *}
 assign (resid 70 and name C)  (resid 71 and name N)
-       (resid 71 and name CA) (resid 71 and name C)  1.0  -65.091    3.815 1
+       (resid 71 and name CA) (resid 71 and name C)  1.0  -61.700    2.981 1
 assign (resid 71 and name N)  (resid 71 and name CA)
-       (resid 71 and name C)  (resid 72 and name N)  1.0  -42.037    4.112 1
+       (resid 71 and name C)  (resid 72 and name N)  1.0  -39.027    4.096 1
 assign (resid 71 and name CA) (resid 71 and name C)
        (resid 72 and name N)  (resid 72 and name CA) 1.0  180.000    0.100 1
 
-{* L72: phi, psi, omega *}
+{* H72: phi, psi, omega *}
 assign (resid 71 and name C)  (resid 72 and name N)
-       (resid 72 and name CA) (resid 72 and name C)  1.0  -66.900    4.976 1
+       (resid 72 and name CA) (resid 72 and name C)  1.0  -65.668    2.789 1
 assign (resid 72 and name N)  (resid 72 and name CA)
-       (resid 72 and name C)  (resid 73 and name N)  1.0  -42.630    5.251 1
+       (resid 72 and name C)  (resid 73 and name N)  1.0  -41.967    4.129 1
 assign (resid 72 and name CA) (resid 72 and name C)
        (resid 73 and name N)  (resid 73 and name CA) 1.0  180.000    0.100 1
 
-{* V73: phi, psi, omega *}
+{* L73: phi, psi, omega *}
 assign (resid 72 and name C)  (resid 73 and name N)
-       (resid 73 and name CA) (resid 73 and name C)  1.0  -65.329    4.797 1
+       (resid 73 and name CA) (resid 73 and name C)  1.0  -67.358    5.843 1
 assign (resid 73 and name N)  (resid 73 and name CA)
-       (resid 73 and name C)  (resid 74 and name N)  1.0  -30.711    6.074 1
+       (resid 73 and name C)  (resid 74 and name N)  1.0  -41.760    5.052 1
 assign (resid 73 and name CA) (resid 73 and name C)
        (resid 74 and name N)  (resid 74 and name CA) 1.0  180.000    0.100 1
 
-{* L74: phi, psi, omega *}
+{* V74: phi, psi, omega *}
 assign (resid 73 and name C)  (resid 74 and name N)
-       (resid 74 and name CA) (resid 74 and name C)  1.0  -72.239    8.331 1
+       (resid 74 and name CA) (resid 74 and name C)  1.0  -66.957    4.769 1
 assign (resid 74 and name N)  (resid 74 and name CA)
-       (resid 74 and name C)  (resid 75 and name N)  1.0  -17.418    7.807 1
+       (resid 74 and name C)  (resid 75 and name N)  1.0  -32.982    7.390 1
 assign (resid 74 and name CA) (resid 74 and name C)
        (resid 75 and name N)  (resid 75 and name CA) 1.0  180.000    0.100 1
 
-{* R75: phi, psi, omega *}
+{* L75: phi, psi, omega *}
 assign (resid 74 and name C)  (resid 75 and name N)
-       (resid 75 and name CA) (resid 75 and name C)  1.0  -78.194   10.808 1
+       (resid 75 and name CA) (resid 75 and name C)  1.0  -73.185    9.532 1
 assign (resid 75 and name N)  (resid 75 and name CA)
-       (resid 75 and name C)  (resid 76 and name N)  1.0  127.401   16.775 1
+       (resid 75 and name C)  (resid 76 and name N)  1.0  -19.330    7.763 1
 assign (resid 75 and name CA) (resid 75 and name C)
        (resid 76 and name N)  (resid 76 and name CA) 1.0  180.000    0.100 1
+
+{* R76: phi, psi, omega *}
+assign (resid 75 and name C)  (resid 76 and name N)
+       (resid 76 and name CA) (resid 76 and name C)  1.0 -111.888   26.821 1
+assign (resid 76 and name N)  (resid 76 and name CA)
+       (resid 76 and name C)  (resid 77 and name N)  1.0   20.929   34.615 1
+assign (resid 76 and name CA) (resid 76 and name C)
+       (resid 77 and name N)  (resid 77 and name CA) 1.0  180.000    0.100 1
 
