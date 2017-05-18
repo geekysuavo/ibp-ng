@@ -6,7 +6,7 @@ dos that need doing.
 
 ## Small tasks
 
- * Timing information during traversal
+ * Fixed timing information during traversal
 
 ## Big tasks
 

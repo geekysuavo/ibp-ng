@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if [ "${1}" == "apply" ]; then
+  pushd ../..
+  patch -p0 -N -i data/orders/orders.diff
+  make again
+  popd
+
+elif [ "${1}" == "revert" ]; then
+  pushd ../..
+  patch -p0 -R -i data/orders/orders.diff
+  make again
+  popd
+
+else
+  echo "invalid option"
+  exit 1
+
+fi
+

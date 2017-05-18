@@ -22,7 +22,7 @@ CFLAGS=-ggdb -O3 -std=c99 -D_POSIX_SOURCE
 CFLAGS+= -Wall -Wformat -Wextra -Wno-unused-parameter
 LFLAGS=
 YFLAGS=-d
-LIBS=-lm -lfl
+LIBS=-lm
 
 # CFLAGS, LIBS: pthread/cuda-only compilation flags and libraries.
 ifeq ($(IBP_PTHREAD),y)
