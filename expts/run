@@ -1,0 +1,97 @@
+#!/bin/bash
+
+# NOTE: this script requires that the STRIDE program exists in this
+# directory as the executable file './stride'
+
+# check for the cleanup argument.
+if [ "${1}" == "clean" ]; then
+  for d in $(cat pdbids.lst); do
+    rm -rf ${d}
+  done
+  exit
+fi
+
+# get the list of pdb identifiers.
+ids="$(cat pdbids.lst)"
+
+# loop over each pdb id.
+for id in ${ids}; do
+  # check for the directory.
+  if [ -d ${id} ]; then
+    continue
+  fi
+
+  # create the directory.
+  mkdir ${id}
+
+  # download the pdb file.
+  uc=$(echo ${id} | tr '[:lower:]' '[:upper:]')
+  wget -q https://files.rcsb.org/download/${uc}.pdb.gz -O ${id}/input.pdb.gz
+  gunzip ${id}/input.pdb.gz
+
+  # loop over each model.
+  nmdl=$(awk -f nummodel.awk ${id}/input.pdb)
+  for mdl in $(seq 1 ${nmdl}); do
+    # extract the model to a file.
+    awk -f getmodel.awk -v id=${mdl} ${id}/input.pdb > ${id}/${mdl}.pdb
+
+    # build the model proton file.
+    awk -f getprot.awk ${id}/${mdl}.pdb > ${id}/${mdl}.prot
+
+    # compute the model dihedrals.
+    ./stride -rA -cA ${id}/${mdl}.pdb > ${id}/${mdl}.str
+    rm -f ${id}/${mdl}.pdb
+
+    # build the sequence from the first model.
+    if [ "${mdl}" == "1" ]; then
+      awk -f getfasta.awk ${id}/${mdl}.str > ${id}/input.fa
+    fi
+
+    # build the model ramachandran file.
+    awk -f getrama.awk ${id}/${mdl}.str > ${id}/${mdl}.rama
+    rm -f ${id}/${mdl}.str
+  done
+
+  # join the ramachandran files.
+  mv ${id}/1.rama temp.rama
+  for mdl in $(seq 2 ${nmdl}); do
+    join -1 1 -2 1 temp.rama ${id}/${mdl}.rama > temp2.rama
+    mv temp2.rama temp.rama
+    rm -f ${id}/${mdl}.rama
+  done
+  mv temp.rama ${id}/input.rama
+
+  # build the restraint files.
+  octave-cli rama.m ${id}/input.rama > ${id}/input.res
+  octave-cli dist.m "${id}/*.prot" 1 >> ${id}/input.res
+
+  # remove the proton files.
+  for mdl in $(seq 1 ${nmdl}); do
+    rm -f ${id}/${mdl}.prot
+  done
+done
+
+# loop again over each pdb id.
+for id in ${ids}; do
+  # check for the ibp outputs.
+  if [ -f ${id}/output.dmdgp ]; then
+    continue
+  fi
+
+  # run the ibp-ng code.
+  ../bin/ibp-ng -v -v \
+    --input  ${id}/input.fa \
+    --psf    ${id}/output.psf \
+    --dmdgp  ${id}/output.dmdgp \
+    --output ${id}/output.dcd \
+    --format dcd \
+    --restraints ${id}/input.res \
+    --topology ../lib/ibp-protein.top \
+    --params ../lib/ibp-protein.par \
+    --reorder ../lib/ibp-protein.ord \
+    --threads 1 \
+    --method dist,impr \
+    --limit 10000 --branch-eps 0.01 --branch-max 16 \
+    --vdw-scale 0.25 --ddf-tol 0.1
+done
+
