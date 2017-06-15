@@ -62,8 +62,8 @@ for id in ${ids}; do
   mv temp.rama ${id}/input.rama
 
   # build the restraint files.
-  octave-cli rama.m ${id}/input.rama > ${id}/input.res
-  octave-cli dist.m "${id}/*.prot" 1 >> ${id}/input.res
+  octave-cli -q rama.m ${id}/input.rama > ${id}/input.res
+  octave-cli -q dist.m "${id}/*.prot" 1 >> ${id}/input.res
 
   # remove the proton files.
   for mdl in $(seq 1 ${nmdl}); do
@@ -73,25 +73,38 @@ done
 
 # loop again over each pdb id.
 for id in ${ids}; do
-  # check for the ibp outputs.
-  if [ -f ${id}/output.dmdgp ]; then
+  # check for the run script.
+  if [ -f ${id}/run ]; then
     continue
   fi
 
-  # run the ibp-ng code.
-  ../bin/ibp-ng -v -v \
-    --input  ${id}/input.fa \
-    --psf    ${id}/output.psf \
-    --dmdgp  ${id}/output.dmdgp \
-    --output ${id}/output.dcd \
-    --format dcd \
-    --restraints ${id}/input.res \
-    --topology ../lib/ibp-protein.top \
-    --params ../lib/ibp-protein.par \
-    --reorder ../lib/ibp-protein.ord \
-    --threads 1 \
-    --method dist,impr \
-    --limit 10000 --branch-eps 0.01 --branch-max 16 \
-    --vdw-scale 0.25 --ddf-tol 0.1
+  # generate the run script.
+  cat > ${id}/run << EOF
+#!/bin/bash
+
+if [ "\${1}" == "clean" ]; then
+  rm -f output.*
+  exit
+fi
+
+../../bin/ibp-ng -v -v \
+  --input  input.fa \
+  --psf    output.psf \
+  --dmdgp  output.dmdgp \
+  --output output.dcd \
+  --format dcd \
+  --restraints input.res \
+  --topology ../../lib/ibp-protein.top \
+  --params ../../lib/ibp-protein.par \
+  --reorder ../../lib/ibp-protein.ord \
+  --threads 1 \
+  --method dist,impr \
+  --limit 10000 --branch-eps 0.01 --branch-max 16 \
+  --vdw-scale 0.25 --ddf-tol 0.1
+
+EOF
+
+  # make the run script executable.
+  chmod +x ${id}/run
 done
 
