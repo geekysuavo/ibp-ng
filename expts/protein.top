@@ -1,0 +1,117 @@
+
+{* mandatory masses *}
+mass H     1.0080
+mass HA    1.0080
+mass HC    1.0080
+mass C    12.0110
+mass C5   12.0110
+mass C5W  12.0110
+mass CF   12.0110
+mass CW   12.0110
+mass CY   12.0110
+mass CY2  12.0110
+mass CH1E 12.0110
+mass CH2E 12.0110
+mass CH2G 12.0110
+mass CH2P 12.0110
+mass CH3E 12.0110
+mass CR1E 12.0110
+mass CR1H 12.0110
+mass CR1W 13.0110
+mass CRHH 12.0110
+mass N    14.0067
+mass NH1  14.0067
+mass NH2  14.0067
+mass NC2  14.0067
+mass NH3  14.0067
+mass O    15.9994
+mass OH1  15.9994
+mass OC   15.9994
+mass S    32.0600
+mass SM   32.0600
+mass SH1E 32.0600
+
+! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+! backbone only, first residue
+residue BB1
+ group
+  atom N  type=NH2  charge=-0.36 end
+  atom H1 type=H    charge= 0.26 end
+ group
+  atom CA type=CH1E charge= 0.00 end
+  atom HA type=HA   charge= 0.10 end
+ group
+  atom C  type=C    charge= 0.48 end
+  atom O  type=O    charge=-0.48 end
+
+ bond N  H1
+ bond N  CA    bond CA HA
+ bond CA C     bond C  O
+
+ dihedral H1 N CA HA
+end
+
+! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+! backbone only, second residue
+residue BB2
+ group
+  atom N  type=NH1  charge=-0.36 end
+  atom H1 type=H    charge= 0.26 end
+ group
+  atom CA type=CH1E charge= 0.00 end
+  atom HA type=HA   charge= 0.10 end
+ group
+  atom C  type=C    charge= 0.48 end
+  atom O  type=O    charge=-0.48 end
+
+ bond N  H1
+ bond N  CA    bond CA HA
+ bond CA C     bond C  O
+
+ dihedral H1 N CA HA
+end
+
+! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+! backbone only, inner residue
+residue BBI
+ group
+  atom N  type=NH1  charge=-0.36 end
+  atom H1 type=H    charge= 0.26 end
+ group
+  atom CA type=CH1E charge= 0.00 end
+  atom HA type=HA   charge= 0.10 end
+ group
+  atom C  type=C    charge= 0.48 end
+  atom O  type=O    charge=-0.48 end
+
+ bond N  H1
+ bond N  CA    bond CA HA
+ bond CA C     bond C  O
+
+ dihedral H1 N CA HA
+end
+
+! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+! backbone only, last residue
+residue BBN
+ group
+  atom N  type=NH1  charge=-0.36 end
+  atom H1 type=H    charge= 0.26 end
+ group
+  atom CA type=CH1E charge= 0.00 end
+  atom HA type=HA   charge= 0.10 end
+ group
+  atom C  type=C    charge= 0.48 end
+  atom O  type=O    charge=-0.48 end
+
+ bond N  H1
+ bond N  CA    bond CA HA
+ bond CA C     bond C  O
+
+ dihedral H1 N CA HA
+end
+

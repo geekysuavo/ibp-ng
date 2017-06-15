@@ -1,0 +1,25 @@
+
+! first residue
+reorder BB1
+ N, H1, H2, CA, N, HA, CA, C
+end
+
+! second residue
+reorder BB2
+ N, -O, -CA, -C, N, CA, C, +N,
+ -C, N, CA, H1, N, CA, C, HA, C, CA
+end
+
+! inner residue
+reorder BBI
+ N, -O, -CA, -C, N, CA, C, +N,
+ -C, N, CA, H1, N, CA, C, HA, C, CA
+end
+
+! last residue
+reorder BBN
+ N, -O, -CA, -C, N, CA, C,
+ -C, N, CA, H1, N, CA, C, HA,
+ C, CA, O, C, O2
+end
+

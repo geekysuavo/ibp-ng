@@ -87,19 +87,19 @@ if [ "\${1}" == "clean" ]; then
   exit
 fi
 
-../../bin/ibp-ng -v -v \
-  --input  input.fa \
-  --psf    output.psf \
-  --dmdgp  output.dmdgp \
-  --output output.dcd \
-  --format dcd \
-  --restraints input.res \
-  --topology ../../lib/ibp-protein.top \
-  --params ../../lib/ibp-protein.par \
-  --reorder ../../lib/ibp-protein.ord \
-  --threads 1 \
-  --method dist,impr \
-  --limit 10000 --branch-eps 0.01 --branch-max 16 \
+../../bin/ibp-ng -v -v        \\
+  --input      input.fa       \\
+  --psf        output.psf     \\
+  --dmdgp      output.dmdgp   \\
+  --output     output.dcd     \\
+  --format     dcd            \\
+  --restraints input.res      \\
+  --params     input.par      \\
+  --topology   ../protein.top \\
+  --reorder    ../protein.ord \\
+  --threads 1 \\
+  --method dist,impr \\
+  --limit 10000 --branch-eps 0.01 --branch-max 16 \\
   --vdw-scale 0.25 --ddf-tol 0.1
 
 EOF
