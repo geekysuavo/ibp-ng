@@ -1,35 +1,16 @@
 
+! protein.top: minimal topology for recapitulation experiments.
+
 {* mandatory masses *}
 mass H     1.0080
 mass HA    1.0080
-mass HC    1.0080
 mass C    12.0110
-mass C5   12.0110
-mass C5W  12.0110
-mass CF   12.0110
-mass CW   12.0110
-mass CY   12.0110
-mass CY2  12.0110
 mass CH1E 12.0110
-mass CH2E 12.0110
-mass CH2G 12.0110
-mass CH2P 12.0110
-mass CH3E 12.0110
-mass CR1E 12.0110
-mass CR1H 12.0110
-mass CR1W 13.0110
-mass CRHH 12.0110
 mass N    14.0067
 mass NH1  14.0067
 mass NH2  14.0067
-mass NC2  14.0067
-mass NH3  14.0067
 mass O    15.9994
-mass OH1  15.9994
 mass OC   15.9994
-mass S    32.0600
-mass SM   32.0600
-mass SH1E 32.0600
 
 ! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -48,6 +29,12 @@ residue BB1
  bond N  H1
  bond N  CA    bond CA HA
  bond CA C     bond C  O
+
+ angle HA CA C
+ angle N  CA C
+ angle N  CA HA
+ angle CA C  O
+ angle CA N  H1
 
  dihedral H1 N CA HA
 end
@@ -70,7 +57,11 @@ residue BB2
  bond N  CA    bond CA HA
  bond CA C     bond C  O
 
- dihedral H1 N CA HA
+ angle HA CA C
+ angle N  CA C
+ angle N  CA HA
+ angle CA C  O
+ angle CA N  H1
 end
 
 ! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -91,7 +82,11 @@ residue BBI
  bond N  CA    bond CA HA
  bond CA C     bond C  O
 
- dihedral H1 N CA HA
+ angle N  CA C
+ angle N  CA HA
+ angle C  CA HA
+ angle CA C  O
+ angle CA N  H1
 end
 
 ! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -112,6 +107,51 @@ residue BBN
  bond N  CA    bond CA HA
  bond CA C     bond C  O
 
- dihedral H1 N CA HA
+ angle N  CA C
+ angle C  CA HA
+ angle CA C  O
+ angle CA N  H1
+end
+
+! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+presidue NTER
+ group
+  modify atom -N  type=NH2              end
+  add    atom -H2 type=H   charge= 0.10 end
+
+ add bond -N -H2
+
+ add angle -H2 -N -H1
+ add angle -H2 -N -CA
+
+ delete dihedral -H1 -N -CA -HA
+ add    dihedral -H2 -N -CA -HA
+end
+
+! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+presidue CTER
+ group
+  modify atom -O  type=OC              end
+  add    atom -O2 type=OC charge=-0.48 end
+
+ add bond -C -O2
+
+ add angle -O  -C -O2
+ add angle -CA -C -O2
+end
+
+! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+presidue PEPT
+ add bond -C +N
+
+ add angle -CA -C +N
+ add angle -O  -C +N
+ add angle -C  +N +CA
+ add angle -C  +N +H1
+
+ add dihedral -HA -CA -C  +N
 end
 

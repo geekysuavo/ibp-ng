@@ -1,0 +1,45 @@
+
+{* bonds *}
+bond NH1  H     1.0 0.980
+bond NH2  H     1.0 0.980
+bond NH1  CH1E  1.0 1.458
+bond NH2  CH1E  1.0 1.486
+bond CH1E HA    1.0 1.080
+bond CH1E C     1.0 1.525
+bond C    NH1   1.0 1.329
+bond C    NH2   1.0 1.328
+bond C    O     1.0 1.231
+bond C    OC    1.0 1.249
+
+{* angles *}
+angle NH1  CH1E C    1.0 111.1396
+angle NH2  CH1E C    1.0 106.9610
+angle NH1  CH1E HA   1.0 108.4800
+angle CH1E C    NH1  1.0 116.1998
+angle CH1E C    O    1.0 120.8258
+angle CH1E C    OC   1.0 118.0611
+angle CH1E NH1  H    1.0 119.2367
+angle C    CH1E HA   1.0 108.9914
+angle C    NH1  CH1E 1.0 121.6541
+angle C    NH1  H    1.0 119.2489
+angle O    C    NH1  1.0 122.9907
+angle OC   C    OC   1.0 123.3548
+angle H    NH2  CH1E 1.0 109.5000
+angle H    NH2  H    1.0 107.3000
+angle NH1  CH1E HA   1.0 108.0508
+angle NH2  CH1E HA   1.0 108.4800
+
+{* interval dihedrals *}
+dihedral HA   CH1E C    NH1   1.0 1   [-180.0, 180.0] ! iBP, BB1-BB2
+dihedral H    NH2  CH1E HA    1.0 1   [-180.0, 180.0] ! iBP, BB1
+
+{* nonbonded *}
+nonbonded H     0.0498 2.2272  0.0498 2.2272
+nonbonded HA    0.0045 2.2272  0.0045 2.2272
+nonbonded C     0.0903 3.3409  0.0903 3.3409
+nonbonded CH1E  0.0903 3.3409  0.0903 3.3409
+nonbonded NH1   0.1592 3.0068  0.1592 3.0068
+nonbonded NH2   0.1592 3.0068  0.1592 3.0068
+nonbonded O     0.2342 2.7755  0.2342 2.7755
+nonbonded OC    1.0244 2.7755  1.0244 2.7755
+
