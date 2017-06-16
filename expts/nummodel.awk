@@ -1,1 +1,0 @@
-/^NUMMDL/ { print $2 }
