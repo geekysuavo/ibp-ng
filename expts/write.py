@@ -71,9 +71,13 @@ def rbase(s, f):
     line = dihed.format(i, 'N', i, 'CA', i, 'C', i, 'HA', -119, 0)
     lines.append(line)
 
-  # write the CTER CA-O-C-O2 dihderal restraint.
+  # write the CTER HA-C-CA-O dihedral restraint.
   i = rmax - rmin + 1
-  line = dihed.format(i, 'CA', i, 'O', i, 'C', i, 'O2', 171.5, 0)
+  line = dihed.format(i, 'HA', i, 'C', i, 'CA', i, 'O', 128.5, 0)
+  lines.append(line)
+
+  # write the CTER CA-O-C-O2 dihderal restraint.
+  line = dihed.format(i, 'CA', i, 'O', i, 'C', i, 'O2', 180, 0)
   lines.append(line)
 
   # build the output string and write it to the file.
@@ -168,4 +172,67 @@ def rdist(s, f):
   # build the output string and write it to the file.
   lines.append('')
   f.write('\n'.join(lines))
+
+
+# params: write a parameter file from a pdb structure.
+#
+def params(struct, filename):
+  # define a rule set for bonds.
+  bfmt = 'bond {:<4s} {:<4s}  1.0 {:>.9f}  ! [{:.4f}, {:.4f}]'
+  bonds = ((('NH1',  'H'),    ('N',  'H',  0)),
+           (('NH2',  'H'),    ('N',  'H',  0)),
+           (('NH1',  'CH1E'), ('N',  'CA', 0)),
+           (('NH2',  'CH1E'), ('N',  'CA', 0)),
+           (('CH1E', 'HA'),   ('CA', 'HA', 0)),
+           (('CH1E', 'C'),    ('CA', 'C',  0)),
+           (('C',    'NH1'),  ('C',  'N',  1)),
+           (('C',    'NH2'),  ('C',  'N',  1)),
+           (('C',    'O'),    ('C',  'O',  0)),
+           (('C',    'OC'),   ('C',  'O',  0)))
+
+  # define a rule set for angles.
+  afmt = 'angle {:<4s} {:<4s} {:<4s}  1.0 {:>.9f}  ! [{:.4f}, {:.4f}]'
+  angles = ((('NH1',  'CH1E', 'C'),    ('N',  'CA', 'C',  0, 0)),
+            (('NH2',  'CH1E', 'C'),    ('N',  'CA', 'C',  0, 0)),
+            (('NH1',  'CH1E', 'HA'),   ('N',  'CA', 'HA', 0, 0)),
+            (('CH1E', 'C',    'NH1'),  ('CA', 'C',  'N',  0, 1)),
+            (('CH1E', 'C',    'O'),    ('CA', 'C',  'O',  0, 0)),
+            (('CH1E', 'C',    'OC'),   ('CA', 'C',  'O',  0, 0)),
+            (('CH1E', 'NH1',  'H'),    ('CA', 'N',  'H',  0, 0)),
+            (('C',    'CH1E', 'HA'),   ('C',  'CA', 'HA', 0, 0)),
+            (('C',    'NH1',  'CH1E'), ('C',  'N',  'CA', 1, 1)),
+            (('C',    'NH1',  'H'),    ('C',  'N',  'H',  0, 0)),
+            (('O',    'C',    'NH1'),  ('O',  'C',  'N',  0, 0)),
+            (('NH1',  'CH1E', 'HA'),   ('N',  'CA', 'HA', 0, 0)),
+            (('NH2',  'CH1E', 'HA'),   ('N',  'CA', 'HA', 0, 0)))
+
+  # initialize the lines of output.
+  lines = []
+
+  # output the bonds.
+  lines = lines + ['', '{* bonds *}']
+  for rule in bonds:
+    (key, val) = (rule[0], rule[1])
+    d = struct.bond(*val)
+    line = bfmt.format(*(key + d))
+    lines.append(line)
+
+  # output the angles.
+  lines = lines + ['', '{* angles *}']
+  for rule in angles:
+    (key, val) = (rule[0], rule[1])
+    theta = struct.angle(*val)
+    line = afmt.format(*(key + theta))
+    lines.append(line)
+
+  # append the base parameter file.
+  f = open('protein.par')
+  lines = lines + [line.strip() for line in f.readlines()]
+  f.close()
+
+  # build the output string and write it to the file.
+  lines.append('')
+  f = open(filename, 'w')
+  f.write('\n'.join(lines))
+  f.close()
 

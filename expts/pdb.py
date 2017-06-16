@@ -1,11 +1,13 @@
 
-# import the math module.
+# import the required modules.
+from util import median
 import math
 
 # pdb: class for parsing protein data bank files.
 #
 class pdb:
   # default values:
+  ok = ['N', 'CA', 'C', 'O', 'H', 'HA']
   filename = 'input.pdb'
   models = []
 
@@ -58,6 +60,50 @@ class pdb:
     return sel
 
 
+  # bond: get bond length statistics from a pdb file.
+  #
+  def bond(self, ni, nj, ij = 0):
+    # get the residue index extents.
+    rlist = [atom['resSeq'] for atom in self.models[0]]
+    rmin = min(rlist)
+    rmax = max(rlist)
+
+    # build the list of distances.
+    d = []
+    for i in range(rmin, rmax + 1):
+      j = i + ij
+      ai = self.select(i, ni)
+      aj = self.select(j, nj)
+      if ai and aj:
+        d = d + dist(ai, aj)
+
+    # compute and return statistics on the list.
+    return (median(d), min(d), max(d))
+
+
+  # angle: get angle statistics from a pdb file.
+  #
+  def angle(self, ni, nj, nk, ij = 0, ik = 0):
+    # get the residue index extents.
+    rlist = [atom['resSeq'] for atom in self.models[0]]
+    rmin = min(rlist)
+    rmax = max(rlist)
+
+    # build the list of angles.
+    theta = []
+    for i in range(rmin, rmax + 1):
+      j = i + ij
+      k = i + ik
+      ai = self.select(i, ni)
+      aj = self.select(j, nj)
+      ak = self.select(k, nk)
+      if ai and aj and ak:
+        theta = theta + angle(ai, aj, ak)
+
+    # compute and return statistics on the list.
+    return (median(theta), min(theta), max(theta))
+
+
   # __atom: parse a single ATOM line in a pdb file.
   #
   def __atom(self, line):
@@ -87,7 +133,7 @@ class pdb:
   #
   def __accept(self, atom):
     # check for acceptance.
-    if atom['chainID'] == 'A' and atom['name'] in ['N', 'CA', 'C', 'O', 'H']:
+    if atom['chainID'] == 'A' and atom['name'] in self.ok:
       return True
     else:
       return False

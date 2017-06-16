@@ -45,6 +45,17 @@ fi
 """)
 
 
+# median: get the median of the values of a list.
+#
+def median(L):
+  S = sorted(L)
+  n = len(L)
+  if n % 2 == 1:
+    return S[n // 2]
+  else:
+    return sum(S[n // 2 - 1 : n // 2 + 1]) / 2.0
+
+
 # minmax: get the minimum and maximum values in a list.
 #
 def minmax(L):

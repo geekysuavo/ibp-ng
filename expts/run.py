@@ -37,5 +37,6 @@ for ident in ids:
   # write the required input files.
   write.runfile(os.path.join(ident, 'run'))
   write.fasta(struct, os.path.join(ident, 'input.fa'))
+  write.params(struct, os.path.join(ident, 'input.par'))
   write.restraints(struct, os.path.join(ident, 'input.res'))
 
