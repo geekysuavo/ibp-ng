@@ -59,6 +59,7 @@ A simple pull-and-build for the lazy:
 ```bash
 git clone git://github.com/geekysuavo/ibp-ng.git
 cd ibp-ng
+mkdir bin
 make
 ```
 
@@ -71,14 +72,15 @@ For basic usage information, just run:
 bin/ibp-ng -h
 ```
 
-A toy example is provided in [data/test](data/test). The script that invokes
-**ibp-ng** is named [data/test/run](data/test/run). It will use four threads
-to generate 100 structures using a very fine granularity and only direct
-distance feasibility pruning. To execute the script, run:
+A set of examples is provided in [data](data). Within each example in
+[data](data), the script that invokes **ibp-ng** is named **run**, e.g.
+[data/alpha/run](data/alpha/run). In addition, a set of test cases is
+available in the [expts](expts) directory, where one can run **run.py**
+in order to prepare the input files required to run **ibp-ng**:
 
 ```bash
-cd data/test
-./run
+cd expts
+python run.py
 ```
 
 More examples will be placed in the [data](data) directory as the source
