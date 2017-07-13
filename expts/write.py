@@ -213,7 +213,7 @@ def params(struct, filename):
   lines = lines + ['', '{* bonds *}']
   for rule in bonds:
     (key, val) = (rule[0], rule[1])
-    d = struct.bond(*val)
+    d = struct.bondStats(*val)
     line = bfmt.format(*(key + d))
     lines.append(line)
 
@@ -221,7 +221,7 @@ def params(struct, filename):
   lines = lines + ['', '{* angles *}']
   for rule in angles:
     (key, val) = (rule[0], rule[1])
-    theta = struct.angle(*val)
+    theta = struct.angleStats(*val)
     line = afmt.format(*(key + theta))
     lines.append(line)
 

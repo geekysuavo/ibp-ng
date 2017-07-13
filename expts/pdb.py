@@ -60,9 +60,9 @@ class pdb:
     return sel
 
 
-  # bond: get bond length statistics from a pdb file.
+  # bondStats: get bond length statistics from a pdb file.
   #
-  def bond(self, ni, nj, ij = 0):
+  def bondStats(self, ni, nj, ij = 0):
     # get the residue index extents.
     rlist = [atom['resSeq'] for atom in self.models[0]]
     rmin = min(rlist)
@@ -81,9 +81,9 @@ class pdb:
     return (median(d), min(d), max(d))
 
 
-  # angle: get angle statistics from a pdb file.
+  # angleStats: get angle statistics from a pdb file.
   #
-  def angle(self, ni, nj, nk, ij = 0, ik = 0):
+  def angleStats(self, ni, nj, nk, ij = 0, ik = 0):
     # get the residue index extents.
     rlist = [atom['resSeq'] for atom in self.models[0]]
     rmin = min(rlist)
@@ -102,6 +102,30 @@ class pdb:
 
     # compute and return statistics on the list.
     return (median(theta), min(theta), max(theta))
+
+  # dihedStats: get dihedral statistics from a pdb file.
+  #
+  def dihedStats(self, ni, nj, nk, nl, ij = 0, ik = 0, il = 0):
+    # get the residue index extents.
+    rlist = [atom['resSeq'] for atom in self.models[0]]
+    rmin = min(rlist)
+    rmax = max(rlist)
+
+    # build the list of dihedrals.
+    omega = []
+    for i in range(rmin, rmax + 1):
+      j = i + ij
+      k = i + ik
+      l = i + il
+      ai = self.select(i, ni)
+      aj = self.select(j, nj)
+      ak = self.select(k, nk)
+      al = self.select(l, nl)
+      if ai and aj and ak and al:
+        omega = omega + dihed(ai, aj, ak, al)
+
+    # compute and return statistics on the list.
+    return (median(omega), min(omega), max(omega))
 
 
   # __atom: parse a single ATOM line in a pdb file.
