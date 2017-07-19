@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 
 # enable imports from the ../../expts directory.
-from subprocess import call
-import os, stat, sys, time
+import os, stat, sys, time, subprocess
 sys.path.insert(0, '../../expts')
 
 # import the utility and pdb modules.
 from util import *
 import pdb
+
+# set the time limit for all runs.
+timeLimit = 18000 # 5 hrs
 
 # if supplied, get the dihedral expansion value.
 eps = 0
@@ -125,11 +127,26 @@ st = os.stat(frun)
 os.chmod(frun, st.st_mode | stat.S_IEXEC)
 
 # execute the runfile.
+finished = True
 startTime = time.time()
-call(['./loops-{}-{}.run'.format(eps, dmax)])
+proc = subprocess.Popen('./loops-{}-{}.run'.format(eps, dmax))
+
+# wait for the runfile to complete.
+while proc.returncode is None:
+  # if the time limit has been exceeded, kill it.
+  if time.time() - startTime > timeLimit:
+    finished = False
+    proc.kill()
+    break
+
+  # wait a bit before polling again.
+  time.sleep(0.1)
+  proc.poll()
+
+# compute the final runtime.
 endTime = time.time()
 timing = endTime - startTime
 
 # output the final run results.
-print('{} {} {} {}'.format(eps, dmax, numDist, timing))
+print('{} {} {} {} {}'.format(eps, dmax, numDist, finished, timing))
 

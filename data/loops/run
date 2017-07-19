@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# define the list of dihedral expansions and distance limits to run over.
+eps_list="0 1 2 5 10 15 20 25 30"
+dmax_list="5 6 7 8 9 10 12 15 20"
+
+# num_procs: count the number of processors.
+function num_procs () {
+  grep ^processor /proc/cpuinfo | wc -l
+}
+
+# num_execs: count the number of executing runs.
+function num_execs () {
+  ps aux | grep loops\.py | sed -e '/grep/d' | wc -l
+}
+
+# procs_available: check if any processors are available for new runs.
+function procs_available () {
+  expr $(num_execs) '<' $(num_procs)
+}
+
+# check if the user just wants to tidy up.
+if [ "${1}" == "clean" ]; then
+  rm -f loops-*.{dcd,dmdgp,err,out,psf,res,run}
+  exit
+fi
+
+# loop over all the parameters.
+for eps in ${eps_list}; do
+  for dmax in ${dmax_list}; do
+    # wait for processors to become available.
+    while [ "$(procs_available)" == "0" ]; do
+      sleep 5
+    done
+
+    # start a new run.
+    ./loops.py ${eps} ${dmax} > stats-${eps}-${dmax} &
+  done
+done
+
