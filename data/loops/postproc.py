@@ -1,10 +1,11 @@
 
 # enable imports from the ../../expts directory.
+import sys
 sys.path.insert(0, '../../expts')
 
 # import the numpy and dcd modules.
 import numpy as np
-import dcd
+import dcd, align
 
 # define a header string for the output latex document.
 header = '''
@@ -50,10 +51,9 @@ def fields(line):
 
   if done:
     final = '{0:.1f}'.format(time)
-    P = dcd.dcd('../talos/talos.dcd')
-    Q = dcd.dcd('loops-{0}-{1}.dcd'.format(*s))
-    rmsd = float(rmsd.strip())
-    rmsd = '{0:.3f}'.format(rmsd)
+    P = np.array(dcd.dcd('loops-{0}-{1}.dcd'.format(*s)).frames[0])
+    Q = np.array(dcd.dcd('../talos/talos.dcd').frames[0])
+    rmsd = '{0:.3f}'.format(align.rmsd(P, Q))
 
   else:
     final = '--'

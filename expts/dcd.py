@@ -13,6 +13,7 @@ class dcd:
   #
   def __init__(self, filename = None):
     # if supplied, set the input filename.
+    self.frames = []
     if filename:
       self.filename = filename
 
@@ -52,4 +53,7 @@ class dcd:
 
       # move to the next block.
       block_start += block_size
+
+    print('opened {} frames from "{}"'.format(
+      len(self.frames), self.filename))
 
