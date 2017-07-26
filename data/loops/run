@@ -21,7 +21,8 @@ function procs_available () {
 
 # check if the user just wants to tidy up.
 if [ "${1}" == "clean" ]; then
-  rm -f loops-*.{dcd,dmdgp,err,out,psf,res,run}
+  rm -f loops-*.{dcd,dmdgp,err,out,pdb,psf,res,run}
+  rm -f stats-* stats.all
   exit
 fi
 
