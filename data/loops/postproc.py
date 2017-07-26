@@ -1,27 +1,10 @@
 
-# import a function for running external programs.
-from subprocess import check_output as checkout
-import os, stat
+# enable imports from the ../../expts directory.
+sys.path.insert(0, '../../expts')
 
-# define the program string for computing rmsd between dcd frames.
-rmsd_sh = '''#!/bin/bash
-
-f="${1}"
-
-cat > rmsd.vmd << EOF
-mol load psf ../talos/talos.psf dcd ../talos/talos.dcd
-set sel1 [atomselect top "name N or name CA or name C" frame 0]
-
-mol load psf ${f}.psf dcd ${f}.dcd
-set sel2 [atomselect top "name N or name CA or name C" frame 0]
-
-measure rmsd \$sel1 \$sel2
-quit
-EOF
-
-vmd -e rmsd.vmd | awk '/^[0-9]/' | tail -n 1
-rm -f rmsd.vmd
-'''
+# import the numpy and dcd modules.
+import numpy as np
+import dcd
 
 # define a header string for the output latex document.
 header = '''
@@ -67,7 +50,8 @@ def fields(line):
 
   if done:
     final = '{0:.1f}'.format(time)
-    rmsd = checkout(['./rmsd.sh', 'loops-{0}-{1}'.format(*s)])
+    P = dcd.dcd('../talos/talos.dcd')
+    Q = dcd.dcd('loops-{0}-{1}.dcd'.format(*s))
     rmsd = float(rmsd.strip())
     rmsd = '{0:.3f}'.format(rmsd)
 
@@ -80,7 +64,7 @@ def fields(line):
 # opener(): open a new table.
 #
 def opener():
-  print('\\begin{tabular}{lllr}')
+  print('\\begin{tabular}{llllr}')
   print('  $\Delta\phi$,$\Delta\psi$ &')
   print('  $d_{max}$ (\\r{A}) &')
   print('  $N_{dist}$ &')
@@ -91,18 +75,8 @@ def opener():
 #
 def closer():
   print('\\end{tabular}')
-  print('\\end{center}')
   print
 
-
-# write the rmsd script to a file.
-f = open('rmsd.sh', 'w')
-f.write(rmsd_sh)
-f.close()
-
-# set the rmsd script file as executable.
-st = os.stat('rmsd.sh')
-os.chmod('rmsd.sh', st.st_mode | stat.S_IEXEC)
 
 # the file 'stats.all' is the concatenation of all 'stats-*' files
 # produced by running './run' in the current directory.
@@ -130,6 +104,7 @@ for i in range(len(L)):
 
 # end the latex document.
 print
+print('\\end{center}')
 print('\\end{document}')
 print
 
