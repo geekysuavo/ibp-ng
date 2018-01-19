@@ -194,7 +194,7 @@ struct _enum_t {
   double eps;
 
   /* @prune: (2d) array of pruning test function pointers.
-   * @prune_sz: sizes of each inner array in @prune_test.
+   * @prune_sz: sizes of each inner array in @prune.
    * @prune_data: array of pruning data payloads.
    */
   enum_prune_test_fn **prune;

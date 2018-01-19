@@ -41,6 +41,14 @@ int enum_prune_path (enum_t *E, enum_thread_t *th, void *data);
 
 void enum_prune_path_report (enum_t *E, unsigned int lev, void *data);
 
+/* function declarations (enum-prune-future.c): */
+
+int enum_prune_future_init (enum_t *E, unsigned int lev);
+
+int enum_prune_future (enum_t *E, enum_thread_t *th, void *data);
+
+void enum_prune_future_report (enum_t *E, unsigned int lev, void *data);
+
 /* function declarations (enum-prune-energy.c): */
 
 int enum_prune_energy_init (enum_t *E, unsigned int lev);

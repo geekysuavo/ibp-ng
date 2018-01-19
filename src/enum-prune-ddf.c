@@ -15,7 +15,7 @@ typedef struct {
 }
 enum_prune_ddf_t;
 
-/* enum_prune_ddf_init(): initialize the ddf enumerator.
+/* enum_prune_ddf_init(): initialize the ddf pruner.
  */
 int enum_prune_ddf_init (enum_t *E, unsigned int lev) {
   /* declare required variables:

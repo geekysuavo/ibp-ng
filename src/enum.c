@@ -88,6 +88,13 @@ static const struct enum_prune_map_t pruners[] = {
     enum_prune_path_report
   },
 
+  /* future distance feasibility. */
+  { "future",
+    enum_prune_future_init,
+    enum_prune_future,
+    enum_prune_future_report
+  },
+
   /* energetic feasibility. */
   { "energy",
     enum_prune_energy_init,
