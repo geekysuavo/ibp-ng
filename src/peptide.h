@@ -162,7 +162,8 @@ int peptide_field (peptide_t *P, double tol);
 
 /* function declarations (peptide-graph.c): */
 
-graph_t *peptide_graph (peptide_t *P, reorder_t *ord);
+graph_t *peptide_graph (peptide_t *P, reorder_t *ord,
+                        unsigned int complete);
 
 #endif  /* !__IBPNG_PEPTIDE_H__ */
 

@@ -39,6 +39,7 @@
   -b, --branch-max NB     Maximum number of branches per node          [20]\n\
   -e, --branch-eps EPS    Minimum interval discretization            [0.05]\n\
   -l, --limit NSOL        Maximum number of solutions                 [off]\n\
+      --complete          Flag to complete the graph                  [off]\n\
       --vdw-scale VF      Atomic radius scaling factor                [0.6]\n\
       --ddf-tol TOL       DDF error tolerance                       [0.001]\n\
 \n\
@@ -177,7 +178,7 @@ int main (int argc, char **argv) {
     die("unable to recompute force field parameters");
 
   /* create a graph structure from the peptide information. */
-  G = peptide_graph(P, ord);
+  G = peptide_graph(P, ord, opts->complete);
 
   /* check if graph creation failed. */
   if (!G)

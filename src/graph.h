@@ -23,20 +23,34 @@
  *  treated internally as a hollow symmetric matrix.
  */
 typedef struct {
-  /* @E: two-dimensional array of edges in the graph.
-   * @nv: number of vertices in the graph.
+  /* core graph elements:
+   *
+   *  @E: two-dimensional array of edges in the graph.
+   *  @nv: number of vertices in the graph.
    */
   value_t *E;
   unsigned int nv;
 
-  /* @order: re-order array for graph traversal.
-   * @ordrev: re-order reverse-lookup array.
-   * @orig: re-order originality offset array.
-   * @rmsd: deviation contribution array.
-   * @n_order: length of the re-order array.
-   * @n_orig: number of original atoms in the order.
+  /* graph properties related to the repetition order:
+   *
+   *  @order: re-order array for graph traversal. at a given level 'i'
+   *          in the order, order[i] gives the vertex index.
+   *  @ordrev: re-order reverse-lookup array. for a given vertex 'v'
+   *           in the graph, ordrev[v] gives the first occurrence of
+   *           that vertex in the order.
+   *  @orig: re-order originality offset array. at a given level 'i'
+   *         in the order, orig[i] is nonzero if 'i' is a repetition,
+   *         in which case it holds the offset from 'i' back to the
+   *         original level of the vertex in the order.
+   *  @n_order: length of the re-order array.
+   *  @n_orig: number of original atoms in the order.
    */
   unsigned int *order, *ordrev, *orig, n_order, n_orig;
+
+  /* miscellaneous graph properties:
+   *
+   *  @rmsd: deviation contribution array.
+   */
   double *rmsd;
 }
 graph_t;

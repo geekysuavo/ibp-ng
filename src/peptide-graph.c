@@ -224,12 +224,14 @@ int peptide_graph_order (peptide_t *P, graph_t *G, reorder_t *ord) {
  * arguments:
  *  @P: pointer to the peptide structure to access.
  *  @ord: pointer to the reorder structure to access.
+ *  @complete: whether or not to complete the graph.
  *
  * returns:
  *  pointer to a newly allocated, initialized and filled graph structure,
  *  or NULL on failure.
  */
-graph_t *peptide_graph (peptide_t *P, reorder_t *ord) {
+graph_t *peptide_graph (peptide_t *P, reorder_t *ord,
+                        unsigned int complete) {
   /* declare required variables:
    *  @G: pointer to a new graph structure.
    */
@@ -300,7 +302,7 @@ graph_t *peptide_graph (peptide_t *P, reorder_t *ord) {
   }
 
   /* complete the graph edge set. */
-  if (!peptide_graph_complete(P, G)) {
+  if (complete && !peptide_graph_complete(P, G)) {
     /* raise an exception and return null. */
     raise("unable to complete graph edge set");
     graph_free(G);
