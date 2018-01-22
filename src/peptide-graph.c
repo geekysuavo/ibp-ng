@@ -87,6 +87,99 @@ int peptide_graph_complete (peptide_t *P, graph_t *G) {
   return 1;
 }
 
+/* peptide_graph_refine(): refine the edge set of a graph using all
+ * available triangle inequalities between embedded vertex pairs
+ * and upstream vertices in the order.
+ *
+ * arguments:
+ *  @P: pointer to the peptide structure to access.
+ *  @G: pointer to the graph structure to modify.
+ *
+ * returns:
+ *  integer indicating whether (1) or not (0) the operation succeeded.
+ */
+int peptide_graph_refine (peptide_t *P, graph_t *G) {
+  /* declare required variables:
+   *  @i, @j, @k: positions in the repetition order for
+   *              upstream, current, and downstream vertices.
+   *  @dij, @djk, @dik: edges related to the triangle inequality.
+   *  @rk: refinement edge to repeatedly intersect with @dij.
+   */
+  unsigned int i, j, k;
+  value_t dij, djk, dik, rk;
+
+  /* locally store references to the re-order and originality arrays. */
+  const unsigned int *order = G->order;
+  const unsigned int *dup = G->orig;
+  const unsigned int n = G->n_order;
+
+  /* loop over all non-fixed vertices in the order. the backwards loop
+   * ensures that the edges corresponding to long jumps in the order
+   * are refined first, which means they can be used to refine inner
+   * edges later on in the loop.
+   */
+  for (j = n - 1; j >= 3; j--) {
+    /* skip duplicate vertices. */
+    if (dup[j]) continue;
+
+    /* loop over all vertices upstream of the
+     * embedding 4-clique: (j,j-1,j-2,j-3).
+     */
+    for (i = 0; i < j - 3; i++) {
+      /* skip duplicate vertices. */
+      if (dup[i]) continue;
+
+      /* initialize the bounds that will be refined. */
+      dij = graph_get_edge(G, order[i], order[j]);
+      if (value_is_undefined(dij))
+        dij = value_interval(0.0, 1.0e+12);
+
+      /* loop over all vertices downstream of the current vertex. */
+      for (k = j + 1; k < n; k++) {
+        /* skip duplicate vertices. */
+        if (dup[k]) continue;
+
+        /* get the graph edges that will be used for refinement. */
+        djk = graph_get_edge(G, order[j], order[k]);
+        dik = graph_get_edge(G, order[i], order[k]);
+
+        /* skip if the required edges are not present. */
+        if (value_is_undefined(djk) || value_is_undefined(dik))
+          continue;
+
+        /* compute the bounds to refine the current edge. */
+        const double lp = dik.l - djk.u;
+        const double lm = djk.l - dik.u;
+        const double u  = djk.u + dik.u;
+
+        /* intersect the refinement with the current edge. */
+        rk = value_interval(lp > lm ? lp : lm, u);
+        dij = value_intersect(dij, rk);
+
+        /* if the intersection is empty, throw an exception, as we
+         * have most likely encountered geometrically inconsistent
+         * distance information.
+         */
+        if (value_is_undefined(dij))
+          throw("invalid refined interval for vertices (%u,%u,%u)",
+                order[i], order[j], order[k]);
+      }
+
+      /* if the edge was non-existent and not refined, do not
+       * store it in the graph.
+       */
+      if (dij.l == 0.0 && dij.u == 1.0e+12)
+        continue;
+
+      /* store the refined edge back into the graph. */
+      graph_set_edge(G, order[i], order[j], dij);
+    }
+  }
+
+  /* return success. */
+  return 1;
+}
+
 /* peptide_graph_order(): use the combined information present in a peptide
  * structure and a reorder structure to construct a repetition ordering for
  * an iDMDGP graph.
@@ -224,6 +317,7 @@ int peptide_graph_order (peptide_t *P, graph_t *G, reorder_t *ord) {
  * arguments:
  *  @P: pointer to the peptide structure to access.
  *  @ord: pointer to the reorder structure to access.
+ *  @refine: whether or not to refine the graph.
  *  @complete: whether or not to complete the graph.
  *
  * returns:
@@ -231,6 +325,7 @@ int peptide_graph_order (peptide_t *P, graph_t *G, reorder_t *ord) {
  *  or NULL on failure.
  */
 graph_t *peptide_graph (peptide_t *P, reorder_t *ord,
+                        unsigned int refine,
                         unsigned int complete) {
   /* declare required variables:
    *  @G: pointer to a new graph structure.
@@ -297,6 +392,14 @@ graph_t *peptide_graph (peptide_t *P, reorder_t *ord,
   if (!peptide_graph_order(P, G, ord)) {
     /* raise an exception and return null. */
     raise("unable to build graph re-order");
+    graph_free(G);
+    return NULL;
+  }
+
+  /* refine the graph edge set using triangle inequalities. */
+  if (refine && !peptide_graph_refine(P, G)) {
+    /* raise an exception and return null. */
+    raise("unable to refine graph edge set");
     graph_free(G);
     return NULL;
   }

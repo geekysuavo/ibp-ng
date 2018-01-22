@@ -76,15 +76,20 @@ typedef struct {
 
   /* declare variables for pruning control:
    *  @nsol_limit: maximum number of solutions to enumerate.
-   *  @complete: whether or not to complete the graph edge set.
    *  @vdw_scale: atomic radius scaling factor for ddf lower-bounds.
    *  @ddf_tol: tolerance for acceptable out-of-bound errors.
    *  @rmsd_tol: rmsd for skipping structures.
    */
-  unsigned int nsol_limit, complete;
+  unsigned int nsol_limit;
   double vdw_scale;
   double ddf_tol;
   double rmsd_tol;
+
+  /* declare variables for graph control:
+   *  @refine: whether or not to refine the graph edge set.
+   *  @complete: whether or not to complete the graph edge set.
+   */
+  unsigned int refine, complete;
 }
 opts_t;
 

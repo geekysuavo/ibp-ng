@@ -96,6 +96,8 @@ value_t value_scal (value_t v, double p);
 
 value_t value_bound (value_t v, value_t b);
 
+value_t value_intersect (value_t va, value_t vb);
+
 value_t value_sin (value_t v);
 
 value_t value_cos (value_t v);

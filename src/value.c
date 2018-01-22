@@ -411,6 +411,41 @@ value_t value_bound (value_t v, value_t b) {
   return value_interval(l, u);
 }
 
+/* value_intersect(): intersect a generalized value with another.
+ * if the intersection is empty, return an undefined value.
+ *
+ * arguments:
+ *  @va: first value in the intersection.
+ *  @vb: second value in the intersection.
+ *
+ * returns:
+ *  intersection of the two values, or undefined for empty intersections.
+ */
+value_t value_intersect (value_t va, value_t vb) {
+  /* declare required variables:
+   *  @vc: output generalized value.
+   */
+  value_t vc;
+
+  /* check if either value is undefined. */
+  if (va.type == VALUE_TYPE_UNDEFINED ||
+      vb.type == VALUE_TYPE_UNDEFINED)
+    return va;
+
+  /* compute the value contained by both input values. */
+  vc.l = va.l > vb.l ? va.l : vb.l;  /* vc.l = max{ va.l, vb.l } */
+  vc.u = va.u < vb.u ? va.u : vb.u;  /* vc.u = min{ va.u, vb.u } */
+
+  /* check for the two cases of non-empty intersections. */
+  if (vc.l == vc.u)
+    return value_scalar(vc.l);
+  else if (vc.l < vc.u)
+    return value_interval(vc.l, vc.u);
+
+  /* the intersection is empty, return an undefined value. */
+  return value_undefined();
+}
+
 /* value_sin(): compute the sine of a generalized value.
  *
  * arguments:

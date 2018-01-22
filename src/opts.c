@@ -24,10 +24,11 @@
 #define OPTS_S_BRANCH_MAX  'b'
 #define OPTS_S_BRANCH_EPS  'e'
 #define OPTS_S_LIMIT       'l'
-#define OPTS_S_COMPLETE   ('z'+1)
-#define OPTS_S_VDW_SCALE  ('z'+2)
-#define OPTS_S_DDF_TOL    ('z'+3)
-#define OPTS_S_RMSD       ('z'+4)
+#define OPTS_S_VDW_SCALE  ('z'+1)
+#define OPTS_S_DDF_TOL    ('z'+2)
+#define OPTS_S_RMSD       ('z'+3)
+#define OPTS_S_REFINE     ('z'+4)
+#define OPTS_S_COMPLETE   ('z'+5)
 
 /* define all accepted long options.
  */
@@ -51,10 +52,11 @@
 #define OPTS_L_BRANCH_MAX "branch-max"
 #define OPTS_L_BRANCH_EPS "branch-eps"
 #define OPTS_L_LIMIT      "limit"
-#define OPTS_L_COMPLETE   "complete"
 #define OPTS_L_VDW_SCALE  "vdw-scale"
 #define OPTS_L_DDF_TOL    "ddf-tol"
 #define OPTS_L_RMSD       "rmsd"
+#define OPTS_L_REFINE     "refine"
+#define OPTS_L_COMPLETE   "complete"
 
 /* opts_config_t: option definition structure for informing opts_next()
  * about all supported command line options that the user may specify.
@@ -95,10 +97,11 @@ static const opts_config_t conf[] = {
   { OPTS_L_BRANCH_MAX, OPTS_S_BRANCH_MAX, 1 },
   { OPTS_L_BRANCH_EPS, OPTS_S_BRANCH_EPS, 1 },
   { OPTS_L_LIMIT,      OPTS_S_LIMIT,      1 },
-  { OPTS_L_COMPLETE,   OPTS_S_COMPLETE,   0 },
   { OPTS_L_VDW_SCALE,  OPTS_S_VDW_SCALE,  1 },
   { OPTS_L_DDF_TOL,    OPTS_S_DDF_TOL,    1 },
   { OPTS_L_RMSD,       OPTS_S_RMSD,       1 },
+  { OPTS_L_REFINE,     OPTS_S_REFINE,     0 },
+  { OPTS_L_COMPLETE,   OPTS_S_COMPLETE,   0 },
 
   /* null terminator. */
   { NULL,              '\0',              0 }
@@ -242,10 +245,13 @@ opts_t *opts_new (void) {
 
   /* initialize prune control fields. */
   opts->nsol_limit = 0;
-  opts->complete = 0;
   opts->vdw_scale = 0.6;
   opts->ddf_tol = 0.001;
   opts->rmsd_tol = 0.0;
+
+  /* initialize graph control fields. */
+  opts->refine = 0;
+  opts->complete = 0;
 
   /* return the new options data structure. */
   return opts;
@@ -617,11 +623,6 @@ opts_t *opts_new_from_strings (int argc, char **argv) {
         argi++;
         break;
 
-      /* graph completion flag. */
-      case OPTS_S_COMPLETE:
-        opts->complete++;
-        break;
-
       /* vdw scale factor. */
       case OPTS_S_VDW_SCALE:
         opts->vdw_scale = atof(argv[argi]);
@@ -638,6 +639,16 @@ opts_t *opts_new_from_strings (int argc, char **argv) {
       case OPTS_S_RMSD:
         opts->rmsd_tol = atof(argv[argi]);
         argi++;
+        break;
+
+      /* graph refinement flag. */
+      case OPTS_S_REFINE:
+        opts->refine++;
+        break;
+
+      /* graph completion flag. */
+      case OPTS_S_COMPLETE:
+        opts->complete++;
         break;
 
       /* unknown option or argument. */
