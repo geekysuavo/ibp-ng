@@ -115,6 +115,9 @@ typedef struct {
   unsigned int idx, start, end, nb;
   vector_t pos, prev;
   double energy;
+
+//double *omega;
+//intervals_t *isa, *isb;
 }
 enum_thread_node_t;
 
@@ -146,7 +149,7 @@ struct _enum_thread_t {
  * an enumerator stores pointers to the peptide and graph data structures
  * that solutions are being computed from.
  *
- * the enumerator state is stored in an explicit tree data structure, and
+ * the enumerator state is stored in an implicit tree data structure, and
  * tree traversal is accomplished using a recursive post-order depth-first
  * search.
  */

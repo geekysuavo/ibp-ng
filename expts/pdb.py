@@ -1,7 +1,7 @@
 
 # import the required modules.
 from util import median
-import math
+import math, urllib2
 
 # pdb: class for parsing protein data bank files.
 #
@@ -10,6 +10,8 @@ class pdb:
   ok = ['N', 'CA', 'C', 'O', 'H', 'HA']
   filename = 'input.pdb'
   models = []
+  rmin = None
+  rmax = None
 
 
   # __init__: construct a pdb object.
@@ -40,6 +42,12 @@ class pdb:
 
     # store the parsed lists.
     self.models = ablks
+
+    # store the residue index bounds, for convenience.
+    if len(self.models):
+      nums = [atom['resSeq'] for atom in self.models[0]]
+      self.rmin = min(nums)
+      self.rmax = max(nums)
 
 
   # select: get the coordinates of selected atoms in a pdb file.
@@ -240,4 +248,23 @@ def dihed(a, b, c, d):
   # compute and return the dihedral.
   omega = math.atan2(dot3(m, n2), dot3(n1, n2))
   return math.degrees(omega)
+
+
+# download: write a pdb file to disk, parse it into a pdb object,
+# and return that object to the caller.
+#
+def download(ident, filename):
+  # download the pdb data.
+  url = 'https://files.rcsb.org/download/' + ident.upper() + '.pdb'
+  response = urllib2.urlopen(url)
+  data = response.read()
+
+  # write the downloaded data to disk.
+  f = open(filename, 'w')
+  f.write(data)
+  f.close()
+
+  # parse and return a pdb object for the new file.
+  return pdb(filename)
+
 
