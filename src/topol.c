@@ -310,10 +310,9 @@ int topol_apply_all (topol_t *top, peptide_t *P) {
   /* loop over the peptide sequence to make some sidechains explicit. */
   for (i = 0; i < P->n_res; i++) {
     /* if the current residue is proline, make it explicit. */
-    if (resid_get_code1(P->res[i]) == 'P' &&
-        !peptide_add_sidechain(P, i))
-      throw("failed to make residue %u (%s) explicit", i + 1,
-            resid_get_code3(P->res[i]));
+    const char *resi = peptide_get_resname(P, i);
+    if (strcmp(resi, "PRO") == 0 && !peptide_add_sidechain(P, i))
+      throw("failed to make residue %u (%s) explicit", i + 1, resi);
   }
 
   /* loop over the peptide sequence to add each residue topology. */
@@ -327,7 +326,7 @@ int topol_apply_all (topol_t *top, peptide_t *P) {
   /* loop over the peptide sequence to link adjacent residues. */
   for (i = 0; i < P->n_res - 1; i++) {
     /* link the current residue to its next neighbor. */
-    if (resid_get_code1(P->res[i + 1]) == 'P') {
+    if (strcmp(peptide_get_resname(P, i + 1), "PRO") == 0) {
       /* use a linkage to proline. */
       ret = topol_apply(top, "PEPP", P, i);
     }

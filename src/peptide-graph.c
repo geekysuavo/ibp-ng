@@ -226,7 +226,7 @@ int peptide_graph_order (peptide_t *P, graph_t *G, reorder_t *ord) {
     /* check that the reorder group was found. */
     if (!grp)
       throw("residue #%u (%s) has no re-order entry",
-            i + 1, resid_get_code3(P->res[i]));
+            i + 1, peptide_get_resname(P, i));
 
     /* loop over the atoms of the reorder group. */
     for (igrp = 0; igrp < grp->n_atoms; igrp++) {

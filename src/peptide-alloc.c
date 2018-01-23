@@ -71,7 +71,11 @@ void peptide_free (peptide_t *P) {
   /* return if the structure pointer is null. */
   if (!P) return;
 
-  /* free the residue index array. */
+  /* free the elements of the residue names array. */
+  for (i = 0; i < P->n_res; i++)
+    free(P->res[i]);
+
+  /* free the residue names array. */
   if (P->n_res)
     free(P->res);
 

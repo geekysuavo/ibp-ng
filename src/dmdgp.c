@@ -23,7 +23,7 @@ int dmdgp_write_header (FILE *fh, peptide_t *P,
   /* loop over the residues to write the sequence. */
   for (i = 0; i < P->n_res; i++) {
     /* print the current residue code. */
-    fprintf(fh, " %s", resid_get_code3(P->res[i]));
+    fprintf(fh, " %s", peptide_get_resname(P, i));
 
     /* check if a line continuation is required. */
     if ((i + 1) % 15 == 0 && i < P->n_res - 1)
@@ -38,7 +38,7 @@ int dmdgp_write_header (FILE *fh, peptide_t *P,
   /* loop over the explicit sidechains. */
   for (i = 0; i < P->n_sc; i++) {
     /* print the residue identifier. */
-    fprintf(fh, " %s%-4u", resid_get_code3(P->res[P->sc[i]]),
+    fprintf(fh, " %s%-4u", peptide_get_resname(P, P->sc[i]),
             P->sc[i] + 1);
 
     /* check if a line continuation is required. */
@@ -77,7 +77,7 @@ int dmdgp_write_vertices (FILE *fh, peptide_t *P,
   for (i = 0; i < P->n_atoms; i++) {
     /* print the vertex entry. */
     fprintf(fh, vertex_fmt, i + 1,
-            resid_get_code3(P->res[P->atoms[i].res_id]),
+            peptide_get_resname(P, P->atoms[i].res_id),
             P->atoms[i].res_id + 1,
             P->atoms[i].name,
             P->atoms[i].type);
@@ -131,10 +131,10 @@ int dmdgp_write_edges (FILE *fh, peptide_t *P, graph_t *G,
       if (value_is_scalar(eij)) {
         /* print the exact edge entry. */
         fprintf(fh, efmt, i + 1, j + 1, G->E[i + G->nv * j].l,
-                resid_get_code3(P->res[P->atoms[i].res_id]),
+                peptide_get_resname(P, P->atoms[i].res_id),
                 P->atoms[i].res_id + 1,
                 P->atoms[i].name,
-                resid_get_code3(P->res[P->atoms[j].res_id]),
+                peptide_get_resname(P, P->atoms[j].res_id),
                 P->atoms[j].res_id + 1,
                 P->atoms[j].name);
       }
@@ -142,10 +142,10 @@ int dmdgp_write_edges (FILE *fh, peptide_t *P, graph_t *G,
         /* print the interval edge entry. */
         fprintf(fh, ifmt, i + 1, j + 1,
                 G->E[i + G->nv * j].l, G->E[i + G->nv * j].u,
-                resid_get_code3(P->res[P->atoms[i].res_id]),
+                peptide_get_resname(P, P->atoms[i].res_id),
                 P->atoms[i].res_id + 1,
                 P->atoms[i].name,
-                resid_get_code3(P->res[P->atoms[j].res_id]),
+                peptide_get_resname(P, P->atoms[j].res_id),
                 P->atoms[j].res_id + 1,
                 P->atoms[j].name);
       }
@@ -228,7 +228,7 @@ int dmdgp_write_residues (FILE *fh, peptide_t *P,
   /* loop over the atoms of the peptide. */
   for (i = 0; i < P->n_atoms; i++) {
     /* get the residue name string. */
-    resname = resid_get_code3(P->res[P->atoms[i].res_id]);
+    resname = peptide_get_resname(P, P->atoms[i].res_id);
 
     /* add the atom to the hash. */
     if (!dmdgp_hash_add(hash, resname, i + 1))
@@ -392,7 +392,7 @@ int dmdgp_write_order (FILE *fh, peptide_t *P, graph_t *G,
 
     /* print the order entry. */
     fprintf(fh, order_fmt, j + 1,
-            resid_get_code3(P->res[P->atoms[j].res_id]),
+            peptide_get_resname(P, P->atoms[j].res_id),
             P->atoms[j].res_id + 1, P->atoms[j].name,
             nb == 0 ? "(init)" :
             nb == 1 ? "(copy)" :

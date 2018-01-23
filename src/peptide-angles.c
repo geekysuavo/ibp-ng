@@ -297,7 +297,7 @@ int peptide_graph_angles (peptide_t *P, graph_t *G) {
     if (value_is_undefined(d01) ||
         value_is_undefined(d12))
       throw("undefined distance in angle (%s%u) %s-%s-%s",
-            resid_get_code3(P->res[P->atoms[atoms[0]].res_id]),
+            peptide_get_resname(P, P->atoms[atoms[0]].res_id),
             P->atoms[atoms[0]].res_id + 1,
             P->atoms[atoms[0]].name,
             P->atoms[atoms[1]].name,

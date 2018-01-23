@@ -107,7 +107,7 @@ int assign_is_ambiguous (assign_set_t *set, unsigned int idx) {
 
       /* add the atom information to the message string. */
       pmsg += sprintf(pmsg, "\n   | residue %s%u atom %s (%s)",
-                      resid_get_code3(set->P->res[atom->res_id]),
+                      peptide_get_resname(set->P, atom->res_id),
                       atom->res_id + 1,
                       atom->name,
                       atom->type);
@@ -307,30 +307,14 @@ assign_set_t *assign_resname (peptide_t *P, const char *name) {
   /* declare required variables:
    *  @set: pointer to the output set.
    *  @i: atom index loop counter.
-   *  @id: residue lookup index.
    */
   assign_set_t *set;
-  unsigned int i, id;
+  unsigned int i;
 
   /* check if the residue name string contains wildcards. */
   if (assign_is_wild(name)) {
     /* raise an exception and return null. */
     raise("illegal wildards in residue name '%s'", name);
-    return NULL;
-  }
-
-  /* determine the residue table index from its name. */
-  if (strlen(name) == 1)
-    id = resid_lookup1(name[0]);
-  else if (strlen(name) == 3)
-    id = resid_lookup3(name);
-  else
-    id = 0;
-
-  /* check that a valid residue table index was found. */
-  if (!id) {
-    /* raise an exception and return null. */
-    raise("invalid residue name '%s'", name);
     return NULL;
   }
 
@@ -342,7 +326,7 @@ assign_set_t *assign_resname (peptide_t *P, const char *name) {
   /* loop over all atoms in the peptide. */
   for (i = 0; i < set->n_max; i++) {
     /* if the atom has the correct residue name, add it to the set. */
-    if (P->res[P->atoms[i].res_id] == id)
+    if (strcmp(peptide_get_resname(P, i), name) == 0)
       set->v[set->n++] = i;
   }
 

@@ -14,29 +14,27 @@
  */
 int peptide_add_residue (peptide_t *P, const char *res) {
   /* declare required variables:
-   *  @ires: residue index 
    *  @i: sequence index.
    */
-  unsigned int i, ires;
+  unsigned int i;
 
-  /* lookup the residue index from the code. */
-  ires = resid_lookup3(res);
-
-  /* check that the residue is valid. */
-  if (!ires)
-    throw("invalid residue code '%s'", res);
+  /* check the input pointers. */
+  if (!P || !res)
+    throw("invalid input arguments");
 
   /* increment the array length. */
   i = P->n_res;
   P->n_res++;
 
   /* reallocate the array. */
-  P->res = (unsigned int*) realloc(P->res, P->n_res * sizeof(unsigned int));
+  P->res = (char**) realloc(P->res, P->n_res * sizeof(char*));
   if (!P->res)
     throw("unable to reallocate sequence array");
 
   /* store the new residue index. */
-  P->res[i] = ires;
+  P->res[i] = strdup(res);
+  if (!P->res[i])
+    throw("unable to store residue %u (%s)", i, res);
 
   /* return success. */
   return 1;
@@ -149,14 +147,14 @@ int peptide_has_sidechain (peptide_t *P, unsigned int res) {
  *
  * arguments:
  *  @P: pointer to the peptide structure to access.
- *  @res: residue index to retrieve name information for.
+ *  @idx: residue index to retrieve name information for.
  *
  * returns:
  *  constant residue name string, or NULL on failure.
  */
-const char *peptide_get_resname (peptide_t *P, unsigned int res) {
+const char *peptide_get_resname (peptide_t *P, unsigned int idx) {
   /* always return the three-letter residue code. */
-  return (P && res < P->n_res ? resid_get_code3(P->res[res]) : NULL);
+  return (P && idx < P->n_res ? P->res[idx] : NULL);
 }
 
 /* peptide_get_restype(): get the residue type string of a given indexed
@@ -164,28 +162,28 @@ const char *peptide_get_resname (peptide_t *P, unsigned int res) {
  *
  * arguments:
  *  @P: pointer to the peptide structure to access.
- *  @res: residue index to retrieve type information for.
+ *  @idx: residue index to retrieve type information for.
  *
  * returns:
  *  constant residue type string, or NULL on failure.
  */
-const char *peptide_get_restype (peptide_t *P, unsigned int res) {
+const char *peptide_get_restype (peptide_t *P, unsigned int idx) {
   /* check that all arguments are valid. */
-  if (!P || res >= P->n_res)
+  if (!P || idx >= P->n_res)
     return NULL;
 
   /* determine whether the residue has an explicit sidechain. */
-  if (peptide_has_sidechain(P, res)) {
+  if (peptide_has_sidechain(P, idx)) {
     /* yes, return the three-letter residue code. */
-    return resid_get_code3(P->res[res]);
+    return peptide_get_resname(P, idx);
   }
   else {
     /* no, return a stock residue type. */
-    if (res == 0)
+    if (idx == 0)
       return "BB1";
-    else if (res == 1)
+    else if (idx == 1)
       return "BB2";
-    else if (res == P->n_res - 1)
+    else if (idx == P->n_res - 1)
       return "BBN";
     else
       return "BBI";

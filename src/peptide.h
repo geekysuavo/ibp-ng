@@ -89,10 +89,11 @@ peptide_dihed_t;
  * construct an iDMDGP instance graph.
  */
 typedef struct {
-  /* @res: array of residues in the sequence.
-   * @n_res: number of residues in the sequence.
+  /* @n_res: number of residues in the sequence.
+   * @res: array of residue name strings in the sequence.
    */
-  unsigned int *res, n_res;
+  unsigned int n_res;
+  char **res;
 
   /* @sc: array of residue indices having explicit sidechains.
    * @n_sc: number of residues having explicit sidechains.
@@ -147,9 +148,9 @@ int peptide_add_sidechain (peptide_t *P, unsigned int res);
 
 int peptide_has_sidechain (peptide_t *P, unsigned int res);
 
-const char *peptide_get_resname (peptide_t *P, unsigned int res);
+const char *peptide_get_resname (peptide_t *P, unsigned int idx);
 
-const char *peptide_get_restype (peptide_t *P, unsigned int res);
+const char *peptide_get_restype (peptide_t *P, unsigned int idx);
 
 /* function declarations (peptide-field.c): */
 
