@@ -43,7 +43,7 @@ BINDIR=$(PREFIX)/bin
 BIN=bin/ibp-ng
 
 # SRC_C: basenames of gcc source files.
-SRC_C=str value vector trace opts resid reorder graph assign
+SRC_C=str value vector trace opts reorder graph assign
 SRC_C+= topol-alloc topol-auto topol-add topol
 SRC_C+= param-alloc param-add param-get param
 SRC_C+= peptide-alloc peptide-residues peptide-atoms peptide-bonds

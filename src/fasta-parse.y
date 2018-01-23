@@ -22,6 +22,47 @@ peptide_t *P;
 void fasta_io_error (const char *msg);
 void fasta_io_clean (void);
 int fasta_io_lex (void);
+
+/* fasta function declarations: */
+const char *fasta_lookup (char code);
+
+/* struct fasta_lut_entry: structure for mapping between single-letter
+ * and three-letter codes used by fasta-format sequence files.
+ */
+struct fasta_lut_entry {
+  /* @code1: single-letter code.
+   * @code3: three-letter code.
+   */
+  char code1;
+  char code3[4];
+};
+
+/* fasta_lut: mapping between all single-letter and three-letter amino
+ * acid codes accepted by canonical fasta sequences.
+ */
+const struct fasta_lut_entry fasta_lut[] = {
+/*  0 */  { '\0', "   " },
+/*  1 */  { 'A',  "ALA" },
+/*  2 */  { 'C',  "CYS" },
+/*  3 */  { 'D',  "ASP" },
+/*  4 */  { 'E',  "GLU" },
+/*  5 */  { 'F',  "PHE" },
+/*  6 */  { 'G',  "GLY" },
+/*  7 */  { 'H',  "HIS" },
+/*  8 */  { 'I',  "ILE" },
+/*  9 */  { 'K',  "LYS" },
+/* 10 */  { 'L',  "LEU" },
+/* 11 */  { 'M',  "MET" },
+/* 12 */  { 'N',  "ASN" },
+/* 13 */  { 'P',  "PRO" },
+/* 14 */  { 'Q',  "GLN" },
+/* 15 */  { 'R',  "ARG" },
+/* 16 */  { 'S',  "SER" },
+/* 17 */  { 'T',  "THR" },
+/* 18 */  { 'V',  "VAL" },
+/* 19 */  { 'W',  "TRP" },
+/* 20 */  { 'Y',  "TYR" },
+/* 21 */  { '\0', "   " }};
 %}
 
 /* define the yylval type union. */
@@ -63,9 +104,17 @@ residues: residues residue
 
 /* single residue instance tokens. */
 residue: T_RESIDUE {
-  /* add the residue into the peptide sequence. */
-  if (fasta_idx == idx && !peptide_add_residue1(P, $1))
-    YYERROR;
+  /* check if we are to parse the current sequence. */
+  if (fasta_idx == idx) {
+    /* search for the residue three-letter code. */
+    const char *resname = fasta_lookup($1);
+    if (!resname)
+      YYERROR;
+
+    /* add the residue into the peptide sequence. */
+    if (!peptide_add_residue(P, resname))
+      YYERROR;
+  }
 };
 
 /* list of newline characters. */
@@ -129,5 +178,26 @@ int fasta_parse (FILE *fh, unsigned int sidx, peptide_t *pep) {
 void fasta_io_error (const char *msg) {
   /* raise an exception, to be handled by fasta_parse(). */
   raise(msg);
+}
+
+/* fasta_lookup(): lookup the three-letter code of an amino acid
+ * from its single-letter code character.
+ *
+ * arguments:
+ *  @code: single-letter code query.
+ *
+ * returns:
+ *  string containing the three-letter code, or null on mismatch.
+ */
+const char *fasta_lookup (char code) {
+  /* search the lookup table. */
+  for (unsigned int i = 1; fasta_lut[i].code1; i++) {
+    /* break the search if a match is found. */
+    if (fasta_lut[i].code1 == (char) toupper((int) code))
+      return fasta_lut[i].code3;
+  }
+
+  /* no match found. */
+  return NULL;
 }
 

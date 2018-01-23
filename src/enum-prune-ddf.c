@@ -108,7 +108,7 @@ void enum_prune_ddf_report (enum_t *E, unsigned int lev, void *data) {
 
   /* get the first atom/residue names. */
   const char *atomi = E->P->atoms[ai].name;
-  const char resi = peptide_get_reschar(E->P, ri);
+  const char *resi = peptide_get_resname(E->P, ri);
 
   /* loop over all tested predecessors. */
   for (unsigned int j = lev - 1; j < E->G->n_order; j--) {
@@ -121,14 +121,14 @@ void enum_prune_ddf_report (enum_t *E, unsigned int lev, void *data) {
 
     /* get the second atom/residue names. */
     const char *atomj = E->P->atoms[aj].name;
-    const char resj = peptide_get_reschar(E->P, rj);
+    const char *resj = peptide_get_resname(E->P, rj);
 
     /* compute the percentage. */
     double f = ((double) ddf_data->nprune[j]) /
                ((double) ddf_data->ntest[j]) * 100.0;
 
     /* output the statistics. */
-    printf("  %c%-4u %-4s | %c%-4u %-4s : "
+    printf("  %3s%-4u %-4s | %3s%-4u %-4s : "
            "%16u/%-16u  %6.2lf%%\n",
            resi, ri + 1, atomi,
            resj, rj + 1, atomj,

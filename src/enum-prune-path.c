@@ -143,7 +143,7 @@ void enum_prune_path_report (enum_t *E, unsigned int lev, void *data) {
 
   /* get the inner atom/residue names. */
   const char *atomj = E->P->atoms[aj].name;
-  const char resj = peptide_get_reschar(E->P, rj);
+  const char *resj = peptide_get_resname(E->P, rj);
 
   /* loop over all tested prior neighbors. */
   for (unsigned int i = j - 1; i < E->G->n_order; i--) {
@@ -156,7 +156,7 @@ void enum_prune_path_report (enum_t *E, unsigned int lev, void *data) {
 
     /* get the first atom/residue names. */
     const char *atomi = E->P->atoms[ai].name;
-    const char resi = peptide_get_reschar(E->P, ri);
+    const char *resi = peptide_get_resname(E->P, ri);
 
     /* loop over all tested posterior neighbors. */
     for (unsigned int k = j + 1; k < E->G->n_order; k++) {
@@ -169,7 +169,7 @@ void enum_prune_path_report (enum_t *E, unsigned int lev, void *data) {
 
       /* get the last atom/residue names. */
       const char *atomk = E->P->atoms[ak].name;
-      const char resk = peptide_get_reschar(E->P, rk);
+      const char *resk = peptide_get_resname(E->P, rk);
 
       /* compute the percentage. */
       unsigned int np = path_data->nprune[i][k - j - 1];
@@ -177,7 +177,7 @@ void enum_prune_path_report (enum_t *E, unsigned int lev, void *data) {
       double f = ((double) np) / ((double) nt) * 100.0;
 
       /* output the statistics. */
-      printf("  %c%-4u %-4s | %c%-4u %-4s | %c%-4u %-4s : "
+      printf("  %3s%-4u %-4s | %3s%-4u %-4s | %3s%-4u %-4s : "
              "%16u/%-16u  %6.2lf%%\n",
              resi, ri + 1, atomi,
              resj, rj + 1, atomj,

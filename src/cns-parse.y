@@ -66,7 +66,7 @@ atom: T_INT T_WORD T_WORD T_WORD T_WORD T_WORD T_FLOAT T_FLOAT {
 
   /* add the residue into the peptide sequence. */
   if ($1 > 0 && atom_ires >= (int) P->n_res &&
-      !peptide_add_residue3(P, $4)) {
+      !peptide_add_residue(P, $4)) {
     /* free the allocated strings. */
     free($2);
     free($3);

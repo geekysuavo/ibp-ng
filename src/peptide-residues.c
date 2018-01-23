@@ -2,45 +2,7 @@
 /* include the peptide header. */
 #include "peptide.h"
 
-/* peptide_add_residue1(): add a residue to a peptide structure based
- * on the single-letter residue code.
- *
- * arguments:
- *  @P: pointer to the peptide structure to modify.
- *  @res: residue single-letter code to add.
- *
- * returns:
- *  integer indicating whether (1) or not (0) the operation succeeded.
- */
-int peptide_add_residue1 (peptide_t *P, char res) {
-  /* declare required variables:
-   *  @ires: residue index 
-   */
-  unsigned int ires;
-
-  /* lookup the residue index from the code. */
-  ires = resid_lookup1(res);
-
-  /* check that the residue is valid. */
-  if (!ires)
-    throw("invalid residue code '%c'", res);
-
-  /* increment the array length. */
-  P->n_res++;
-
-  /* reallocate the array. */
-  P->res = (unsigned int*) realloc(P->res, P->n_res * sizeof(unsigned int));
-  if (!P->res)
-    throw("unable to reallocate sequence array");
-
-  /* store the new residue index. */
-  P->res[P->n_res - 1] = ires;
-
-  /* return success. */
-  return 1;
-}
-
-/* peptide_add_residue3(): add a residue to a peptide structure based
+/* peptide_add_residue(): add a residue to a peptide structure based
  * on the three-letter residue code.
  *
  * arguments:
@@ -50,7 +12,7 @@ int peptide_add_residue1 (peptide_t *P, char res) {
  * returns:
  *  integer indicating whether (1) or not (0) the operation succeeded.
  */
-int peptide_add_residue3 (peptide_t *P, char *res) {
+int peptide_add_residue (peptide_t *P, const char *res) {
   /* declare required variables:
    *  @ires: residue index 
    *  @i: sequence index.
@@ -180,21 +142,6 @@ int peptide_has_sidechain (peptide_t *P, unsigned int res) {
 
   /* residue index not found. return false. */
   return 0;
-}
-
-/* peptide_get_reschar(): get the residue name character of a given indexed
- * residue within a peptide structure.
- *
- * arguments:
- *  @P: pointer to the peptide structure to access.
- *  @res: residue index to retrieve name information for.
- *
- * returns:
- *  constant residue name character.
- */
-char peptide_get_reschar (peptide_t *P, unsigned int res) {
-  /* always return the single-letter residue code. */
-  return (P && res < P->n_res ? resid_get_code1(P->res[res]) : 'X');
 }
 
 /* peptide_get_resname(): get the residue name string of a given indexed

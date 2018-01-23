@@ -59,7 +59,7 @@ atoms: atom | atoms atom ;
 /* atom: token group identifying a single atom entry. */
 atom: T_INT T_INT T_WORD T_WORD T_WORD T_FLOAT T_FLOAT T_INT {
   /* add the residue into the peptide sequence. */
-  if ($1 > 0 && $2 >= (int) P->n_res && !peptide_add_residue3(P, $3)) {
+  if ($1 > 0 && $2 >= (int) P->n_res && !peptide_add_residue(P, $3)) {
     /* free the allocated strings. */
     free($3);
     free($4);

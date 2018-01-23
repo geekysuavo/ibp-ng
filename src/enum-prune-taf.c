@@ -177,18 +177,18 @@ void enum_prune_taf_report (enum_t *E, peptide_dihed_t *arr,
   const char *atom3 = E->P->atoms[a3].name;
 
   /* get the residue codes. */
-  const char res0 = peptide_get_reschar(E->P, r0);
-  const char res1 = peptide_get_reschar(E->P, r1);
-  const char res2 = peptide_get_reschar(E->P, r2);
-  const char res3 = peptide_get_reschar(E->P, r3);
+  const char *res0 = peptide_get_resname(E->P, r0);
+  const char *res1 = peptide_get_resname(E->P, r1);
+  const char *res2 = peptide_get_resname(E->P, r2);
+  const char *res3 = peptide_get_resname(E->P, r3);
 
   /* compute the percentage. */
   double f = ((double) taf_data->nprune) /
              ((double) taf_data->ntest) * 100.0;
 
   /* output the statistics. */
-  printf("  %c%-4u %-4s | %c%-4u %-4s | "
-         "%c%-4u %-4s | %c%-4u %-4s : "
+  printf("  %3s%-4u %-4s | %3s%-4u %-4s | "
+         "%3s%-4u %-4s | %3s%-4u %-4s : "
          "%16u/%-16u  %6.2lf%%\n",
          res0, r0 + 1, atom0,
          res1, r1 + 1, atom1,

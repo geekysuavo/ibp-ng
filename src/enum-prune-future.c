@@ -158,16 +158,16 @@ void enum_prune_future_report (enum_t *E, unsigned int lev, void *data) {
   const char *atom2 = E->P->atoms[a2].name;
 
   /* get the residue codes. */
-  const char res0 = peptide_get_reschar(E->P, r0);
-  const char res1 = peptide_get_reschar(E->P, r1);
-  const char res2 = peptide_get_reschar(E->P, r2);
+  const char *res0 = peptide_get_resname(E->P, r0);
+  const char *res1 = peptide_get_resname(E->P, r1);
+  const char *res2 = peptide_get_resname(E->P, r2);
 
   /* compute the percentage. */
   double f = ((double) future_data->nprune) /
              ((double) future_data->ntest) * 100.0;
 
   /* output the statistics. */
-  printf("  %c%-4u %-4s | %c%-4u %-4s | %c%-4u %-4s : "
+  printf("  %3s%-4u %-4s | %3s%-4u %-4s | %3s%-4u %-4s : "
          "%16u/%-16u  %6.2lf%%\n",
          res0, r0 + 1, atom0,
          res1, r1 + 1, atom1,

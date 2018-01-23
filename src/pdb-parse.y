@@ -64,7 +64,7 @@ seqres: T_SEQRES T_INT T_WORD T_INT words {
     /* loop for each residue in the sequence string. */
     for (i = 0; i < strlen($5); i += 4) {
       /* attempt to add the residue to the peptide sequence. */
-      if (!peptide_add_residue3(P, $5 + i)) {
+      if (!peptide_add_residue(P, $5 + i)) {
         /* clean up. */
         free($3);
         free($5);

@@ -6,7 +6,6 @@
 /* include the traceback, graph and residue headers. */
 #include "trace.h"
 #include "graph.h"
-#include "resid.h"
 
 /* include the repetition ordering header. */
 #include "reorder.h"
@@ -142,15 +141,11 @@ void peptide_free (peptide_t *P);
 
 /* function declarations (peptide-residues.c): */
 
-int peptide_add_residue1 (peptide_t *P, char res);
-
-int peptide_add_residue3 (peptide_t *P, char *res);
+int peptide_add_residue (peptide_t *P, const char *res);
 
 int peptide_add_sidechain (peptide_t *P, unsigned int res);
 
 int peptide_has_sidechain (peptide_t *P, unsigned int res);
-
-char peptide_get_reschar (peptide_t *P, unsigned int res);
 
 const char *peptide_get_resname (peptide_t *P, unsigned int res);
 
