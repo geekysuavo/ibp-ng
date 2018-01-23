@@ -55,16 +55,22 @@ other: T_INT
 /* seqres: a complete line of SEQRES data. */
 seqres: T_SEQRES T_INT T_WORD T_INT words {
   /* declare required variables:
+   *  @resname: temporary string storage location.
    *  @i: string offset.
    */
+  char resname[4];
   unsigned int i;
 
   /* check if the current chain is a match. */
   if (($3)[0] == pdb_chain) {
     /* loop for each residue in the sequence string. */
     for (i = 0; i < strlen($5); i += 4) {
+      /* copy the residue name string into a terminated array. */
+      strncpy(resname, $5 + i, 3);
+      resname[3] = '\0';
+
       /* attempt to add the residue to the peptide sequence. */
-      if (!peptide_add_residue(P, $5 + i)) {
+      if (!peptide_add_residue(P, resname)) {
         /* clean up. */
         free($3);
         free($5);
