@@ -1,7 +1,6 @@
 
 /* ensure once-only inclusion. */
-#ifndef __IBPNG_ENUM_H__
-#define __IBPNG_ENUM_H__
+#pragma once
 
 /* include the system headers. */
 #include <sys/stat.h>
@@ -231,6 +230,4 @@ enum_t *enum_new (peptide_t *P, graph_t *G, opts_t *opts);
 void enum_free (enum_t *E);
 
 int enum_execute (enum_t *E);
-
-#endif  /* !__IBPNG_ENUM_H__ */
 

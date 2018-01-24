@@ -1,7 +1,6 @@
 
 /* ensure once-only inclusion. */
-#ifndef __IBPNG_VALUE_H__
-#define __IBPNG_VALUE_H__
+#pragma once
 
 /* include standard c library headers. */
 #include <stdio.h>
@@ -122,6 +121,4 @@ double distances_to_angle (double d01, double d02, double d12);
 
 double distances_to_dihedral (double d01, double d02, double d03,
                               double d12, double d13, double d23);
-
-#endif  /* !__IBPNG_VALUE_H__ */
 

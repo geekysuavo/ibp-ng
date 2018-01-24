@@ -1,7 +1,6 @@
 
 /* ensure once-only inclusion. */
-#ifndef __IBPNG_GRAPH_H__
-#define __IBPNG_GRAPH_H__
+#pragma once
 
 /* include the integer limits header. */
 #include <limits.h>
@@ -79,6 +78,4 @@ int graph_refine_edge (graph_t *G, unsigned int va, unsigned int vb,
 void graph_count_edges (graph_t *G, unsigned int *ne, unsigned int *ni);
 
 int graph_extend_order (graph_t *G, unsigned int v);
-
-#endif  /* !__IBPNG_GRAPH_H__ */
 

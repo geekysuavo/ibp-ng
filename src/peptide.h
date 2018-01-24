@@ -1,7 +1,6 @@
 
 /* ensure once-only inclusion. */
-#ifndef __IBPNG_PEPTIDE_H__
-#define __IBPNG_PEPTIDE_H__
+#pragma once
 
 /* include the traceback, graph and residue headers. */
 #include "trace.h"
@@ -161,6 +160,4 @@ int peptide_field (peptide_t *P, double tol);
 graph_t *peptide_graph (peptide_t *P, reorder_t *ord,
                         unsigned int refine,
                         unsigned int complete);
-
-#endif  /* !__IBPNG_PEPTIDE_H__ */
 

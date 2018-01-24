@@ -1,7 +1,6 @@
 
 /* ensure once-only inclusion. */
-#ifndef __IBPNG_ENUM_GPU_H__
-#define __IBPNG_ENUM_GPU_H__
+#pragma once
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,7 +13,5 @@
 
 /* function declarations (enum-gpu.cu): */
 
-/* FIXME */
-
-#endif /* !__IBPNG_ENUM_GPU_H__ */
+/* FIXME: functions for enum-gpu.cu ?? */
 

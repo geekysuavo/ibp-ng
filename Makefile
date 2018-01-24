@@ -18,7 +18,7 @@ LD=gcc
 endif
 
 # CFLAGS, LFLAGS, YFLAGS, LIBS: compilation flags and library linkage flags.
-CFLAGS=-ggdb -O3 -std=c99 -D_POSIX_SOURCE
+CFLAGS=-ggdb -O3 -std=c99 -D_GNU_SOURCE
 CFLAGS+= -Wall -Wformat -Wextra -Wno-unused-parameter
 LFLAGS=
 YFLAGS=-d
@@ -43,7 +43,7 @@ BINDIR=$(PREFIX)/bin
 BIN=bin/ibp-ng
 
 # SRC_C: basenames of gcc source files.
-SRC_C=str value vector trace opts reorder graph assign
+SRC_C=str value vector intervals trace opts reorder graph assign
 SRC_C+= topol-alloc topol-auto topol-add topol
 SRC_C+= param-alloc param-add param-get param
 SRC_C+= peptide-alloc peptide-residues peptide-atoms peptide-bonds
@@ -52,7 +52,7 @@ SRC_C+= peptide-graph peptide-field
 SRC_C+= enum enum-thread enum-write enum-prune
 SRC_C+= enum-prune-ddf enum-prune-taf enum-prune-path
 SRC_C+= enum-prune-future enum-prune-energy
-SRC_C+= dmdgp dmdgp-hash psf ibp-ng
+SRC_C+= dmdgp dmdgp-hash psf
 
 # SRC_N: basenames of nvcc source files.
 SRC_N=enum-gpu
@@ -77,11 +77,22 @@ ifeq ($(IBP_CUDA),y)
 OBJ+= $(addsuffix .o,$(addprefix src/,$(SRC_N)))
 endif
 
+# TESTS_C: basenames of gcc test-case source files.
+TESTS_C=base
+
+# TBIN: filenames of all linked test-case binary executables.
+TBIN=intervals-alloc intervals-union intervals-intersect intervals-grid
+TESTS_O=$(addsuffix .o,$(addprefix tests/,$(TBIN)))
+TESTS_X=$(addsuffix .x,$(addprefix tests/,$(TBIN)))
+
+# TOBJ: filenames of all compiled test-case object files.
+TOBJ=  $(addsuffix .o,$(addprefix tests/,$(TESTS_C)))
+
 # DATE: date string for making tarballs.
 DATE=$(shell date +%Y%m%d)
 
 # SUFFIXES: registered filename suffixes for implicit make rules.
-.SUFFIXES: .c .cu .l .o .y
+.SUFFIXES: .c .cu .l .o .x .y
 
 # PRECIOUS: files that make is forced to keep around.
 .PRECIOUS: %.c %.cu %.h %.o
@@ -90,7 +101,7 @@ DATE=$(shell date +%Y%m%d)
 all: $(SRC_Y_C) $(SRC_L_C) $(OBJ) $(BIN)
 
 # BIN: binary linkage make target.
-$(BIN): $(OBJ)
+$(BIN): $(OBJ) src/ibp-ng.o
 	@echo " LD   $@"
 	@$(LD) $^ -o $@ $(LIBS)
 
@@ -114,6 +125,15 @@ $(BIN): $(OBJ)
 	@echo " YACC $^"
 	@$(YACC) $(YFLAGS) -p $(@:src/%-parse.c=%_io_) -o $@ $^
 
+# .o => .x: gcc test-case binary linkage make target.
+.o.x:
+	@echo " LD   $@"
+	@$(LD) $(OBJ) $(TOBJ) $^ -o $@ $(LIBS)
+
+# test: target to execute all generated test programs.
+test: $(OBJ) $(TOBJ) $(TESTS_X)
+	@for tx in $(TESTS_X); do echo " TEST $$tx"; ./$$tx; done
+
 # install: target to install all generated output files.
 install: install-bin
 
@@ -126,7 +146,8 @@ install-bin: $(BIN)
 # clean: target to remove all generated intermediate and output files.
 clean:
 	@echo " CLEAN"
-	@rm -f $(SRC_L_C) $(SRC_Y_C) $(SRC_Y_H) $(OBJ) $(BIN)
+	@rm -f $(SRC_L_C) $(SRC_Y_C) $(SRC_Y_H) $(OBJ) $(TOBJ)
+	@rm -f $(TESTS_X) $(TESTS_O) $(BIN)
 
 # again: target to fully recompile all sources and rebuild all binaries.
 again: clean all

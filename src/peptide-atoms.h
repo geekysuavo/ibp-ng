@@ -1,7 +1,6 @@
 
 /* ensure once-only inclusion. */
-#ifndef __IBPNG_PEPTIDE_ATOMS_H__
-#define __IBPNG_PEPTIDE_ATOMS_H__
+#pragma once
 
 /* function declarations (peptide-atoms.c): */
 
@@ -28,6 +27,4 @@ int peptide_atom_modify (peptide_t *P,
 int peptide_atom_delete (peptide_t *P,
                          unsigned int resid,
                          const char *name);
-
-#endif /* !__IBPNG_PEPTIDE_ATOMS_H__ */
 

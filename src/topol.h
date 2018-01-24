@@ -1,7 +1,6 @@
 
 /* ensure once-only inclusion. */
-#ifndef __IBPNG_TOPOL_H__
-#define __IBPNG_TOPOL_H__
+#pragma once
 
 /* include the c math library header. */
 #include <math.h>
@@ -179,6 +178,4 @@ void topol_free (topol_t *top);
 /* function declarations (topol.c): */
 
 int topol_apply_all (topol_t *top, peptide_t *P);
-
-#endif  /* !__IBPNG_TOPOL_H__ */
 

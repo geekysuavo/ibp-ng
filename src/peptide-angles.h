@@ -1,7 +1,6 @@
 
 /* ensure once-only inclusion. */
-#ifndef __IBPNG_PEPTIDE_ANGLES_H__
-#define __IBPNG_PEPTIDE_ANGLES_H__
+#pragma once
 
 /* function declarations (peptide-angles.c): */
 
@@ -22,6 +21,4 @@ int peptide_angle_delete_any (peptide_t *P,
 int peptide_field_angles (peptide_t *P, double tol);
 
 int peptide_graph_angles (peptide_t *P, graph_t *G);
-
-#endif /* !__IBPNG_PEPTIDE_ANGLES_H__ */
 

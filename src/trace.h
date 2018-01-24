@@ -1,7 +1,6 @@
 
 /* ensure once-only inclusion. */
-#ifndef __IBPNG_TRACE_H__
-#define __IBPNG_TRACE_H__
+#pragma once
 
 /* include required standard c library headers. */
 #include <stdio.h>
@@ -66,6 +65,4 @@ void verbose_print (const int lev,
                     const char *f,
                     const unsigned int l,
                     const char *format, ...);
-
-#endif  /* !__IBPNG_TRACE_H__ */
 

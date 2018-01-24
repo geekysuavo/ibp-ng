@@ -1,7 +1,6 @@
 
 /* ensure once-only inclusion. */
-#ifndef __IBPNG_PEPTIDE_BONDS_H__
-#define __IBPNG_PEPTIDE_BONDS_H__
+#pragma once
 
 /* function declarations (peptide-bonds.c): */
 
@@ -21,6 +20,4 @@ int peptide_bond_delete_any (peptide_t *P,
 int peptide_field_bonds (peptide_t *P, double tol);
 
 int peptide_graph_bonds (peptide_t *P, graph_t *G);
-
-#endif /* !__IBPNG_PEPTIDE_BONDS_H__ */
 

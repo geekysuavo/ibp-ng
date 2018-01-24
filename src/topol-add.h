@@ -1,7 +1,6 @@
 
 /* ensure once-only inclusion. */
-#ifndef __IBPNG_TOPOL_ADD_H__
-#define __IBPNG_TOPOL_ADD_H__
+#pragma once
 
 /* function declarations (topol-add.c): */
 
@@ -44,6 +43,4 @@ int topol_add_improper (topol_t *top,
                         const char *c, int coff,
                         const char *d, int doff,
                         topol_mode_t mode);
-
-#endif /* !__IBPNG_TOPOL_ADD_H__ */
 

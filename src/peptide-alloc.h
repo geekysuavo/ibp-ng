@@ -1,7 +1,6 @@
 
 /* ensure once-only inclusion. */
-#ifndef __IBPNG_PEPTIDE_ALLOC_H__
-#define __IBPNG_PEPTIDE_ALLOC_H__
+#pragma once
 
 /* function declarations (peptide-alloc.c): */
 
@@ -12,6 +11,4 @@ int pdb_parse (FILE *fh, char chain, peptide_t *pep);
 int psf_parse (FILE *fh, peptide_t *pep);
 
 int cns_parse (FILE *fh, peptide_t *pep);
-
-#endif /* !__IBPNG_PEPTIDE_ALLOC_H__ */
 

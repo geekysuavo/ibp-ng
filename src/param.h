@@ -1,7 +1,6 @@
 
 /* ensure once-only inclusion. */
-#ifndef __IBPNG_PARAM_H__
-#define __IBPNG_PARAM_H__
+#pragma once
 
 /* include the c math library header. */
 #include <math.h>
@@ -153,6 +152,4 @@ value_t param_get_radius (param_t *par, const char *type);
 /* function declarations (param.c): */
 
 int param_apply_all (param_t *par, peptide_t *P);
-
-#endif  /* !__IBPNG_PARAM_H__ */
 

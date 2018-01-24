@@ -70,6 +70,20 @@ inline void vector_dot (vector_t *a, vector_t *b, double *z) {
   *z = a->x * b->x + a->y * b->y + a->z * b->z;
 }
 
+/* vector_axpy(): compute the blas-1 axpy operation (a <- a + alpha * b)
+ *
+ * arguments:
+ *  @a: input and output vector pointer for the computation.
+ *  @alpha: scale factor.
+ *  @b: second input vector pointer.
+ */
+void vector_axpy (vector_t *a, double alpha, vector_t *b) {
+  /* compute the result. */
+  a->x += alpha * b->x;
+  a->y += alpha * b->y;
+  a->z += alpha * b->z;
+}
+
 /* vector_sqdist(): compute the squared distance between two vectors.
  *
  * arguments:

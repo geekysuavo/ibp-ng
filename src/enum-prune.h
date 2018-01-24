@@ -1,7 +1,6 @@
 
 /* ensure once-only inclusion. */
-#ifndef __IBPNG_ENUM_PRUNE_H__
-#define __IBPNG_ENUM_PRUNE_H__
+#pragma once
 
 /* function declarations (enum-prune.c): */
 
@@ -56,6 +55,4 @@ int enum_prune_energy_init (enum_t *E, unsigned int lev);
 int enum_prune_energy (enum_t *E, enum_thread_t *th, void *data);
 
 void enum_prune_energy_report (enum_t *E, unsigned int lev, void *data);
-
-#endif /* !__IBPNG_ENUM_PRUNE_H__ */
 

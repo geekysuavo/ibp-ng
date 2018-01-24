@@ -1,7 +1,6 @@
 
 /* ensure once-only inclusion. */
-#ifndef __IBPNG_REORDER_H__
-#define __IBPNG_REORDER_H__
+#pragma once
 
 /* include the traceback and string function headers. */
 #include "trace.h"
@@ -54,6 +53,4 @@ int reorder_add_atom (reorder_t *ord, const char *name,
                       int offset, int optional);
 
 reorder_t *reorder_get_residue (reorder_t *ord, const char *name);
-
-#endif  /* !__IBPNG_REORDER_H__ */
 

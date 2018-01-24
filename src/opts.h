@@ -1,7 +1,6 @@
 
 /* ensure once-only inclusion. */
-#ifndef __IBPNG_OPTS_H__
-#define __IBPNG_OPTS_H__
+#pragma once
 
 /* include the traceback and string headers. */
 #include "trace.h"
@@ -102,6 +101,4 @@ opts_t *opts_new_from_strings (int argc, char **argv);
 void opts_free (opts_t *opts);
 
 int opts_validate (opts_t *opts);
-
-#endif  /* !__IBPNG_OPTS_H__ */
 

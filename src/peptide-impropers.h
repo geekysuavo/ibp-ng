@@ -1,7 +1,6 @@
 
 /* ensure once-only inclusion. */
-#ifndef __IBPNG_PEPTIDE_IMPROPERS_H__
-#define __IBPNG_PEPTIDE_IMPROPERS_H__
+#pragma once
 
 /* function declarations (peptide-impropers.c): */
 
@@ -24,6 +23,4 @@ int peptide_improper_delete_any (peptide_t *P,
 int peptide_field_impropers (peptide_t *P, double tol);
 
 int peptide_graph_impropers (peptide_t *P, graph_t *G);
-
-#endif /* !__IBPNG_PEPTIDE_IMPROPERS_H__ */
 

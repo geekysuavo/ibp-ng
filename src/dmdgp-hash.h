@@ -1,7 +1,6 @@
 
 /* ensure once-only inclusion. */
-#ifndef __IBPNG_DMDGP_HASH_H__
-#define __IBPNG_DMDGP_HASH_H__
+#pragma once
 
 /* include the traceback and string headers. */
 #include "trace.h"
@@ -35,6 +34,4 @@ void dmdgp_hash_free (dmdgp_hash_t *hash);
 int dmdgp_hash_add (dmdgp_hash_t *hash, const char *key, unsigned int val);
 
 int dmdgp_hash_write (dmdgp_hash_t *hash, const char *fmt, FILE *fh);
-
-#endif  /* !__IBPNG_DMDGP_HASH_H__ */
 

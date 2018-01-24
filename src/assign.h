@@ -1,7 +1,6 @@
 
 /* ensure once-only inclusion. */
-#ifndef __IBPNG_ASSIGN_H__
-#define __IBPNG_ASSIGN_H__
+#pragma once
 
 /* include the peptide and string headers. */
 #include "peptide.h"
@@ -59,6 +58,4 @@ int assign_set_dihedral (peptide_t *P,
                          double phi, double dphi);
 
 int assign_set_from_file (peptide_t *P, const char *fname);
-
-#endif  /* !__IBPNG_ASSIGN_H__ */
 
