@@ -74,6 +74,10 @@ graph_t *graph_new (unsigned int n_vertices) {
   G->order = G->orig = NULL;
   G->n_order = G->n_orig = 0;
 
+  /* initialize the friend array. */
+  G->friends = NULL;
+  G->n_friends = NULL;
+
   /* return the newly allocated graph. */
   return G;
 }
@@ -100,7 +104,17 @@ void graph_free (graph_t *G) {
 
   /* check if the re-order arrays are allocated. */
   if (G->n_order) {
-    /* yes. free the arrays and reset the array size. */
+    /* yes. free each element of the friend array. */
+    for (unsigned int i = 0; i < G->n_order; i++) {
+      if (G->orig[i] == 0)
+        free(G->friends[i]);
+    }
+
+    /* free the friend array and the friend count array. */
+    free(G->friends);
+    free(G->n_friends);
+
+    /* also, free the arrays and reset the array size. */
     free(G->order);
     free(G->orig);
     free(G->rmsd);
@@ -335,24 +349,27 @@ int graph_extend_order (graph_t *G, unsigned int v) {
   G->n_order++;
 
   /* reallocate the order array. */
-  G->order = (unsigned int*)
-    realloc(G->order, G->n_order * sizeof(unsigned int));
+  G->order = realloc(G->order, G->n_order * sizeof(unsigned int));
 
   /* reallocate the originality array. */
-  G->orig = (unsigned int*)
-    realloc(G->orig, G->n_order * sizeof(unsigned int));
+  G->orig = realloc(G->orig, G->n_order * sizeof(unsigned int));
+
+  /* reallocate the friend array. */
+  G->friends = realloc(G->friends, G->n_order * sizeof(unsigned int*));
+  G->n_friends = realloc(G->n_friends, G->n_order * sizeof(unsigned int*));
 
   /* reallocate the rmsd array. */
-  G->rmsd = (double*)
-    realloc(G->rmsd, G->n_order * sizeof(double));
+  G->rmsd = realloc(G->rmsd, G->n_order * sizeof(double));
 
   /* check if reallocation failed. */
-  if (!G->order || !G->orig || !G->rmsd)
+  if (!G->order || !G->orig || !G->friends || !G->n_friends || !G->rmsd)
     throw("unable to reallocate re-order arrays");
 
   /* store the new array element. */
   G->order[i] = v;
   G->orig[i] = 0;
+  G->friends[i] = NULL;
+  G->n_friends[i] = 0;
   G->rmsd[i] = 0.0;
 
   /* loop over the previous elements to determine originality. */
@@ -372,6 +389,26 @@ int graph_extend_order (graph_t *G, unsigned int v) {
      */
     G->ordrev[v] = i;
     G->n_orig++;
+
+    /* count the number of friends of the new node. */
+    unsigned int nf = 0;
+    for (unsigned int j = 0; j < i; j++) {
+      /* count only original nodes prior in the order. */
+      if (graph_has_edge(G, v, G->order[j]) && G->orig[j] == 0)
+        nf++;
+    }
+
+    /* allocate an array for the friends of the new node. */
+    G->friends[i] = malloc(nf * sizeof(unsigned int));
+    if (!G->friends[i])
+      throw("unable to allocate %u friends for vertex %u", nf, v);
+
+    /* store the vertex indices of the friends. */
+    G->n_friends[i] = nf;
+    for (unsigned int j = 0, fidx = 0; j < i; j++) {
+      if (graph_has_edge(G, v, G->order[j]) && G->orig[j] == 0)
+        G->friends[i][fidx++] = G->order[j];
+    }
   }
 
   /* return success. */

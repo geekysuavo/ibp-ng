@@ -17,7 +17,8 @@
 #include "graph.h"
 #include "opts.h"
 
-/* include the vector header. */
+/* include the interval set and vector headers. */
+#include "intervals.h"
 #include "vector.h"
 
 /* predeclare enum_t and enum_thread_t before defining them, in order
@@ -103,20 +104,32 @@ typedef void (*enum_write_close_fn) (struct _enum_t *E);
  * the state of a single candidate solution.
  */
 typedef struct {
-  /* @idx: index [0..n-1] of the node at the current level.
-   * @start: start index of the thread at the current level.
-   * @end: end index of the thread at the current level.
-   * @nb: number of nodes/branches at the current level.
-   * @pos: position of the node for the candidate solution.
-   * @prev: previous solution position of the node.
-   * @energy: current energy at the node.
+  /* variables related to tree size and search location:
+   *  @idx: index [0..n-1] of the node at the current level.
+   *  @start: start index of the thread at the current level.
+   *  @end: end index of the thread at the current level.
+   *  @nb: number of nodes/branches at the current level.
    */
   unsigned int idx, start, end, nb;
-  vector_t pos, prev;
-  double energy;
 
-//double *omega;
-//intervals_t *isa, *isb;
+  /* coordinate variables:
+   *  @pos: position of the node for the candidate solution.
+   *  @prev: previous solution position of the node.
+   */
+  vector_t pos, prev;
+
+  /* variables related to dihedral interval reduction:
+   *  @isa, @isb: interval sets used during intersection operations.
+   *  @isk: interval arcs from the k-th vertex adjacent to us.
+   *  @omega: array of discretized dihedral angle values.
+   */
+  intervals_t *isa, *isb, *isk;
+  double *omega;
+
+  /* auxiliary variables:
+   *  @energy: current energy at the node.
+   */
+  double energy;
 }
 enum_thread_node_t;
 

@@ -2,5 +2,6 @@
 .*.swp
 *.pyc
 *.o
+*.x
 *-parse.[ch]
 *-scan.c

@@ -49,7 +49,7 @@ SRC_C+= param-alloc param-add param-get param
 SRC_C+= peptide-alloc peptide-residues peptide-atoms peptide-bonds
 SRC_C+= peptide-angles peptide-torsions peptide-impropers
 SRC_C+= peptide-graph peptide-field
-SRC_C+= enum enum-thread enum-write enum-prune
+SRC_C+= enum enum-thread enum-reduce enum-write enum-prune
 SRC_C+= enum-prune-ddf enum-prune-taf enum-prune-path
 SRC_C+= enum-prune-future enum-prune-energy
 SRC_C+= dmdgp dmdgp-hash psf
@@ -82,6 +82,7 @@ TESTS_C=base
 
 # TBIN: filenames of all linked test-case binary executables.
 TBIN=intervals-alloc intervals-union intervals-intersect intervals-grid
+TBIN+= solve-linear solve-spheres solve-omegak
 TESTS_O=$(addsuffix .o,$(addprefix tests/,$(TBIN)))
 TESTS_X=$(addsuffix .x,$(addprefix tests/,$(TBIN)))
 

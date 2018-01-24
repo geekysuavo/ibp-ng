@@ -43,8 +43,12 @@ typedef struct {
    *         original level of the vertex in the order.
    *  @n_order: length of the re-order array.
    *  @n_orig: number of original atoms in the order.
+   *  @friends: array of adjacent vertices that are earlier in the order
+   *            (referred to as "friends") for every vertex in the order.
+   *  @n_friends: array of friends for every vertex in the order.
    */
   unsigned int *order, *ordrev, *orig, n_order, n_orig;
+  unsigned int **friends, *n_friends;
 
   /* miscellaneous graph properties:
    *
