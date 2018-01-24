@@ -155,7 +155,7 @@ again: clean all
 # target to count lines of all source files.
 lines: clean
 	@echo " WC"
-	@wc -l src/*.[chly]
+	@wc -l src/*.[chly] tests/*.[ch]
 
 # target to search all source files for 'fixme' statements.
 fixme:
@@ -163,7 +163,7 @@ fixme:
 	@grep \
 	   --recursive --with-filename \
 	   --line-number --ignore-case --color \
-	   fixme src/*.[chly] || \
+	   fixme src/*.[chly] tests/*.[ch] || \
 	 echo " No statements found"
 
 # target to wrap all source files up into a dated tarball.
@@ -172,7 +172,7 @@ dist: clean
 	@rm -rf ibp-ng-$(DATE)
 	@rm -f ../ibp-ng-$(DATE).tgz
 	@$(INSTALL) -d ibp-ng-$(DATE)
-	@cp -ar bin lib src Makefile ibp-ng-$(DATE)/
+	@cp -ar bin lib src tests Makefile ibp-ng-$(DATE)/
 	@tar czf ../ibp-ng-$(DATE).tgz ibp-ng-$(DATE)/
 	@rm -rf ibp-ng-$(DATE)
 
