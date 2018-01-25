@@ -157,6 +157,10 @@ void solve_tsi (vector_t *a, vector_t *b, vector_t *c,
   u.x = p->x - a->x;
   u.y = p->y - a->y;
   u.z = p->z - a->z;
+  /* FIXME: issues with solving the systems in this way...
+   * in some cases, |p-a|^2 > ra^2, which results in
+   * alpha becoming nan.
+   */
 
   /* compute the plane-to-solution length. */
   *alpha = sqrt((ra * ra) - (u.x * u.x + u.y * u.y + u.z * u.z));
@@ -215,12 +219,15 @@ void solve_iomega_k (vector_t *x1, vector_t *x2, vector_t *x3, vector_t *xk,
  * arguments:
  *  @th: enumerator thread structure pointer.
  *  @lev: level in the order at which to compute the omega values.
+ *  @l0: initial lower bound for the reduced interval set.
+ *  @u0: initial upper bound for the reduced interval set.
  *
  * returns:
  *  integer indicating whether (1) or not (0) dihedral interval reduction
  *  yielded a feasible (i.e. non-empty) set of intervals.
  */
-int enum_reduce (enum_thread_t *th, unsigned int lev) {
+int enum_reduce (enum_thread_t *th, unsigned int lev,
+                 double l0, double u0) {
   /* get some required struct pointers:
    *  @E: master enumerator.
    *  @G: distance graph.
@@ -273,14 +280,14 @@ int enum_reduce (enum_thread_t *th, unsigned int lev) {
   /* initialize the interval set to the entire circle. */
   state[lev].isa->size = 0;
   state[lev].isb->size = 0;
-  intervals_union(state[lev].isa, -M_PI, M_PI);
+  intervals_union(state[lev].isa, l0, u0);
 
   /* loop over all friend vertices (adjacent non-repeat vertices
    * prior to the current vertex in the order), but do not use
    * the last two friends, because they are a part of the
    * 3-clique (they are x[i-1] and x[i-2]).
    */
-  for (unsigned int k = 0; k < n_friends - 2; k++) {
+  for (unsigned int k = 0; k < n_friends; k++) {
     /* alternate between the two interval sets for intersections. */
     isa = k % 2 ? state[lev].isb : state[lev].isa;
     isb = k % 2 ? state[lev].isa : state[lev].isb;
@@ -294,8 +301,13 @@ int enum_reduce (enum_thread_t *th, unsigned int lev) {
 
     /* solve for the two interval arcs related to the current friend. */
     solve_iomega_k(&x1, &x2, &x3, &xk, d01, d02,
-                   d0k.l - E->ddf_tol,
-                   d0k.u + E->ddf_tol,
+    /* FIXME: always adding tolerances to d(i,k) can hurt us bad!
+     * sometimes, d(i,k) is exact, so tolerances will cause pruning.
+     * however, removing tolerances will require a re-implementation
+     * of intervals_grid() to support zero-length intervals.
+     */
+                   d0k.l - E->ddf_tol / 2.0,
+                   d0k.u + E->ddf_tol / 2.0,
                    isk);
 
     /* intersect these interval arcs with the current interval set. */
