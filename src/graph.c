@@ -390,24 +390,32 @@ int graph_extend_order (graph_t *G, unsigned int v) {
     G->ordrev[v] = i;
     G->n_orig++;
 
-    /* count the number of friends of the new node. */
-    unsigned int nf = 0;
+    /* get the two preceeding vertices in the order. */
+    unsigned int v1 = i >= 1 ? G->order[i - 1] : G->nv;
+    unsigned int v2 = i >= 2 ? G->order[i - 2] : G->nv;
+
+    /* construct the friends array for the new node. */
     for (unsigned int j = 0; j < i; j++) {
-      /* count only original nodes prior in the order. */
-      if (graph_has_edge(G, v, G->order[j]) && G->orig[j] == 0)
-        nf++;
-    }
+      /* only befriend...
+       *  - unique (non-repeated) vertices.
+       *  - prior to the current vertex in the order.
+       *  - not part of the clique (i,i-1,i-2) in the order.
+       */
+      const unsigned int vj = G->order[j];
+      if (G->orig[j] == 0 && vj != v1 && vj != v2 &&
+          graph_has_edge(G, v, vj)) {
+        /* reallocate the friends array to store the new friend. */
+        G->n_friends[i]++;
+        G->friends[i] = realloc(G->friends[i],
+          G->n_friends[i] * sizeof(unsigned int));
 
-    /* allocate an array for the friends of the new node. */
-    G->friends[i] = malloc(nf * sizeof(unsigned int));
-    if (!G->friends[i])
-      throw("unable to allocate %u friends for vertex %u", nf, v);
+        /* throw an exception if reallocation failed. */
+        if (!G->friends[i])
+          throw("unable to allocate friends for vertex %u", v);
 
-    /* store the vertex indices of the friends. */
-    G->n_friends[i] = nf;
-    for (unsigned int j = 0, fidx = 0; j < i; j++) {
-      if (graph_has_edge(G, v, G->order[j]) && G->orig[j] == 0)
-        G->friends[i][fidx++] = G->order[j];
+        /* store the vertex index of the new friend. */
+        G->friends[i][G->n_friends[i] - 1] = vj;
+      }
     }
   }
 

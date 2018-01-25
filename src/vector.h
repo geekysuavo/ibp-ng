@@ -8,6 +8,10 @@
 /* include the traceback header. */
 #include "trace.h"
 
+/* vector_print(): macro to pretty-print vectors.
+ */
+#define vector_print(v)  vector_printfn(v, #v)
+
 /* vector_free(): macro to free allocated vector structure pointers.
  */
 #define vector_free(v)  { free(v); v = NULL; }
@@ -45,4 +49,6 @@ double vector_angle (vector_t *a, vector_t *b, vector_t *c);
 
 double vector_dihedral (vector_t *a, vector_t *b,
                         vector_t *c, vector_t *d);
+
+void vector_printfn (vector_t *v, const char *id);
 

@@ -549,7 +549,7 @@ value_t value_cos (value_t v) {
 }
 
 /* value_printfn(): core function used by the value_print() macro to
- * output generalized values to standard output.
+ * write generalized values to standard output.
  *
  * arguments:
  *  @v: value to print.

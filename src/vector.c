@@ -227,3 +227,15 @@ inline double vector_dihedral (vector_t *a, vector_t *b,
   return atan2(y, x);
 }
 
+/* vector_printfn(): core function used by the vector_print() macro
+ * to write vectors to standard output.
+ *
+ * arguments:
+ *  @v: pointer to the vector to access.
+ *  @id: string identifier of the vector.
+ */
+void vector_printfn (vector_t *v, const char *id) {
+  /* print the variable name and value. */
+  printf("%s = ( %lf, %lf, %lf )\n", id, v->x, v->y, v->z);
+}
+

@@ -246,3 +246,23 @@ int intervals_grid (intervals_t *I, double *samp, unsigned int n_samp) {
   return 1;
 }
 
+/* intervals_printfn(): core function used by the intervals_print() macro
+ * to write interval sets to standard output.
+ *
+ * arguments:
+ *  @I: pointer to the interval set to access.
+ *  @id: string identifier of the interval.
+ */
+void intervals_printfn (intervals_t *I, const char *id) {
+  /* print the variable name. */
+  printf("%s (%u/%u) = ", id, I->size, I->capacity);
+
+  /* loop over the intervals in the set. */
+  for (unsigned int i = 0; i < I->size; i++)
+    printf("[%lf,%lf]%s", I->start[i], I->end[i],
+           i + 1 == I->size ? "" : ", ");
+
+  /* write a newline. */
+  printf("\n");
+}
+

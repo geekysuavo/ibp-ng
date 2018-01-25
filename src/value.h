@@ -14,7 +14,8 @@
 #define M_PI_2  1.57079632679489661923
 #endif
 
-/* define a macro to pretty-print values. */
+/* value_print(): macro to pretty-print values.
+ */
 #define value_print(v)  value_printfn(v, #v)
 
 /* value_type_t: enumeration of all types of values that may

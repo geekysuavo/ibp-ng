@@ -5,6 +5,10 @@
 /* include the traceback header. */
 #include "trace.h"
 
+/* intervals_print(): macro to pretty-print interval sets.
+ */
+#define intervals_print(I)  intervals_printfn(I, #I)
+
 /* intervals_free(): macro to free allocated interval set structure pointers.
  */
 #define intervals_free(I)  { free(I); I = NULL; }
@@ -35,4 +39,6 @@ int intervals_union (intervals_t *I, double start, double end);
 int intervals_intersect (intervals_t *Ia, intervals_t *Ib, intervals_t *Ic);
 
 int intervals_grid (intervals_t *I, double *samp, unsigned int n_samp);
+
+void intervals_printfn (intervals_t *I, const char *id);
 
