@@ -326,10 +326,8 @@ int enum_reduce (enum_thread_t *th, unsigned int lev,
   state[lev].isb->size = 0;
   intervals_union(state[lev].isa, l0, u0);
 
-  /* loop over all friend vertices (adjacent non-repeat vertices
-   * prior to the current vertex in the order), but do not use
-   * the last two friends, because they are a part of the
-   * 3-clique (they are x[i-1] and x[i-2]).
+  /* loop over all friend vertices:
+   * F(i) := { v(k) | k <= i-3 ^ !dup[k] ^ v(k) != v(i-1) ^ v(k) != v(i-2) }
    */
   for (unsigned int k = 0; k < n_friends; k++) {
     /* alternate between the two interval sets for intersections. */
