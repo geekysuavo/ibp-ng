@@ -17,6 +17,8 @@ unsigned int test_eq_array_uint (unsigned int n,
                                  const unsigned int *u,
                                  const unsigned int *v);
 
+unsigned int test_eq_int (int a, int b);
+
 unsigned int test_eq_uint (unsigned int a, unsigned int b);
 
 unsigned int test_eq_double (double a, double b, double tol);

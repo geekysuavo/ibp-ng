@@ -109,10 +109,14 @@ void solve_3x3 (const double *A, const double *b, vector_t *p) {
  *  @n: unit normal vector to the plane (a,b,c).
  *  @p: projection of the solution point-pair onto the plane (a,b,c).
  *  @alpha: distance between @p and each point in the solution point-pair.
+ *
+ * returns:
+ *  integer indicating whether (1) or not (0) the intersection
+ *  has solutions.
  */
-void solve_tsi (vector_t *a, vector_t *b, vector_t *c,
-                double ra,   double rb,   double rc,
-                vector_t *n, vector_t *p, double *alpha) {
+int solve_tsi (vector_t *a, vector_t *b, vector_t *c,
+               double ra,   double rb,   double rc,
+               vector_t *n, vector_t *p, double *alpha) {
   /* declare a pair of temporary vectors. */
   vector_t u, v;
 
@@ -157,13 +161,19 @@ void solve_tsi (vector_t *a, vector_t *b, vector_t *c,
   u.x = p->x - a->x;
   u.y = p->y - a->y;
   u.z = p->z - a->z;
-  /* FIXME: issues with solving the systems in this way...
-   * in some cases, |p-a|^2 > ra^2, which results in
-   * alpha becoming nan.
+
+  /* compute two intermediate values:
+   *  @unrm2: squared length of the vector (@p-@a).
+   *  @ra2: squared radius of the first sphere.
    */
+  const double unrm2 = u.x * u.x + u.y * u.y + u.z * u.z;
+  const double ra2 = ra * ra;
 
   /* compute the plane-to-solution length. */
-  *alpha = sqrt((ra * ra) - (u.x * u.x + u.y * u.y + u.z * u.z));
+  *alpha = sqrt(ra2 - unrm2);
+
+  /* return true if valid solutions exist in @n, @p, @alpha. */
+  return (ra2 >= unrm2);
 }
 
 /* solve_iomega_k(): compute the two dihedral interval arcs belonging
@@ -180,36 +190,70 @@ void solve_tsi (vector_t *a, vector_t *b, vector_t *c,
  *  @lk: lower bound distance between x[i] and x[k].
  *  @uk: upper bound distance between x[i] and x[k].
  *  @iomega_k: output interval set to hold the dihedral arcs.
+ *
+ * returns:
+ *  integer indicating whether (1) or not (0) the dihedral intervals
+ *  were successfully added to the interval set. failure to do so
+ *  indicates that the three-sphere intersection problem(s) had
+ *  no solutions.
  */
-void solve_iomega_k (vector_t *x1, vector_t *x2, vector_t *x3, vector_t *xk,
-                     double d01, double d02, double lk, double uk,
-                     intervals_t *iomega_k) {
+int solve_iomega_k (vector_t *x1, vector_t *x2, vector_t *x3, vector_t *xk,
+                    double d01, double d02, double lk, double uk,
+                    intervals_t *iomega_k) {
   /* declare required variables:
    *  @p: midpoint between the two solutions.
    *  @n: unit normal vector to plane (x0,x1,xk).
    *  @alpha: distance from midpoint to each solution.
+   *  @Lpos: dihedral lower bound for the positive solution.
+   *  @Lneg: dihedral lower bound for the negative solution.
+   *  @Upos: dihedral upper bound for the positive solution.
+   *  @Uneg: dihedral upper bound for the negative solution.
    */
+  double Lpos, Lneg, Upos, Uneg;
   vector_t p, n;
   double alpha;
 
   /* compute the arc points closest to x[k], and their omega values. */
-  solve_tsi(x1, x2, xk, d01, d02, lk, &n, &p, &alpha);
-  vector_axpy(&p, alpha, &n); /* p <- p + alpha n */
-  const double a0 = vector_dihedral(x3, x2, x1, &p);
-  vector_axpy(&p, -2.0 * alpha, &n); /* p <- p - 2 alpha n */
-  const double b0 = vector_dihedral(x3, x2, x1, &p);
+  if (solve_tsi(x1, x2, xk, d01, d02, lk, &n, &p, &alpha)) {
+    /* p <- p + alpha n */
+    vector_axpy(&p, alpha, &n);
+    Lpos = vector_dihedral(x3, x2, x1, &p);
 
-  /* compute the arc points furthest from x[k], and their omega values. */
-  solve_tsi(x1, x2, xk, d01, d02, uk, &n, &p, &alpha);
-  vector_axpy(&p, alpha, &n); /* p <- p + alpha n */
-  const double a1 = vector_dihedral(x3, x2, x1, &p);
-  vector_axpy(&p, -2.0 * alpha, &n); /* p <- p - 2 alpha n */
-  const double b1 = vector_dihedral(x3, x2, x1, &p);
+    /* p <- p - 2 alpha n */
+    vector_axpy(&p, -2.0 * alpha, &n);
+    Lneg = vector_dihedral(x3, x2, x1, &p);
+  }
+  else
+    return 0;
+
+  /* avoid extra work with exact distances, i.e. [lk,uk] s.t. lk==uk. */
+  if (uk == lk) {
+    /* the upper bounds are identical. */
+    Upos = Lpos;
+    Uneg = Lneg;
+  }
+  else {
+    /* compute the arc points furthest from x[k], and their omega values. */
+    if (solve_tsi(x1, x2, xk, d01, d02, uk, &n, &p, &alpha)) {
+      /* p <- p + alpha n */
+      vector_axpy(&p, alpha, &n);
+      Upos = vector_dihedral(x3, x2, x1, &p);
+
+      /* p <- p - 2 alpha n */
+      vector_axpy(&p, -2.0 * alpha, &n);
+      Uneg = vector_dihedral(x3, x2, x1, &p);
+    }
+    else
+      return 0;
+  }
 
   /* store the results into the interval set. */
   iomega_k->size = 0;
-  add_circular_interval(iomega_k, a0, a1);
-  add_circular_interval(iomega_k, b0, b1);
+  add_circular_interval(iomega_k, Lpos, Upos);
+  add_circular_interval(iomega_k, Lneg, Uneg);
+
+  /* return success. valid dihedrals were added to the interval set. */
+  return 1;
 }
 
 /* enum_reduce(): at a given level within an enumerator thread, compute
@@ -300,15 +344,8 @@ int enum_reduce (enum_thread_t *th, unsigned int lev,
     d0k = graph_get_edge(G, v, vk);
 
     /* solve for the two interval arcs related to the current friend. */
-    solve_iomega_k(&x1, &x2, &x3, &xk, d01, d02,
-    /* FIXME: always adding tolerances to d(i,k) can hurt us bad!
-     * sometimes, d(i,k) is exact, so tolerances will cause pruning.
-     * however, removing tolerances will require a re-implementation
-     * of intervals_grid() to support zero-length intervals.
-     */
-                   d0k.l - E->ddf_tol / 2.0,
-                   d0k.u + E->ddf_tol / 2.0,
-                   isk);
+    if (!solve_iomega_k(&x1, &x2, &x3, &xk, d01, d02, d0k.l, d0k.u, isk))
+      return 0;
 
     /* intersect these interval arcs with the current interval set. */
     intervals_intersect(isa, isk, isb);

@@ -204,6 +204,7 @@ int intervals_intersect (intervals_t *Ia, intervals_t *Ib, intervals_t *Ic) {
  *  integer indicating whether (1) or not (0) the operation succeeded.
  */
 int intervals_grid (intervals_t *I, double *samp, unsigned int n_samp) {
+  /* FIXME: intervals_grid() does not support degenerate intervals! */
   /* throw an exception if the interval set is empty. */
   if (I->size == 0)
     throw("attempted to grid an empty interval set");

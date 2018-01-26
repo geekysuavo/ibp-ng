@@ -47,6 +47,21 @@ unsigned int test_eq_array_uint (unsigned int n,
   return 0;
 }
 
+/* test_eq_int(): test if two ints are equal.
+ *
+ * arguments:
+ *  @u, @v: values to check for equality.
+ *
+ * returns:
+ *  integer indicating whether (1) or not (0) the values differ.
+ */
+unsigned int test_eq_int (int a, int b) {
+  if (a != b)
+    return 1;
+
+  return 0;
+}
+
 /* test_eq_uint(): test if two uints are equal.
  *
  * arguments:
