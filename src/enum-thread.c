@@ -623,6 +623,12 @@ void *enum_thread_execute (void *pdata) {
       ct = distances_to_angle(d12, d13, d23);
       st = sqrt(1.0 - ct * ct);
 
+/*FIXME*/
+printf("\n[***    LEVEL %3u    ***]\n",lev);
+printf("[idx,   nb,  start,  end]\n");
+printf(" %3u   %3u     %3u   %3u\n",
+state[lev].idx,state[lev].nb,state[lev].start,state[lev].end);
+/*FIXME*/
       /* upon entering a level at the starting index, compute
        * the set of dihedral points to use for embedding.
        */
@@ -641,12 +647,13 @@ void *enum_thread_execute (void *pdata) {
         /* compute the discretized dihedral values. */
         enum_reduce(thread, lev, val03.l, val03.u);
       }
-/*FIXME*/printf("\n[*** LEVEL %u ***]\n",lev);
-/*FIXME*/printf(" idx     = %u\n",state[lev].idx);
-/*FIXME*/printf(" nb      = %u\n",state[lev].nb);
-/*FIXME*/printf(" start   = %u\n",state[lev].start);
-/*FIXME*/printf(" end     = %u\n",state[lev].end);
-/*FIXME*/printf(" n_omega = %u\n",state[lev].n_omega);
+/*FIXME*/
+printf("omega (%u) = ( ",state[lev].n_omega);
+for (unsigned int kk = 0; kk < state[lev].n_omega; kk++)
+  printf("%lf%s", state[lev].omega[kk],
+         kk + 1 == state[lev].n_omega ? "" : ", ");
+printf(" )\n");
+/*FIXME*/
 
       /* prune if we have exhausted our set of feasible points
        * at the current level.
@@ -662,8 +669,8 @@ void *enum_thread_execute (void *pdata) {
        */
       cw = cos(state[lev].omega[state[lev].idx]);
       sw = sin(state[lev].omega[state[lev].idx]);
-/*FIXME*/printf(" cos(omega) = %lf\n",cw);
-/*FIXME*/printf(" sin(omega) = %lf\n",sw);
+/*FIXME*/printf("cos(omega) = %lf\n",cw);
+/*FIXME*/printf("sin(omega) = %lf\n",sw);
 
       /* compute the scale factor for all p-vectors. */
       fv = st / sqrt(rv.x * rv.x + rv.y * rv.y + rv.z * rv.z);

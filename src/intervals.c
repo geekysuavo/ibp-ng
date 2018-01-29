@@ -284,7 +284,7 @@ void intervals_printfn (intervals_t *I, const char *id) {
 
   /* loop over the intervals in the set. */
   for (unsigned int i = 0; i < I->size; i++)
-    printf("[%lf,%lf]%s", I->start[i], I->end[i],
+    printf("[%lf, %lf]%s", I->start[i], I->end[i],
            i + 1 == I->size ? "" : ", ");
 
   /* write a newline. */

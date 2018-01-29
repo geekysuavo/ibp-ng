@@ -328,6 +328,11 @@ void enum_reduce (enum_thread_t *th, unsigned int lev,
   state[lev].isb->size = 0;
   isk = state[lev].isk;
   intervals_union(state[lev].isa, l0, u0);
+/*FIXME*/
+vector_print(&x1);
+vector_print(&x2);
+vector_print(&x3);
+/*FIXME*/
 
   /* loop over all friend vertices:
    * F(i) := { v(k) | k <= i-3 ^ !dup[k] ^ v(k) != v(i-1) ^ v(k) != v(i-2) }
@@ -340,6 +345,7 @@ void enum_reduce (enum_thread_t *th, unsigned int lev,
     /* get the vertex index and position of the current friend. */
     const unsigned int vk = friends[k];
     xk = state[ordrev[vk]].pos;
+/*FIXME*/vector_print(&xk);
 
     /* get the graph edge connecting us to the current friend. */
     d0k = graph_get_edge(G, v, vk);
@@ -349,7 +355,9 @@ void enum_reduce (enum_thread_t *th, unsigned int lev,
       return;
 
     /* intersect these interval arcs with the current interval set. */
+/*FIXME*/intervals_print(isa);intervals_print(isk);
     intervals_intersect(isa, isk, isb);
+/*FIXME*/intervals_print(isb);
 
     /* the interval set is empty! */
     if (isb->size == 0)
