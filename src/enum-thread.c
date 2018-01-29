@@ -334,7 +334,9 @@ int enum_threads_init (enum_t *E) {
      */
     unsigned int has_exact_edge = 0;
     for (unsigned int k = 0; k < E->G->n_friends[i]; k++) {
-      value_t dik = graph_get_edge(E->G, E->G->order[i], E->G->order[k]);
+      value_t dik = graph_get_edge(E->G, E->G->order[i],
+                                   E->G->friends[i][k]);
+
       if (value_is_scalar(dik)) {
         has_exact_edge = 1;
         break;

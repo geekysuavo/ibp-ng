@@ -191,6 +191,25 @@ int intervals_intersect (intervals_t *Ia, intervals_t *Ib, intervals_t *Ic) {
   return 1;
 }
 
+/* intervals_len(): compute the total length of all intervals contained
+ * within an interval set.
+ *
+ * arguments:
+ *  @I: pointer to the interval set to access.
+ *
+ * returns:
+ *  sum of all interval lengths.
+ */
+double intervals_len (intervals_t *I) {
+  /* compute the combined length of all intervals in the set. */
+  double len = 0.0;
+  for (unsigned int i = 0; i < I->size; i++)
+    len += I->end[i] - I->start[i];
+
+  /* return the computed length. */
+  return len;
+}
+
 /* intervals_grid(): uniformly discretize an interval set with a specified
  * number of points, where the points are equally spaced on the interval
  * formed by concatenating all intervals in the set together end-to-end.
@@ -212,39 +231,37 @@ int intervals_intersect (intervals_t *Ia, intervals_t *Ib, intervals_t *Ic) {
  *            - the final number of sampled values.
  */
 void intervals_grid (intervals_t *I, double *samp, unsigned int *n_samp) {
-  /* the final number of sampled points will be the lesser of the
-   * number of available and requested point counts.
-   */
-  const unsigned int ns = (I->size < *n_samp ? I->size : *n_samp);
-
   /* immediately finish if the interval set is empty. */
-  if (ns == 0)
-    goto final;
+  if (!I || I->size == 0) {
+    *n_samp = 0;
+    return;
+  }
 
-  /* compute the combined length of all intervals in the set. */
-  double len = 0.0;
-  for (unsigned int i = 0; i < I->size; i++)
-    len += I->end[i] - I->start[i];
+  /* compute the total length of the interval set. */
+  double len = intervals_len(I);
 
   /* check if the intervals are degenerate. */
   if (len == 0) {
+    /* ensure that we do not overflow the source or the destination. */
+    *n_samp = (I->size < *n_samp ? I->size : *n_samp);
+
     /* store the lower bounds (values) of each interval (point)
      * into the output samples array, until we have exhausted
      * either the interval set or the array size.
      */
-    for (unsigned int i = 0; i < ns; i++)
+    for (unsigned int i = 0; i < *n_samp; i++)
       samp[i] = I->start[i];
   }
   else {
     /* compute the spacing between sampled points. */
-    const double h = len / (ns - 1);
+    const double h = len / (*n_samp - 1);
 
     /* initialize the first sampled point and zero the length. */
     samp[0] = I->start[0];
     len = 0.0;
 
     /* loop until all sampled points are computed. */
-    for (unsigned int i = 0, j = 0; i < ns - 1; /**/) {
+    for (unsigned int i = 0, j = 0; i < *n_samp - 1; /**/) {
       /* compute the distance from the last sampled point to the end
        * of the currently indexed interval.
        */
@@ -265,10 +282,6 @@ void intervals_grid (intervals_t *I, double *samp, unsigned int *n_samp) {
       }
     }
   }
-
-final:
-  /* store the final sample count. */
-  *n_samp = ns;
 }
 
 /* intervals_printfn(): core function used by the intervals_print() macro

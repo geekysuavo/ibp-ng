@@ -349,6 +349,7 @@ vector_print(&x3);
 
     /* get the graph edge connecting us to the current friend. */
     d0k = graph_get_edge(G, v, vk);
+/*FIXME*/value_print(d0k);
 
     /* solve for the two interval arcs related to the current friend. */
     if (!solve_iomega_k(&x1, &x2, &x3, &xk, d01, d02, d0k.l, d0k.u, isk))
