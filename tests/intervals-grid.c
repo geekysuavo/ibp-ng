@@ -17,10 +17,12 @@ int main (int argc, char **argv) {
 
   /* compute the set of grid samples. */
   double samples[8];
-  intervals_grid(I, samples, 5);
+  unsigned int n_samples = 5;
+  intervals_grid(I, samples, &n_samples);
 
   /* test the result. */
   const double ans[] = { 0.5, 2.125, 2.75, 4.875, 6.5 };
+  n_fails += test_eq_uint(n_samples, 5);
   n_fails += test_eq_array_double(5, samples, ans, 1.0e-8);
 
   /* free the interval set. */

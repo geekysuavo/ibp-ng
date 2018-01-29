@@ -163,6 +163,23 @@ static int enum_init_threads (enum_t *E, opts_t *opts) {
       /* set the node coordinates. */
       vector_set(&E->threads[i].state[j].pos, 0.0, 0.0, 0.0);
       vector_set(&E->threads[i].state[j].prev, 1.0e6, 1.0e6, 1.0e6);
+
+      /* allocate the interval sets. */
+      E->threads[i].state[j].n_omega = 0;
+      E->threads[i].state[j].omega = NULL;
+      if (E->G->orig[j] == 0) {
+        /* original atoms: interval sets are required. */
+        const unsigned int nf = 2 * E->G->n_friends[j] + 1;
+        E->threads[i].state[j].isa = intervals_new(nf);
+        E->threads[i].state[j].isb = intervals_new(nf);
+        E->threads[i].state[j].isk = intervals_new(4);
+      }
+      else {
+        /* duplicate atoms: interval sets are *not* required. */
+        E->threads[i].state[j].isa = NULL;
+        E->threads[i].state[j].isb = NULL;
+        E->threads[i].state[j].isk = NULL;
+      }
     }
   }
 
@@ -263,7 +280,7 @@ static int enum_init_prune_add (enum_t *E, const char *name) {
   throw("unrecognized pruning method '%s'", name);
 }
 
-/* initialize the pruning methods of an enumerator.
+/* enum_init_prune(): initialize the pruning methods of an enumerator.
  *
  * arguments:
  *  @E: pointer to the enumerator structure to modify.
@@ -444,6 +461,16 @@ void enum_free (enum_t *E) {
 
   /* free the pruning test sizes. */
   free(E->prune_sz);
+
+  /* free the interval sets pointed to by the thread states. */
+  for (unsigned int i = 0; i < E->nthreads; i++) {
+    for (unsigned int j = 0; j < E->G->n_order; j++) {
+      intervals_free(E->threads[i].state[j].isa);
+      intervals_free(E->threads[i].state[j].isb);
+      intervals_free(E->threads[i].state[j].isk);
+      free(E->threads[i].state[j].omega);
+    }
+  }
 
   /* free the threads. */
   free(E->threads);

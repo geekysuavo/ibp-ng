@@ -4,6 +4,6 @@
 
 /* function declarations (enum-reduce.c): */
 
-int enum_reduce (enum_thread_t *th, unsigned int lev,
-                 double l0, double u0);
+void enum_reduce (enum_thread_t *th, unsigned int lev,
+                  double l0, double u0);
 

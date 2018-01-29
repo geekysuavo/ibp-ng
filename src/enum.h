@@ -121,9 +121,11 @@ typedef struct {
   /* variables related to dihedral interval reduction:
    *  @isa, @isb: interval sets used during intersection operations.
    *  @isk: interval arcs from the k-th vertex adjacent to us.
+   *  @n_omega: number of discretized dihedral angle values.
    *  @omega: array of discretized dihedral angle values.
    */
   intervals_t *isa, *isb, *isk;
+  unsigned int n_omega;
   double *omega;
 
   /* auxiliary variables:

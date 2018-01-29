@@ -260,18 +260,20 @@ int solve_iomega_k (vector_t *x1, vector_t *x2, vector_t *x3, vector_t *xk,
  * a discretized set of omega dihedral angles using interval reduction,
  * described in the 'torsion Branch-and-Prune' paper.
  *
+ * the resulting set of discretized dihedral angles is stored in the
+ * enumerator thread state, within the array th->state[lev].omega,
+ * and the number of angles is given by th->state[lev].n_omega.
+ * in the case of infeasibility, the number of angles will be
+ * set to zero.
+ *
  * arguments:
  *  @th: enumerator thread structure pointer.
  *  @lev: level in the order at which to compute the omega values.
  *  @l0: initial lower bound for the reduced interval set.
  *  @u0: initial upper bound for the reduced interval set.
- *
- * returns:
- *  integer indicating whether (1) or not (0) dihedral interval reduction
- *  yielded a feasible (i.e. non-empty) set of intervals.
  */
-int enum_reduce (enum_thread_t *th, unsigned int lev,
-                 double l0, double u0) {
+void enum_reduce (enum_thread_t *th, unsigned int lev,
+                  double l0, double u0) {
   /* get some required struct pointers:
    *  @E: master enumerator.
    *  @G: distance graph.
@@ -293,14 +295,6 @@ int enum_reduce (enum_thread_t *th, unsigned int lev,
   vector_t xk;
   value_t d0k;
 
-  /* get some more required variables:
-   *  @n_omega: number of discretization points.
-   *  @isa, @isb, @isk: temporary interval sets.
-   */
-  const unsigned int n_omega = state[lev].nb;
-  intervals_t *isa, *isb, *isk;
-  isk = state[lev].isk;
-
   /* get some required uint arrays:
    *  @order: graph repetition order array.
    *  @ordrev: graph inverse re-order array.
@@ -321,9 +315,18 @@ int enum_reduce (enum_thread_t *th, unsigned int lev,
   const double d01 = graph_get_edge(G, v, order[lev - 1]).l;
   const double d02 = graph_get_edge(G, v, order[lev - 2]).l;
 
-  /* initialize the interval set to the entire circle. */
+  /* initialize the number of discretized dihedral values to zero.
+   * therefore, any return prior to the final call to intervals_grid()
+   * will be guaranteed to result in a pruning of the entire sub-tree.
+   */
+  unsigned int *n_omega = &state[lev].n_omega;
+  *n_omega = 0;
+
+  /* initialize the interval sets used for dihedral reduction. */
+  intervals_t *isa, *isb, *isk;
   state[lev].isa->size = 0;
   state[lev].isb->size = 0;
+  isk = state[lev].isk;
   intervals_union(state[lev].isa, l0, u0);
 
   /* loop over all friend vertices:
@@ -343,20 +346,18 @@ int enum_reduce (enum_thread_t *th, unsigned int lev,
 
     /* solve for the two interval arcs related to the current friend. */
     if (!solve_iomega_k(&x1, &x2, &x3, &xk, d01, d02, d0k.l, d0k.u, isk))
-      return 0;
+      return;
 
     /* intersect these interval arcs with the current interval set. */
     intervals_intersect(isa, isk, isb);
 
-    /* the interval set is empty! return false. */
+    /* the interval set is empty! */
     if (isb->size == 0)
-      return 0;
+      return;
   }
 
   /* finally, discretize the reduced interval set. */
+  *n_omega = state[lev].nb;
   intervals_grid(isb, state[lev].omega, n_omega);
-
-  /* feasible intervals are available, return true. */
-  return 1;
 }
 

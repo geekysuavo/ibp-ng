@@ -716,6 +716,20 @@ void opts_free (opts_t *opts) {
  *  integer indicating whether (1) or not (0) validation succeeded.
  */
 int opts_validate (opts_t *opts) {
+  /* FIXME: temporary measure to ensure that nobody tries to run tBP
+   * on more than one thread.
+   *
+   * TODO: a more proper multi-threaded implementation will most likely
+   * be based on a thread pool model, where each worker periodically
+   * queries the master for available threads (a locking operation),
+   * and the master splits the querying thread when idle threads
+   * are available.
+   */
+#ifdef __IBP_HAVE_PTHREAD
+  if (opts->thread_num != 1)
+    throw("multi-threaded execution is currently unsupported");
+#endif
+
   /* check that an input filename was specified. */
   if (!opts->fname_in)
     throw("expected input filename not specified");

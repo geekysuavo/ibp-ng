@@ -2,6 +2,7 @@
 /* include the enumerator headers. */
 #include "enum.h"
 #include "enum-thread.h"
+#include "enum-reduce.h"
 #include "enum-write.h"
 
 /* state_div(): divide the size of a thread state into uniform pieces,
@@ -327,18 +328,31 @@ int enum_threads_init (enum_t *E) {
       continue;
     }
 
-    /* get the d(i,i-3) edge weight. */
-    const unsigned int i0 = E->G->order[i - 3];
-    const unsigned int i3 = E->G->order[i];
-    value_t d03 = graph_get_edge(E->G, i0, i3);
+    /* determine whether the current vertex has an exact edge back to
+     * a friend vertex, which will reduce the set of possible solutions
+     * to two points, one point, or null.
+     */
+    unsigned int has_exact_edge = 0;
+    for (unsigned int k = 0; k < E->G->n_friends[i]; k++) {
+      value_t dik = graph_get_edge(E->G, E->G->order[i], E->G->order[k]);
+      if (value_is_scalar(dik)) {
+        has_exact_edge = 1;
+        break;
+      }
+    }
 
-    /* set the branch count based on d(i,i-3) edge type. */
-    if (value_is_scalar(d03)) {
+    /* set the branch count based on whether the current vertex has
+     * an exact edge to a friend vertex.
+     */
+    if (has_exact_edge) {
       /* scalar edges produce two branches. */
       E->threads[0].state[i].nb = 2;
     }
-    else if (value_is_interval(d03)) {
+    else {
       /* interval edges produce multiple branches. */
+      const unsigned int i0 = E->G->order[i];
+      const unsigned int i3 = E->G->order[i - 3];
+      value_t d03 = graph_get_edge(E->G, i0, i3);
       unsigned int nb = (d03.u - d03.l) / E->eps;
       if (nb > E->nbmax)
         nb = E->nbmax;
@@ -348,15 +362,11 @@ int enum_threads_init (enum_t *E) {
       /* set the branch count. */
       E->threads[0].state[i].nb = 2 * nb;
     }
-
-    /* refine the branch count in the case of dihedral edges. */
-    if (value_is_dihedral(d03)) {
-      /* dihedrals do not require sigma={+1,-1}, only sigma=+1. */
-      E->threads[0].state[i].nb /= 2;
-    }
   }
 
-  /* store the branch counts into every thread. */
+  /* copy the branch counts from the first thread
+   * into every remaining thread.
+   */
   for (unsigned int t = 1; t < E->nthreads; t++)
     for (unsigned int i = 0; i < E->G->n_order; i++)
       E->threads[t].state[i].nb = E->threads[0].state[i].nb;
@@ -400,6 +410,16 @@ int enum_threads_init (enum_t *E) {
     for (unsigned int i = 0; i < E->G->n_order; i++)
       E->threads[t].state[i].energy = 0.0;
 
+  /* initialize the dihedral lists. */
+  for (unsigned int t = 0; t < E->nthreads; t++) {
+    for (unsigned int i = 0; i < E->G->n_order; i++) {
+      E->threads[t].state[i].omega =
+        malloc(E->threads[t].state[i].nb * sizeof(double));
+      if (!E->threads[t].state[i].omega)
+        throw("unable to allocate dihedrals array, level %u", i);
+    }
+  }
+
   /* compute the tree size. */
   for (unsigned int i = 0; i < E->G->n_order; i++)
     E->logW += log10((double) E->threads[0].state[i].nb);
@@ -436,65 +456,6 @@ static inline int enum_thread_feasible (enum_thread_t *th) {
 
   /* return feasible. */
   return 1;
-}
-
-/* enum_thread_lerp_index(): compute the sign of sin(omega) and the
- * interval interpolation factor based on the current value of the
- * thread state index.
- *
- * the sign of sin(omega) is determined to be positive for even
- * state indices and negative for odd state indices.
- *
- * the interpolation factor is a bit trickier. this function basically
- * dabbles in the dark arts of integer modular arithmetic to cause iBP
- * to select the inner interpolation points first, moving outwards as
- * the state index increases.
- *
- * this is basically a heuristic to try and traverse better parts of
- * the tree first when enumerating solutions.
- *
- * arguments:
- *  @i: current thread state index.
- *  @nb: number of branches at the current tree level.
- *  @is_dihed: whether or not the distance is from a dihedral.
- *  @sigma: pointer to the output sign of sin(omega).
- *  @lerp: pointer to the output interpolation factor.
- */
-static inline void enum_thread_lerp_index (const unsigned int i,
-                                           const unsigned int nb,
-                                           const int is_dihed,
-                                           double *sigma,
-                                           double *lerp) {
-  /* act differently for dihedral-derived edges. */
-  unsigned int j = 0;
-  unsigned int N = 0;
-  if (is_dihed) {
-    /* dihedral: only branch using positive sign. */
-    *sigma = 1.0;
-    N = nb;
-    j = i;
-  }
-  else {
-    /* distance/angle: branch using positive and negative sign. */
-    *sigma = (i % 2 ? -1.0 : 1.0);
-    N = nb / 2;
-    j = i / 2;
-  }
-
-  /* compute a halfway point. */
-  const unsigned int H = (N % 2 ? N / 2 + 1 : N / 2);
-
-  /* get the "sign-independent" branch index @j, and swap around to
-   * obtain an alternating index @n.
-   */
-  const unsigned int n = ((j + 1) % 2 ? N / 2 + j / 2 : (j + 1) / 2 - 1);
-
-  /* compute the interpolation index @idx. */
-  unsigned int idx = (N / 2 + n) % N;
-  idx = (n < H ? idx : (N - 1) % H - idx);
-
-  /* compute the final interpolation factor. */
-  *lerp = (N > 1 ? ((double) idx) / ((double) (N - 1)) : 0.5);
 }
 
 /* enum_thread_timer(): timer thread function for enumeration timing
@@ -577,7 +538,7 @@ void *enum_thread_execute (void *pdata) {
   double d12 = graph_get_edge_exact(G, G->order[1], G->order[2]);
 
   /* define distances to each newly embedded atom. */
-  double d03, d13, d23;
+  double d13, d23;
   value_t val03;
 
   /* compute the cosine and sine of the angle formed by the atoms. */
@@ -585,7 +546,7 @@ void *enum_thread_execute (void *pdata) {
   double st = sqrt(1.0 - ct * ct);
 
   /* define dihedral angular quantities for embedding atoms. */
-  double cw, sw, sig, lerp;
+  double cw, sw;
 
   /* define vector quantities and extra scalars for embedding atoms. */
   vector_t x0, x1, x2, x3, r01, r02, r12, rv, p1, p2, p3;
@@ -662,39 +623,47 @@ void *enum_thread_execute (void *pdata) {
       ct = distances_to_angle(d12, d13, d23);
       st = sqrt(1.0 - ct * ct);
 
-      /* determine the cosine and sine of omega. */
-      if (value_is_dihedral(val03)) {
-        /* dihedral case: directly interpolate the cosine and sine. */
-        val03 = value_bound(value_scal(*val03.src, M_PI / 180.0),
-                            value_interval(-M_PI, M_PI));
+      /* upon entering a level at the starting index, compute
+       * the set of dihedral points to use for embedding.
+       */
+      if (state[lev].idx == state[lev].start) {
+        /* check if the (i,i-3) dihedral is directly available. */
+        if (value_is_dihedral(val03)) {
+          /* dihedral case: bound the initial dihedrals. */
+          val03 = value_bound(value_scal(*val03.src, M_PI / 180.0),
+                              value_interval(-M_PI, M_PI));
+        }
+        else {
+          /* distance case: do not bound the initial dihedrals. */
+          val03 = value_interval(-M_PI, M_PI);
+        }
 
-        /* compute the interpolation factor and the sign. */
-        enum_thread_lerp_index(state[lev].idx, state[lev].nb, 1,
-                               &sig, &lerp);
-
-        /* compute the current d(i,i-3) edge value. */
-        d03 = val03.l + (val03.u - val03.l) * lerp;
-
-        /* compute the cosine and sine of omega. */
-        cw = cos(d03);
-        sw = sin(d03);
+        /* compute the discretized dihedral values. */
+        enum_reduce(thread, lev, val03.l, val03.u);
       }
-      else {
-        /* distance/angle case: determine the sign and
-         * interpolation factors from the value of the
-         * thread state index.
-         */
-        enum_thread_lerp_index(state[lev].idx, state[lev].nb, 0,
-                               &sig, &lerp);
+/*FIXME*/printf("\n[*** LEVEL %u ***]\n",lev);
+/*FIXME*/printf(" idx     = %u\n",state[lev].idx);
+/*FIXME*/printf(" nb      = %u\n",state[lev].nb);
+/*FIXME*/printf(" start   = %u\n",state[lev].start);
+/*FIXME*/printf(" end     = %u\n",state[lev].end);
+/*FIXME*/printf(" n_omega = %u\n",state[lev].n_omega);
 
-        /* compute the current d(i,i-3) edge value. */
-        d03 = val03.l + (val03.u - val03.l) * lerp;
-
-        /* compute the cosine and sine of omega. */
-        cw = distances_to_dihedral(d01, d02, d03, d12, d13, d23);
-        cw = (cw < -1.0 ? -1.0 : cw > 1.0 ? 1.0 : cw);
-        sw = sig * sqrt(1.0 - cw * cw);
+      /* prune if we have exhausted our set of feasible points
+       * at the current level.
+       */
+      if (state[lev].idx >= state[lev].n_omega) {
+        lev = state_increment(state, len, lev - 1);
+        goto infeasible;
       }
+
+      /* compute the cosine and sine of omega. */
+      /* FIXME: THIS IS ABSOLUTELY NOT MULTITHREAD COMPATIBLE!!!
+       *  -- see notes in src/opts.c on future remedies.
+       */
+      cw = cos(state[lev].omega[state[lev].idx]);
+      sw = sin(state[lev].omega[state[lev].idx]);
+/*FIXME*/printf(" cos(omega) = %lf\n",cw);
+/*FIXME*/printf(" sin(omega) = %lf\n",sw);
 
       /* compute the scale factor for all p-vectors. */
       fv = st / sqrt(rv.x * rv.x + rv.y * rv.y + rv.z * rv.z);
