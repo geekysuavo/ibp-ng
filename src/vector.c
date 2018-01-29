@@ -236,6 +236,6 @@ inline double vector_dihedral (vector_t *a, vector_t *b,
  */
 void vector_printfn (vector_t *v, const char *id) {
   /* print the variable name and value. */
-  printf("%s = ( %lf, %lf, %lf )\n", id, v->x, v->y, v->z);
+  printf("%s = (%lf, %lf, %lf)\n", id, v->x, v->y, v->z);
 }
 

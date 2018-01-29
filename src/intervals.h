@@ -38,7 +38,7 @@ int intervals_union (intervals_t *I, double start, double end);
 
 int intervals_intersect (intervals_t *Ia, intervals_t *Ib, intervals_t *Ic);
 
-int intervals_grid (intervals_t *I, double *samp, unsigned int n_samp);
+void intervals_grid (intervals_t *I, double *samp, unsigned int *n_samp);
 
 void intervals_printfn (intervals_t *I, const char *id);
 
