@@ -240,6 +240,8 @@ int graph_refine_edge (graph_t *G, unsigned int va, unsigned int vb,
   if (!G)
     throw("graph structure pointer is invalid");
 
+  /* FIXME: graph construction from peptide is still a bit ill-defined. */
+
   /* check if an exact edge already exists. */
   if (graph_has_edge(G, va, vb) == VALUE_TYPE_SCALAR)
     return 1;

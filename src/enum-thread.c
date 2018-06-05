@@ -185,20 +185,23 @@ static inline void state_widths (enum_thread_node_t *state,
  *  characteristic polynomial." Acta Crysta. A, 2005, 61(4): 478-480.
  *
  * arguments:
+ *  @G: graph data structure representing the problem.
  *  @state: state from which to compute the rmsd.
- *  @len: number of nodes in the state.
  *
  * returns:
  *  root-mean-square deviation (rmsd) from the previous solution to
  *  the current solution.
  */
-static inline double state_rmsd (enum_thread_node_t *state,
-                                 const unsigned int len) {
+static inline double state_rmsd (graph_t *G, enum_thread_node_t *state) {
   /* declare required variables:
    */
   double Sxx, Sxy, Sxz, Syx, Syy, Syz, Szx, Szy, Szz, G1, G2;
   double x1, x2, y1, y2, z1, z2;
   unsigned int i;
+
+  /* gain access to the duplicate array. */
+  const unsigned int len = G->n_order;
+  const unsigned int *dup = G->orig;
 
   /* initialize the inner product matrix. */
   Sxx = Sxy = Sxz = 0.0;
@@ -207,6 +210,9 @@ static inline double state_rmsd (enum_thread_node_t *state,
 
   /* loop to compute the inner product matrix. */
   for (i = 0, G1 = 0.0, G2 = 0.0; i < len; i++) {
+    /* skip repeated vertices in the order. */
+    if (dup[i]) continue;
+
     /* get the first coordinate. */
     x1 = state[i].prev.x;
     y1 = state[i].prev.y;
@@ -533,7 +539,7 @@ void *enum_thread_timer (void *pdata) {
 
       /* write the current thread information. */
       fprintf(stderr, "   #%-3u: ~10^%.3lf min. remaining\n",
-              tid + 1, L2 - L1 + log(t));
+              tid + 1, L2 - L1 + log10(t));
     }
 
     /* if the number of solutions has not increased since our
@@ -738,13 +744,15 @@ void *enum_thread_execute (void *pdata) {
         /* compute the center of the structure. */
         x0.x = x0.y = x0.z = 0.0;
         for (unsigned int i = 0; i < len; i++) {
-          x0.x += state[i].pos.x;
-          x0.y += state[i].pos.y;
-          x0.z += state[i].pos.z;
+          if (!dup[i]) {
+            x0.x += state[i].pos.x;
+            x0.y += state[i].pos.y;
+            x0.z += state[i].pos.z;
+          }
         }
 
         /* scale the computed mean value. */
-        fp = 1.0 / ((double) len);
+        fp = 1.0 / ((double) G->n_orig);
         x0.x *= fp;
         x0.y *= fp;
         x0.z *= fp;
@@ -760,7 +768,7 @@ void *enum_thread_execute (void *pdata) {
          *  1. the rmsd-step of the candidate solution is too low.
          *  2. the energy of the candidate solution is too high.
          */
-        if (state_rmsd(state, len) < E->rmsd_tol ||
+        if (state_rmsd(G, state) < E->rmsd_tol ||
             state[len - 1].energy > E->energy_tol) {
           E->nrej++;
           break;
