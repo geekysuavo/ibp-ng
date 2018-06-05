@@ -251,8 +251,9 @@ void verbose_print (const int lev,
 
   /* print the first part of the message. */
   fprintf(stderr, "[%s] %s:%u:\n  ",
-          lev == IBPNG_VERBOSE_WARN ? "WARN" :
-          lev == IBPNG_VERBOSE_INFO ? "INFO" :
+          lev == IBPNG_VERBOSE_WARN  ? "WARN" :
+          lev == IBPNG_VERBOSE_INFO  ? "INFO" :
+          lev == IBPNG_VERBOSE_DEBUG ? "DBUG" :
           "????", f, l);
 
   /* print the second part of the message. */

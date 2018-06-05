@@ -10,9 +10,10 @@
 #include <errno.h>
 
 /* verbosity level definitions. */
-#define IBPNG_SILENT        0
-#define IBPNG_VERBOSE_WARN  1
-#define IBPNG_VERBOSE_INFO  2
+#define IBPNG_SILENT         0
+#define IBPNG_VERBOSE_WARN   1
+#define IBPNG_VERBOSE_INFO   2
+#define IBPNG_VERBOSE_DEBUG  3
 
 /* raise(): macro function to add traceback information onto the
  * application's error stack.
@@ -35,17 +36,23 @@
     traceback_print(); \
     goto death; }
 
+/* warn(): macro function to print a verbose warning message to
+ * standard error.
+ */
+#define warn(...) \
+  verbose_print(IBPNG_VERBOSE_WARN, __FILE__, __LINE__, __VA_ARGS__)
+
 /* info(): macro function to print a verbose informational message to
  * standard error.
  */
 #define info(...) \
   verbose_print(IBPNG_VERBOSE_INFO, __FILE__, __LINE__, __VA_ARGS__)
 
-/* warn(): macro function to print a verbose warning message to
+/* debug(): macro function to print a verbose debugging message to
  * standard error.
  */
-#define warn(...) \
-  verbose_print(IBPNG_VERBOSE_WARN, __FILE__, __LINE__, __VA_ARGS__)
+#define debug(...) \
+  verbose_print(IBPNG_VERBOSE_DEBUG, __FILE__, __LINE__, __VA_ARGS__)
 
 /* function declarations: */
 
