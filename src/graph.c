@@ -243,8 +243,9 @@ int graph_refine_edge (graph_t *G, unsigned int va, unsigned int vb,
   /* FIXME: graph construction from peptide is still a bit ill-defined. */
 
   /* check if an exact edge already exists. */
-  if (graph_has_edge(G, va, vb) == VALUE_TYPE_SCALAR)
-    return 1;
+  /* Therese Malliavin */
+  /* if (graph_has_edge(G, va, vb) == VALUE_TYPE_SCALAR)
+    return 1; */
 
   /* determine the type of the refinement weight. */
   if (value_is_scalar(w)) {
