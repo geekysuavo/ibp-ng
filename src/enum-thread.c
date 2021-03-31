@@ -407,8 +407,33 @@ int enum_threads_init (enum_t *E) {
       E->threads[t].state[i].energy = 0.0;
 
   /* compute the tree size. */
-  for (unsigned int i = 0; i < E->G->n_order; i++)
+  for (unsigned int i = 0; i < E->G->n_order; i++) {
+    if (i >= 3)  {
+       /* get the d(i,i-3) edge weight. */
+       const unsigned int i0 = E->G->order[i - 3];
+       const unsigned int i1 = E->G->order[i - 2];
+       const unsigned int i2 = E->G->order[i - 1];
+       const unsigned int i3 = E->G->order[i];
+
+       /* get the residue indices. */
+       unsigned int r0 = E->P->atoms[i0].res_id;
+       unsigned int r1 = E->P->atoms[i1].res_id;
+       unsigned int r2 = E->P->atoms[i2].res_id;
+       unsigned int r3 = E->P->atoms[i3].res_id;
+       info("r0:%d, r1:%d, r2:%d, r3:%d", r0 + 1, r1 + 1, r2 + 1, r3 + 1);
+
+       /* get the atom names. */
+       const char *atom0 = E->P->atoms[i0].name;
+       const char *atom1 = E->P->atoms[i1].name;
+       const char *atom2 = E->P->atoms[i2].name;
+       const char *atom3 = E->P->atoms[i3].name;
+       info("atom0:%s, atom1:%s, atom2:%s, atom3:%s", atom0, atom1, atom2, atom3);
+
+       value_t d03 = graph_get_edge(E->G, i0, i3);
+       info("edge (i,i-3) i-3: %d.%s, i-2: %d.%s, i-1: %d.%s, i: %d.%s, d03.u: %f, d03.l: %f, E->threads[0].state[i].nb: %d",r0 + 1, atom0, r1 + 1, atom1, r2 + 1, atom2, r3 + 1, atom3, d03.u, d03.l, E->threads[0].state[i].nb);
+      }
     E->logW += log10((double) E->threads[0].state[i].nb);
+  }
 
   /* output an informational message about the tree size. */
   info("dense tree size: 10^%.3lf leaves", E->logW);
@@ -538,8 +563,10 @@ void *enum_thread_timer (void *pdata) {
       state_widths(E->threads[tid].state, len, &L1, &L2);
 
       /* write the current thread information. */
-      fprintf(stderr, "   #%-3u: ~10^%.3lf min. remaining\n",
-              tid + 1, L2 - L1 + log10(t));
+      /* fprintf(stderr, "   #%-3u: ~10^%.3lf min. remaining\n",
+              tid + 1, L2 - L1 + log10(t)); */
+      fprintf(stderr, "   #%-3u: ~10^%.3lf min. remaining, done: ~10^%.3lf, todo:~10^%.3lf\n",
+              tid + 1, L2 - L1 + log10(t),L1,L2);
     }
 
     /* if the number of solutions has not increased since our
