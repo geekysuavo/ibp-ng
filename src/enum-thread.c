@@ -420,17 +420,17 @@ int enum_threads_init (enum_t *E) {
        unsigned int r1 = E->P->atoms[i1].res_id;
        unsigned int r2 = E->P->atoms[i2].res_id;
        unsigned int r3 = E->P->atoms[i3].res_id;
-       info("r0:%d, r1:%d, r2:%d, r3:%d",r0+1,r1+1,r2+1,r3+1);
+       info("r0:%d, r1:%d, r2:%d, r3:%d", r0 + 1, r1 + 1, r2 + 1, r3 + 1);
 
        /* get the atom names. */
        const char *atom0 = E->P->atoms[i0].name;
        const char *atom1 = E->P->atoms[i1].name;
        const char *atom2 = E->P->atoms[i2].name;
        const char *atom3 = E->P->atoms[i3].name;
-       info("atom0:%s, atom1:%s, atom2:%s, atom3:%s",atom0,atom1,atom2,atom3);
+       info("atom0:%s, atom1:%s, atom2:%s, atom3:%s", atom0, atom1, atom2, atom3);
 
        value_t d03 = graph_get_edge(E->G, i0, i3);
-       info("edge (i,i-3) i-3: %d.%s, i-2: %d.%s, i-1: %d.%s, i: %d.%s, d03.u: %f, d03.l: %f, E->threads[0].state[i].nb: %d",r0+1,atom0,r1+1,atom1,r2+1,atom2,r3+1,atom3,d03.u,d03.l,E->threads[0].state[i].nb);
+       info("edge (i,i-3) i-3: %d.%s, i-2: %d.%s, i-1: %d.%s, i: %d.%s, d03.u: %f, d03.l: %f, E->threads[0].state[i].nb: %d",r0 + 1, atom0, r1 + 1, atom1, r2 + 1, atom2, r3 + 1, atom3, d03.u, d03.l, E->threads[0].state[i].nb);
       }
     E->logW += log10((double) E->threads[0].state[i].nb);
   }
