@@ -91,8 +91,3 @@ code progresses.
 This project is released under the
 [MIT license](https://opensource.org/licenses/MIT). See the
 [LICENSE.md](LICENSE.md) file for the complete license terms.
-
-And as always, enjoy!
-
-*~ Brad.*
-
